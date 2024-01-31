@@ -1,0 +1,10 @@
+# Requirements for AdNotifier
+# Install by: ```pip install -r requirements.txt```
+Flask
+Flask-SQLAlchemy
+Flask-Migrate
+Flask-Login
+gunicorn
+python-dotenv
+requests
+beautifulsoup4

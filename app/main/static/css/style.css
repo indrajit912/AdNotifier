@@ -1,0 +1,140 @@
+/* static/styles.css */
+
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap");
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    text-decoration: none;
+    font-family: "Poppins", sans-serif;
+    border: none;
+    outline: none;
+    letter-spacing: .4px;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+:root {
+    --primary-color: #3498db;
+    --secondary-color: #2ecc71;
+    --background-color: #ecf0f1;
+    --text-color: #333;
+
+    --color-black: #000000;  
+    --color-white: #ffffff;
+    --color-dark: #353535;
+    --color-dark-variant: #555555;
+}
+
+body {
+    background-color: var(--background-color);
+}
+
+/* Example style for the home page content */
+h1,h2,h3,h4,h5 {
+    line-height: 120%;
+}
+
+h1 {
+    font-size: 48px;
+    color: var(--color-black);
+}
+
+h2 {
+    font-size: 28px;
+    color: var(--color-dark-variant);
+}
+
+h3 {
+    font-size: 26px;
+    color: var(--color-black);
+}
+
+h4 {
+    font-size: 19px;
+    color: var(--color-black);
+}
+
+h4 {
+    font-size: 18px;
+    font-weight: 400;
+}
+
+.heading {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+
+nav {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 10px;
+    text-align: left;
+    height: 50px;
+}
+
+nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+nav ul li {
+    display: inline;
+    margin-right: 20px;
+}
+
+nav a {
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+}
+
+section {
+    padding-top: 4vh;
+    margin: 0 10rem;
+    margin-bottom: 5rem;
+    box-sizing: border-box;
+    min-height: fit-content;
+}
+
+footer {
+    background-color: var(--primary-color);
+    color: var(--background-color);
+    text-align: center;
+    padding: 10px;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+.social > a {
+  font-size:24px;
+  width:40px;
+  height:40px;
+  line-height:40px;
+  display:inline-block;
+  text-align:center;
+  border-radius:50%;
+  border:1px solid var(--background-color);
+  margin:0 8px;
+  color:inherit;
+  opacity:0.75;
+}
+
+/* Twitter X icon */
+.fa.fa-twitter::before {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    content: "";
+    background-color: currentColor;
+    -webkit-mask: url('data:image/svg+xml;utf8,<svg viewBox="0 -8 26 30" xmlns="http://www.w3.org/2000/svg"><g><path fill="white" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></g></svg>') no-repeat center;
+    mask: url('data:image/svg+xml;utf8,<svg viewBox="0 -8 26 30" xmlns="http://www.w3.org/2000/svg"><g><path fill="white" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></g></svg>') no-repeat center;
+    background-position: center 3px;
+}
+
