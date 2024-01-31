@@ -1,4 +1,4 @@
-# main of the webapp
+# main blueprint of the webapp
 from flask import Blueprint
 
 main_bp = Blueprint(

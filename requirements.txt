@@ -4,6 +4,8 @@ Flask
 Flask-SQLAlchemy
 Flask-Migrate
 Flask-Login
+Flask-WTF
+mysql-connector-python
 gunicorn
 python-dotenv
 requests

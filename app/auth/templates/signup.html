@@ -1,0 +1,19 @@
+<!-- app/auth/templates/auth/signup.html -->
+{% extends 'base.html' %}
+
+{% block title %}Sign Up{% endblock %}
+
+{% block content %}
+    <h1>Sign Up</h1>
+    <!-- Signup form goes here -->
+    <br>
+    <form method="POST">
+        {{ form.hidden_tag() }}
+
+        {{ form.name.label(class="form-label") }}
+        {{ form.name(class="form-control") }}
+
+        <br>
+        {{ form.submit(class="btn btn-primary") }}
+    </form>
+{% endblock %}
