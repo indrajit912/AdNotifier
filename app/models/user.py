@@ -5,6 +5,19 @@ from datetime import datetime
 import secrets
 
 
+class MonitoredAd(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    advertisement_number = db.Column(db.String(100), nullable=False)
+    website_url = db.Column(db.String(255), nullable=False)
+    occurrence_count = db.Column(db.Integer, default=0)  # New field to store the count
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    # You can add additional fields as needed, e.g., last_checked_at, notification_status, etc.
+
+    # Foreign Key to refer to the user
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     fullname = db.Column(db.String(100), nullable=False)
@@ -14,6 +27,9 @@ class User(db.Model, UserMixin):
     whatsapp = db.Column(db.Integer)
     is_admin = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    # User can have many MonitoredAd
+    monitored_ads = db.relationship('MonitoredAd', backref='user')
 
     
     def __repr__(self):
@@ -37,11 +53,3 @@ class User(db.Model, UserMixin):
         return hashed_password == self.password_hash
     
     
-class MonitoredAd(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    advertisement_number = db.Column(db.String(100), nullable=False)
-    website_url = db.Column(db.String(255), nullable=False)
-    occurrence_count = db.Column(db.Integer, default=0)  # New field to store the count
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    
-    # You can add additional fields as needed, e.g., last_checked_at, notification_status, etc.

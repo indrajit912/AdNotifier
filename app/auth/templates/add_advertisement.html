@@ -24,11 +24,5 @@
 
         {{ form.submit(class="btn btn-secondary") }}
     </form>
-
-    <!-- TODO: Delete the block below -->
-    <br>
-    <br>
-    {% for ad in ads %}
-        <li>{{ ad.advertisement_number }} - {{ ad.website_url }} | <a href="{{ url_for('auth.delete_ad', id=ad.id) }}">Delete</a></li>
-    {% endfor %}
+    
 {% endblock %}

@@ -22,4 +22,19 @@
       </div>
     </div>
 
+    <br><br>
+
+    <ol class="list-group list-group-numbered">
+      {% for ad in user_ads %}
+        <li class="list-group-item d-flex justify-content-between align-items-start">
+          <div class="ms-2 me-auto">
+            <div class="fw-bold">{{ ad.advertisement_number }}</div>
+            {{ ad.website_url }}
+          </div>
+          <span class="badge bg-primary rounded-pill">{{ convert_utc_to_ist(ad.created_at.strftime("%Y-%m-%d %H:%M:%S")) }}</span>
+        </li>
+      {% endfor %}
+    </ol>
+    
+
 {% endblock %}

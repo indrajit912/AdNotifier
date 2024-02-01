@@ -6,6 +6,8 @@ from app.extensions import db
 from flask_login import login_required, login_user, logout_user, current_user
 
 from . import auth_bp
+from scripts.utils import convert_utc_to_ist
+
 
 # Login view (route)
 @auth_bp.route('/login', methods=['GET', 'POST'])
@@ -38,7 +40,8 @@ def login():
 @login_required
 def dashboard():
     user = current_user
-    return render_template('dashboard.html', user=user)
+    user_ads = MonitoredAd.query.filter_by(user_id=current_user.id).order_by(MonitoredAd.created_at).all()
+    return render_template('dashboard.html', user=user, user_ads=user_ads, convert_utc_to_ist=convert_utc_to_ist)
 
 @auth_bp.route('/logout', methods=['GET', 'POST'])
 @login_required
@@ -102,13 +105,17 @@ def delete_user(id):
 
 
 @auth_bp.route('/add_advertisement', methods=['GET', 'POST'])
+@login_required
 def add_advertisement():
     form = AdvertisementForm()
 
     if form.validate_on_submit():
+        ad_user_id = current_user.id
+
         monitored_ad = MonitoredAd(
             advertisement_number = form.advertisement_number.data,
-            website_url = form.website_url.data
+            website_url = form.website_url.data,
+            user_id = ad_user_id
         )
 
         # Clear the form
