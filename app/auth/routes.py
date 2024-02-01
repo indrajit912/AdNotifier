@@ -3,7 +3,7 @@ from flask import render_template, url_for, redirect, flash
 from app.auth.forms import UserSignupForm, AdvertisementForm, UserLoginForm
 from app.models.user import User, MonitoredAd
 from app.extensions import db
-from flask_login import login_required, login_user
+from flask_login import login_required, login_user, logout_user, current_user
 
 from . import auth_bp
 
@@ -37,9 +37,16 @@ def login():
 @auth_bp.route('/dashboard', methods=['GET', 'POST'])
 @login_required
 def dashboard():
+    user = current_user
+    return render_template('dashboard.html', user=user)
 
-    # Login logic here
-    return render_template('dashboard.html')
+@auth_bp.route('/logout', methods=['GET', 'POST'])
+@login_required
+def logout():
+    logout_user()
+    flash("You have been logged out successfully!", 'success')
+
+    return redirect(url_for('auth.login'))
 
 @auth_bp.route('/signup', methods=['GET', 'POST'])
 def signup():
@@ -78,14 +85,6 @@ def signup():
         our_users=our_users
     )
 
-@auth_bp.route('/change_password/<int:id>', methods=['POST'])
-def change_password(id):
-    user_to_update = User.query.get_or_404(id)
-
-    try:
-        pass
-    except:
-        pass
 
 @auth_bp.route('/delete_user/<int:id>')
 def delete_user(id):

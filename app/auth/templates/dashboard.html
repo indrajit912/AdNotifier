@@ -6,6 +6,20 @@
 {% block content %}
     {% include 'flash_msgs.html' %}
 
-    <h1 class="heading">Dashboard</h1>
+    <div class="card">
+      <h5 class="card-header">{{ user.fullname }}</h5>
+      <div class="card-body">
+        <h5 class="card-title">Welcome to your dashboard!</h5>
+        <p class="card-text">
+            <ul>
+                <li><b>Email</b>: {{ user.email }}</li>
+                <li><b>WhatsApp number</b>: {{ user.whatsapp }}</li>
+                <li><b>Account Created</b>: {{ user.created_at }}</li>
+                <li><b>Admin</b>: {{ user.is_admin }}</li>
+            </ul>
+        </p>
+        <a href="{{ url_for('auth.logout') }}" class="btn btn-primary">Logout</a>
+      </div>
+    </div>
 
 {% endblock %}
