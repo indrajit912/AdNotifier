@@ -1,4 +1,9 @@
-# main blueprint of the webapp
+# app/main/__init__.py
+#
+# Author: Indrajit Ghosh
+# Created On: Jan 31, 2024
+#
+
 from flask import Blueprint
 
 main_bp = Blueprint(

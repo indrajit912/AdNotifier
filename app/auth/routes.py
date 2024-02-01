@@ -1,12 +1,16 @@
 # app/auth/routes.py
+# Author: Indrajit Ghosh
+# Created On: Feb 01, 2024
+#
+
 from flask import render_template, url_for, redirect, flash
-from app.auth.forms import UserSignupForm, AdvertisementForm, UserLoginForm
-from app.models.user import User, MonitoredAd
-from app.extensions import db
 from flask_login import login_required, login_user, logout_user, current_user
 
-from . import auth_bp
+from app.forms.auth_forms import UserSignupForm, AdvertisementForm, UserLoginForm
+from app.models.user import User, MonitoredAd
+from app.extensions import db
 from scripts.utils import convert_utc_to_ist
+from . import auth_bp
 
 
 # Login view (route)

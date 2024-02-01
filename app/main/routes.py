@@ -1,4 +1,4 @@
-# main routes
+# app/main/routes.py
 #
 # Author: Indrajit Ghosh
 # Created On: Jan 31, 2024

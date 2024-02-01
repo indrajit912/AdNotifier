@@ -1,8 +1,14 @@
-from app.extensions import db
-from flask_login import UserMixin
-from scripts.utils import sha256_hash
+# app/models/user.py
+# Author: Indrajit Ghosh
+# Created On: Feb 01, 2024
+#
+
 from datetime import datetime
 import secrets
+from flask_login import UserMixin
+
+from app.extensions import db
+from scripts.utils import sha256_hash
 
 
 class MonitoredAd(db.Model):

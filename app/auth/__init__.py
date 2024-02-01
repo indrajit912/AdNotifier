@@ -1,4 +1,8 @@
-# auth blueprint of the webapp
+# app/auth/__init__.py
+# Author: Indrajit Ghosh
+# Created On: Feb 01, 2024
+#
+
 from flask import Blueprint
 
 auth_bp = Blueprint(
