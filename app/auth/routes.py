@@ -34,7 +34,7 @@ def signup():
             db.session.commit()
         
         fullname = form.fullname.data
-        form.fullname.data = form.email.data = form.passwd.data = form.whatsapp.data = ''
+        form = UserSignupForm(formdata=None)
 
         flash("User added successfully!", 'success')
     
