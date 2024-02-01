@@ -14,7 +14,7 @@
             <ul>
                 <li><b>Email</b>: {{ user.email }}</li>
                 <li><b>WhatsApp number</b>: {{ user.whatsapp }}</li>
-                <li><b>Account Created</b>: {{ user.created_at }}</li>
+                <li><b>Account Created</b>: {{ convert_utc_to_ist(user.created_at.strftime("%Y-%m-%d %H:%M:%S")) }}</li>
                 <li><b>Admin</b>: {{ user.is_admin }}</li>
             </ul>
         </p>
@@ -31,10 +31,13 @@
             <div class="fw-bold">{{ ad.advertisement_number }}</div>
             {{ ad.website_url }}
           </div>
-          <span class="badge bg-primary rounded-pill">{{ convert_utc_to_ist(ad.created_at.strftime("%Y-%m-%d %H:%M:%S")) }}</span>
+          <span class="badge bg-primary rounded-pill">
+            {{ convert_utc_to_ist(ad.last_updated.strftime("%Y-%m-%d %H:%M:%S")) }}
+          </span>
         </li>
       {% endfor %}
     </ol>
+    
     
 
 {% endblock %}

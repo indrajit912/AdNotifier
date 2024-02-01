@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, PasswordField, EmailField, IntegerField
-from wtforms.validators import DataRequired
+from wtforms.validators import DataRequired, EqualTo, Optional
 
 class UserLoginForm(FlaskForm):
     email = EmailField("Email address", validators=[DataRequired()])
@@ -11,12 +11,14 @@ class UserLoginForm(FlaskForm):
 class UserSignupForm(FlaskForm):
     fullname = StringField("Fullname", validators=[DataRequired()])
     email = EmailField("Email address", validators=[DataRequired()])
-    passwd = PasswordField("Choose a password", validators=[DataRequired()])
-    # confirm_passwd = PasswordField("Confirm your password", validators=[DataRequired()])
+    passwd = PasswordField(
+        "Choose a password", 
+        validators=[DataRequired(), EqualTo('confirm_passwd', message='Passwords must match')]
+    )
+    confirm_passwd = PasswordField("Confirm your password")
+    whatsapp = IntegerField("WhatsApp number", validators=[Optional()])
 
-    whatsapp = IntegerField("WhatsApp number")
-
-    submit = SubmitField("Submit")
+    submit = SubmitField("Register")
 
 
 class AdvertisementForm(FlaskForm):

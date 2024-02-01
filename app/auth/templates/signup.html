@@ -5,9 +5,14 @@
 
 {% block content %}
     {% include 'flash_msgs.html' %}
+    
+    {% for error in form.passwd.errors %}
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            {{ error }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
 
-    <h1 class="heading">Register Yourself</h1>
-    <br>
     <!-- Signup form goes here -->
     <form method="POST" class="form-container">
         {{ form.hidden_tag() }}
@@ -26,6 +31,11 @@
         <div class="mb-3">
             {{ form.passwd.label(class="form-label") }}
             {{ form.passwd(class="form-control") }}
+        </div>
+
+        <div class="mb-3">
+            {{ form.confirm_passwd.label(class="form-label") }}
+            {{ form.confirm_passwd(class="form-control") }}
         </div>
 
         <div class="mb-3">

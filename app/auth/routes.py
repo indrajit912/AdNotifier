@@ -40,7 +40,7 @@ def login():
 @login_required
 def dashboard():
     user = current_user
-    user_ads = MonitoredAd.query.filter_by(user_id=current_user.id).order_by(MonitoredAd.created_at).all()
+    user_ads = MonitoredAd.query.filter_by(user_id=current_user.id).order_by(MonitoredAd.last_updated).all()
     return render_template('dashboard.html', user=user, user_ads=user_ads, convert_utc_to_ist=convert_utc_to_ist)
 
 @auth_bp.route('/logout', methods=['GET', 'POST'])
@@ -54,12 +54,12 @@ def logout():
 @auth_bp.route('/signup', methods=['GET', 'POST'])
 def signup():
     # Signup logic here
-    fullname = None
     form = UserSignupForm()
 
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         if user is None:
+            print(f"Here is whatsapp: {form.whatsapp.data}")
             user = User(
                 fullname=form.fullname.data,
                 email = form.email.data,
@@ -73,7 +73,6 @@ def signup():
             db.session.add(user)
             db.session.commit()
         
-        fullname = form.fullname.data
         form = UserSignupForm(formdata=None)
 
         flash("Congratulations! Your account has been successfully created. You can now log in using the provided credentials.", 'success')
@@ -83,7 +82,6 @@ def signup():
 
     return render_template(
         'signup.html',
-        fullname=fullname,
         form=form,
         our_users=our_users
     )
