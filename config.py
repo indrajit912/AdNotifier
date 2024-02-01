@@ -44,8 +44,7 @@ class DevelopmentConfig:
     DEBUG = True
     SECRET_KEY = os.environ.get('SECRET_KEY') or token_hex(16)
 
-    SQLALCHEMY_DATABASE_URI = DatabaseConfig.pscale_connection_uri \
-        or 'sqlite:///' + os.path.join(BASE_DIR, 'app.db')
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(BASE_DIR, 'app.db')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 
