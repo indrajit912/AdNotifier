@@ -4,6 +4,8 @@
 {% block title %}Sign Up{% endblock %}
 
 {% block content %}
+    {% include 'flash_msgs.html' %}
+
     <h1 class="heading">Sign Up</h1>
     <br>
     <!-- Signup form goes here -->
@@ -34,9 +36,10 @@
         {{ form.submit(class="btn btn-secondary") }}
     </form>
 
+    <!-- TODO: Delete the block below -->
     <br>
     <br>
     {% for our_user in our_users %}
-        <li>{{ our_user.fullname }} - {{ our_user.email }}</li>
+        <li>{{ our_user.fullname }} - {{ our_user.email }} | <a href="{{ url_for('auth.delete_user', id=our_user.id) }}">Delete</a></li>
     {% endfor %}
 {% endblock %}

@@ -4,6 +4,25 @@
 {% block title %}Login{% endblock %}
 
 {% block content %}
-    <h1>Login</h1>
+    {% include 'flash_msgs.html' %}
+
+    <h1 class="heading">Login</h1>
+
     <!-- Login form goes here -->
+    <form method="POST" class="form-container">
+        {{ form.hidden_tag() }}
+
+        <div class="mb-3">
+            {{ form.email.label(class="form-label") }}
+            {{ form.email(class="form-control") }}
+        </div>
+
+        <div class="mb-3">
+            {{ form.passwd.label(class="form-label") }}
+            {{ form.passwd(class="form-control") }}
+        </div>
+
+        {{ form.submit(class="btn btn-secondary") }}
+    </form>
+
 {% endblock %}

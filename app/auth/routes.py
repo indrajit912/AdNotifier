@@ -1,15 +1,45 @@
 # app/auth/routes.py
 from flask import render_template, url_for, redirect, flash
-from app.auth.forms import UserSignupForm
-from app.models.user import User
+from app.auth.forms import UserSignupForm, AdvertisementForm, UserLoginForm
+from app.models.user import User, MonitoredAd
 from app.extensions import db
+from flask_login import login_required, login_user
 
 from . import auth_bp
 
+# Login view (route)
 @auth_bp.route('/login', methods=['GET', 'POST'])
 def login():
+    form = UserLoginForm()
+
     # Login logic here
-    return render_template('login.html')
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+
+        if user:
+            # Check the hash
+            if user.check_password(form.passwd.data):
+                # Password matched!
+                login_user(user)
+                flash("Login successful!", 'success')
+
+                return redirect(url_for('auth.dashboard'))
+            else:
+                flash("Wrong passsword. Try again!")
+        else:
+            flash("That user doesn't exist! Try again...")
+        
+        form = UserLoginForm(formdata=None)
+
+
+    return render_template('login.html', form=form)
+
+@auth_bp.route('/dashboard', methods=['GET', 'POST'])
+@login_required
+def dashboard():
+
+    # Login logic here
+    return render_template('dashboard.html')
 
 @auth_bp.route('/signup', methods=['GET', 'POST'])
 def signup():
@@ -36,7 +66,8 @@ def signup():
         fullname = form.fullname.data
         form = UserSignupForm(formdata=None)
 
-        flash("User added successfully!", 'success')
+        flash("Congratulations! Your account has been successfully created. You can now log in using the provided credentials.", 'success')
+        return redirect(url_for('auth.login'))
     
     our_users = User.query.order_by(User.created_at)
 
@@ -46,3 +77,65 @@ def signup():
         form=form,
         our_users=our_users
     )
+
+@auth_bp.route('/change_password/<int:id>', methods=['POST'])
+def change_password(id):
+    user_to_update = User.query.get_or_404(id)
+
+    try:
+        pass
+    except:
+        pass
+
+@auth_bp.route('/delete_user/<int:id>')
+def delete_user(id):
+    user_to_delete = User.query.get_or_404(id)
+
+    try:
+        db.session.delete(user_to_delete)
+        db.session.commit()
+
+        flash("User deleted successfully!", 'success')
+        return redirect(url_for('auth.signup'))
+    except:
+        flash("Opps! There was a problem deleting user. Try again.", 'danger')
+        return redirect(url_for('main.index'))
+
+
+@auth_bp.route('/add_advertisement', methods=['GET', 'POST'])
+def add_advertisement():
+    form = AdvertisementForm()
+
+    if form.validate_on_submit():
+        monitored_ad = MonitoredAd(
+            advertisement_number = form.advertisement_number.data,
+            website_url = form.website_url.data
+        )
+
+        # Clear the form
+        form = AdvertisementForm(formdata=None)
+
+        # Add the advertisement to the database
+        db.session.add(monitored_ad)
+        db.session.commit()
+
+        flash("Advertisement entry added successfully!", 'success')
+    
+    ads = MonitoredAd.query.order_by(MonitoredAd.created_at)
+
+    return render_template('add_advertisement.html', form=form, ads=ads)
+
+
+@auth_bp.route('/delete_ad/<int:id>')
+def delete_ad(id):
+    ad_to_delete = MonitoredAd.query.get_or_404(id)
+
+    try:
+        db.session.delete(ad_to_delete)
+        db.session.commit()
+
+        flash("Advertisement deleted successfully!", 'success')
+        return redirect(url_for('auth.add_advertisement'))
+    except:
+        flash("Opps! There was a problem deleting user. Try again.", 'danger')
+        return redirect(url_for('main.index'))

@@ -1,0 +1,34 @@
+<!-- app/auth/templates/auth/add_advertisement.html -->
+{% extends 'base.html' %}
+
+{% block title %}Add Advertisement{% endblock %}
+
+{% block content %}
+    {% include 'flash_msgs.html' %}
+
+    <h1 class="heading">Add advertisement</h1>
+    <br>
+    <!-- Signup form goes here -->
+    <form method="POST" class="form-container">
+        {{ form.hidden_tag() }}
+
+        <div class="mb-3">
+            {{ form.advertisement_number.label(class="form-label") }}
+            {{ form.advertisement_number(class="form-control", placeholder="e.g- 'ADVT. NO.1/2020'") }}
+        </div>
+        
+        <div class="mb-3">
+            {{ form.website_url.label(class="form-label") }}
+            {{ form.website_url(class="form-control", placeholder="e.g.- https://www.wbcsconline.in/") }}
+        </div>
+
+        {{ form.submit(class="btn btn-secondary") }}
+    </form>
+
+    <!-- TODO: Delete the block below -->
+    <br>
+    <br>
+    {% for ad in ads %}
+        <li>{{ ad.advertisement_number }} - {{ ad.website_url }} | <a href="{{ url_for('auth.delete_ad', id=ad.id) }}">Delete</a></li>
+    {% endfor %}
+{% endblock %}

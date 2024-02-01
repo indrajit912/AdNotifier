@@ -1,10 +1,11 @@
 from app.extensions import db
+from flask_login import UserMixin
 from scripts.utils import sha256_hash
 from datetime import datetime
 import secrets
 
 
-class User(db.Model):
+class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     fullname = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
@@ -14,6 +15,7 @@ class User(db.Model):
     is_admin = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
+    
     def __repr__(self):
         return f"User(id={self.id}, fullname={self.fullname}, email={self.email}, whatsapp={self.whatsapp}, is_admin={self.is_admin}, created_at={self.created_at})"
 
@@ -33,3 +35,13 @@ class User(db.Model):
         password_with_salt = password + self.password_salt
         hashed_password = sha256_hash(password_with_salt)
         return hashed_password == self.password_hash
+    
+    
+class MonitoredAd(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    advertisement_number = db.Column(db.String(100), nullable=False)
+    website_url = db.Column(db.String(255), nullable=False)
+    occurrence_count = db.Column(db.Integer, default=0)  # New field to store the count
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    # You can add additional fields as needed, e.g., last_checked_at, notification_status, etc.
