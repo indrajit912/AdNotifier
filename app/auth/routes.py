@@ -90,12 +90,12 @@ def signup():
             
             else:
                 # Whatsapp number taken
-                flash("Whatsapp number is taken. Try different one!")
+                flash("Whatsapp number is taken. Try different one!", 'warning')
                 return redirect(url_for('auth.signup'))
 
         else:
             # User exists with the same email
-            flash("Email id taken. Try different one!")
+            flash("Email id taken. Try different one!", 'warning')
             return redirect(url_for('auth.signup'))
 
     return render_template(
