@@ -7,7 +7,8 @@
 
 import hashlib
 from datetime import datetime, timedelta, timezone
-
+import requests
+from bs4 import BeautifulSoup
 
 def sha256_hash(raw_text):
     """Hash the given text using SHA-256 algorithm.
@@ -54,3 +55,40 @@ def convert_utc_to_ist(utc_datetime_str):
     formatted_datetime = ist_datetime.strftime("%b %d, %Y %I:%M %p IST")
 
     return formatted_datetime
+
+def count_advertisement_numbers(url:str, advertisement_number:str):
+    """
+    Count the number of occurrences of a given advertisement number on a web page.
+
+    Parameters:
+    - url (str): The URL of the web page to analyze.
+    - advertisement_number (str): The advertisement number to search for.
+
+    Returns:
+    - int: The number of occurrences of the advertisement number on the page.
+           Returns -1 if there is an error fetching the website content.
+
+    Example:
+    ```python
+    url = "https://example.com"
+    advertisement_number = "ABC123"
+    occurrences = count_advertisement_numbers(url, advertisement_number)
+    print(f"The advertisement number '{advertisement_number}' appears {occurrences} times on the page.")
+    ```
+    """
+    try:
+        # Fetch HTML content of the website
+        response = requests.get(url)
+        response.raise_for_status()  # Raise an HTTPError for bad responses
+
+        # Parse the HTML content
+        soup = BeautifulSoup(response.text, 'html.parser')
+
+        # Find all occurrences of the advertisement number on the page
+        occurrences = soup.body.text.count(advertisement_number)
+
+        return occurrences
+
+    except requests.RequestException as e:
+        return -1  # Error indicator
+    
