@@ -18,16 +18,17 @@ html {
 }
 
 :root {
-    --primary-color: #3498db;
-    --secondary-color: #2ecc71;
-    --background-color: #ecf0f1;
+    --primary-color: #0056b3;   /* Dark Blue */
+    --secondary-color: #4caf50; /* Green */
+    --background-color: #f4f4f4; /* Light Gray */
     --text-color: #333;
 
     --color-black: #000000;  
     --color-white: #ffffff;
-    --color-dark: #353535;
-    --color-dark-variant: #555555;
+    --color-dark: #2c2c2c;      /* Dark Gray */
+    --color-dark-variant: #444; /* Slightly Darker Gray */
 }
+
 
 body {
     background-color: var(--background-color);
@@ -67,12 +68,6 @@ h4 {
     text-align: center;
     margin-bottom: 3rem;
 }
-
-
-nav {
-    background-color: var(--primary-color);
-}
-
 
 section {
     padding-top: 4vh;
@@ -131,3 +126,59 @@ footer {
     width: 50%;
 }
 
+.hero-section {
+    background-color: #f8f9fa;
+    padding: 40px;
+    text-align: center;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.hero-section h1 {
+    font-size: 2.5rem;
+    color: var(--primary-color);
+    margin-bottom: 15px;
+}
+
+.hero-section p {
+    font-size: 1.1rem;
+    color: var(--color-dark);
+}
+
+.features-section {
+    padding: 40px 20px;
+    text-align: center;
+}
+
+.features-section h2 {
+    font-size: 1.5rem;
+    color: var(--color-dark);
+    margin-bottom: 15px;
+}
+
+.features-section h3 {
+    font-size: 1.2rem;
+    color: var(--primary-color);
+    margin-bottom: 10px;
+}
+
+.features-section p {
+    font-size: 1rem;
+    color: var(--color-dark-variant);
+}
+
+.cta-section {
+    background-color: var(--color-dark);
+    color: var(--color-white);
+    padding: 40px;
+    text-align: center;
+}
+
+.cta-section h2 {
+    font-size: 2rem;
+    margin-bottom: 15px;
+}
+
+.cta-section p {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+}

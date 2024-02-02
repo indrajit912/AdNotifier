@@ -1,17 +1,43 @@
-<!-- main/index.html -->
+<!-- app/main/index.html -->
 {% extends 'base.html' %}
 
-{% block title %}Home{% endblock %}
+{% block title %}AdNotifier - Home{% endblock %}
 
 {% block styles %}
     {{ super() }}
-    <!-- Additional styles specific to this template go here -->
 {% endblock %}
 
 {% block content %}
-    <h1 class="heading">Welcome to AdNotifier</h1>
-    <!-- Add specific content for the home page here -->
-    <p>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. In, id libero ab eligendi nobis corrupti minima dignissimos, aspernatur, autem beatae sint reprehenderit nostrum sed inventore facilis molestiae. Dolor, cupiditate repellendus!
-    </p>
+    <div class="hero-section">
+        <h1 class="display-4">Welcome to <span style="font-weight: bold; color: #28a745;">AdNotifier</span></h1>
+        <p class="lead">
+            Your personalized notification system for exam and job advertisements.
+        </p>
+    </div>
+
+    <div class="container features-section">
+        <h2>How AdNotifier Works</h2>
+        <div class="row">
+            <div class="col-md-4">
+                <h3>1. Register</h3>
+                <p>Create an account with a valid email to get started.</p>
+            </div>
+            <div class="col-md-4">
+                <h3>2. Login</h3>
+                <p>Access your account securely using your credentials.</p>
+            </div>
+            <div class="col-md-4">
+                <h3>3. Add Advertisements</h3>
+                <p>Specify advertisement numbers and website URLs to monitor.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="cta-section">
+        <h2>Ready to stay informed?</h2>
+        <p class="lead">
+            Sign up now and never miss an important notification.
+        </p>
+        <a class="btn btn-primary btn-lg" href="{{ url_for('auth.signup') }}" role="button">Get Started</a>
+    </div>
 {% endblock %}
