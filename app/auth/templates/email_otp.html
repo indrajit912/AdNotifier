@@ -1,0 +1,69 @@
+<!-- 
+    This template can be used to send an OTP to a user
+    for some `reason` (e.g- Registration Process)
+
+    Parameters:
+        `otp`: an otp
+
+    Author: Indrajit Ghosh
+    Created On: Dec 13, 2023
+ -->
+
+ <!DOCTYPE html>
+ <html>
+ 
+ <head>
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>Your Admin Registration OTP</title>
+     <style>
+         body {
+             font-family: 'Arial', sans-serif;
+             margin: 0;
+             padding: 0;
+             background-color: #f4f4f4;
+         }
+ 
+         .container {
+             max-width: 600px;
+             margin: 0 auto;
+             padding: 20px;
+             background-color: #fff;
+             border-radius: 8px;
+             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+         }
+ 
+         h1 {
+             color: #333;
+             text-align: left;
+         }
+ 
+         p {
+             margin-top: 10px;
+             margin-bottom: 10px;
+             line-height: 1.5;
+         }
+ 
+         b {
+             font-weight: bold;
+         }
+ 
+         .otp {
+             font-size: 24px;
+             color: #4285f4;
+         }
+     </style>
+ </head>
+ 
+ <body>
+     <div class="container">
+         <h1>Hello {{ username }},</h1>
+         <div class="details">
+             <p>Below is the OTP required to complete the registration process:</p>
+             <p><b>OTP:</b> <span class="otp">{{ otp }}</span></p>
+             <p>For security reasons, please refrain from sharing this OTP with anyone.</p>
+         </div>
+     </div>
+ </body>
+ 
+ </html>

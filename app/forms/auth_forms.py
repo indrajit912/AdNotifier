@@ -4,7 +4,7 @@
 #
 
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, PasswordField, EmailField, IntegerField
+from wtforms import StringField, SubmitField, PasswordField, EmailField, IntegerField, HiddenField
 from wtforms.validators import DataRequired, EqualTo, Optional
 
 
@@ -17,12 +17,23 @@ class UserLoginForm(FlaskForm):
 class UserSignupForm(FlaskForm):
     fullname = StringField("Fullname", validators=[DataRequired()])
     email = EmailField("Email", validators=[DataRequired()])
+
+    # New hidden field to store the step
+    step = HiddenField(default="1")
+
+    submit = SubmitField("Next")
+
+class UserSignupFormNext(FlaskForm):
+    otp = StringField("OTP", validators=[DataRequired()])
     passwd = PasswordField(
         "Password", 
         validators=[DataRequired(), EqualTo('confirm_passwd', message='Passwords must match')]
     )
     confirm_passwd = PasswordField("Confirm password")
     whatsapp = IntegerField("WhatsApp", validators=[Optional()])
+
+    # New hidden field to store the step
+    step = HiddenField(default="2")
 
     submit = SubmitField("Register")
 

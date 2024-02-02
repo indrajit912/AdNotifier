@@ -5,10 +5,23 @@
 # Date: Feb 01, 2024
 #
 
+import random
 import hashlib
 from datetime import datetime, timedelta, timezone
 import requests
 from bs4 import BeautifulSoup
+
+def generate_otp():
+    """Generate a random 6-digit OTP (One-Time Password).
+
+    Returns:
+        str: A string representing the randomly generated OTP.
+
+    Example:
+        >>> generate_otp()
+        '657432'
+    """
+    return str(random.randint(100000, 999999))
 
 def sha256_hash(raw_text):
     """Hash the given text using SHA-256 algorithm.
