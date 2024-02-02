@@ -32,7 +32,7 @@ class DatabaseConfig:
 
     # Database URI
     # Check if any of the required credentials is None
-    if '' in (DB_HOST, DB_USERNAME, DB_PASSWORD, DB_NAME):
+    if None in (DB_HOST, DB_USERNAME, DB_PASSWORD, DB_NAME):
         pscale_connection_uri = None
     else:
         # Construct the Planet Scale Database URI
