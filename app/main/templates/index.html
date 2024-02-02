@@ -38,6 +38,10 @@
         <p class="lead">
             Sign up now and never miss an important notification.
         </p>
-        <a class="btn btn-primary btn-lg" href="{{ url_for('auth.signup') }}" role="button">Get Started</a>
+        {% if current_user.is_authenticated %}
+            <a class="btn btn-primary btn-lg" href="{{ url_for('auth.dashboard') }}" role="button">Dashboard</a>
+        {% else %}
+            <a class="btn btn-primary btn-lg" href="{{ url_for('auth.signup') }}" role="button">Get Started</a>
+        {% endif %}
     </div>
 {% endblock %}
