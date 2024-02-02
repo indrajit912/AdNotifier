@@ -1,0 +1,60 @@
+<!-- app/admin/templates/admin/admin.html -->
+{% extends 'base.html' %}
+
+{% block title %}Admin Page{% endblock %}
+
+{% block content %}
+
+    <h1 class="heading">Welcome admin!</h1>
+
+    <h2>All Users</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Fullname</th>
+                <th scope="col">Email</th>
+                <th scope="col">Whatsapp</th>
+                <th scope="col">Joined</th>
+                <th scope="col">Admin</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+                <tr>
+                    <th scope="row">{{ user.id }}</td>
+                    <td>{{ user.fullname }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.whatsapp }}</td>
+                    <td>{{ convert_utc_to_ist(user.created_at.strftime("%Y-%m-%d %H:%M:%S")) }}</td>
+                    <td>{{ user.is_admin }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>All Monitored Ads</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Advertisement Number</th>
+                <th scope="col">Website URL</th>
+                <th scope="col">Count</th>
+                <th scope="col">User (ID)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ad in monitored_ads %}
+                <tr>
+                    <th scope="row">{{ ad.id }}</td>
+                    <td>{{ ad.advertisement_number }}</td>
+                    <td>{{ ad.website_url }}</td>
+                    <td>{{ ad.occurrence_count }}</td>
+                    <td>{{ ad.user.fullname }} ({{ ad.user_id }})</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

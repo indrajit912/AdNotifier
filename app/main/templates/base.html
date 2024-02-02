@@ -31,6 +31,10 @@
             <li class="nav-item">
               <a class="nav-link" href="{{ url_for('auth.dashboard') }}">Dashboard</a>
             </li>
+            <!-- TODO: Add logic to check whether user is admin to show Admin page! -->
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('admin.home') }}">Admin</a>
+            </li>
             <li class="nav-item">
               <a class="nav-link" href="{{ url_for('auth.logout') }}">Logout</a>
             </li>

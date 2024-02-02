@@ -32,6 +32,9 @@ def create_app(config_class=ProductionConfig):
     from app.auth import auth_bp
     app.register_blueprint(auth_bp)
 
+    from app.admin import admin_bp
+    app.register_blueprint(admin_bp)
+
 
     # Define the user loader function
     @login_manager.user_loader
