@@ -67,6 +67,8 @@ def signup():
         if form.whatsapp.data:
             # Check whether there is any user with the same whatsapp number!
             whatsapp_user = User.query.filter_by(whatsapp=form.whatsapp.data).first()
+        else:
+            whatsapp_user = None
         
         if user is None:
             if whatsapp_user is None:
