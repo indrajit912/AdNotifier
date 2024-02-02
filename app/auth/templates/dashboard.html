@@ -31,7 +31,7 @@
         <div class="card h-100">
           <div class="card-body">
             <h5 class="card-title">{{ ad.advertisement_number }}</h5>
-            <div><span class="fw-bold">URL</span>: {{ ad.website_url }}</div>
+            <div><span class="fw-bold">URL</span>: <a href="{{ ad.website_url }}" target="_blank">{{ ad.website_url }}</a></div>
             <div><span class="fw-bold">Date added:</span>: {{ convert_utc_to_ist(ad.created_at.strftime("%Y-%m-%d %H:%M:%S")) }}</div> 
             <br>
             <!-- TODO: Add logic to these buttons -->

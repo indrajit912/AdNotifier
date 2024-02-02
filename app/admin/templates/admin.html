@@ -53,7 +53,7 @@
                 <tr>
                     <th scope="row">{{ ad.id }}</td>
                     <td>{{ ad.advertisement_number }}</td>
-                    <td>{{ ad.website_url }}</td>
+                    <td><a href="{{ ad.website_url }}" target="_blank">{{ ad.website_url }}</a></td>
                     <td>{{ ad.occurrence_count }}</td>
                     <td>{{ ad.user.fullname }} ({{ ad.user_id }})</td>
                 </tr>
