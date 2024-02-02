@@ -16,13 +16,13 @@ class UserLoginForm(FlaskForm):
 
 class UserSignupForm(FlaskForm):
     fullname = StringField("Fullname", validators=[DataRequired()])
-    email = EmailField("Email address", validators=[DataRequired()])
+    email = EmailField("Email", validators=[DataRequired()])
     passwd = PasswordField(
-        "Choose a password", 
+        "Password", 
         validators=[DataRequired(), EqualTo('confirm_passwd', message='Passwords must match')]
     )
-    confirm_passwd = PasswordField("Confirm your password")
-    whatsapp = IntegerField("WhatsApp number", validators=[Optional()])
+    confirm_passwd = PasswordField("Confirm password")
+    whatsapp = IntegerField("WhatsApp", validators=[Optional()])
 
     submit = SubmitField("Register")
 
