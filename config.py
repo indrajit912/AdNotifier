@@ -1,3 +1,8 @@
+# config.py
+#
+# Author: Indrajit Ghosh
+# Created on: Jan 31, 2024
+#
 """
 Flask App Configuration
 
