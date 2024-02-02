@@ -72,7 +72,7 @@ h4 {
 section {
     padding-top: 4vh;
     margin: 0 10rem;
-    margin-bottom: 8rem;
+    margin-bottom: 8.7rem;
     box-sizing: border-box;
     min-height: fit-content;
 }
@@ -82,7 +82,7 @@ footer {
     color: var(--background-color);
     text-align: center;
     padding: 10px;
-    position: fixed;
+    /* position: fixed; */
     bottom: 0;
     width: 100%;
 }
@@ -124,6 +124,12 @@ footer {
 .form-container {
     margin: 0 auto;
     width: 50%;
+}
+
+@media (max-width:700px) {
+    .form-container {
+        width: 90%;
+    }    
 }
 
 .hero-section {

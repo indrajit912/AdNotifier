@@ -91,21 +91,6 @@ def signup():
     )
 
 
-@auth_bp.route('/delete_user/<int:id>')
-def delete_user(id):
-    user_to_delete = User.query.get_or_404(id)
-
-    try:
-        db.session.delete(user_to_delete)
-        db.session.commit()
-
-        flash("User deleted successfully!", 'success')
-        return redirect(url_for('auth.signup'))
-    except:
-        flash("Opps! There was a problem deleting user. Try again.", 'danger')
-        return redirect(url_for('main.index'))
-
-
 @auth_bp.route('/add_advertisement', methods=['GET', 'POST'])
 @login_required
 def add_advertisement():
@@ -128,6 +113,7 @@ def add_advertisement():
         db.session.commit()
 
         flash("Advertisement entry added successfully!", 'success')
+        return redirect(url_for('auth.dashboard'))
     
     ads = MonitoredAd.query.order_by(MonitoredAd.created_at)
 

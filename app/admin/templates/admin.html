@@ -5,6 +5,8 @@
 
 {% block content %}
 
+    {% include 'flash_msgs.html' %}
+
     <h1 class="heading">Welcome admin!</h1>
 
     <h2>All Users</h2>
@@ -17,6 +19,7 @@
                 <th scope="col">Whatsapp</th>
                 <th scope="col">Joined</th>
                 <th scope="col">Admin</th>
+                <th scope="col">Action</th>
             </tr>
         </thead>
         <tbody>
@@ -28,6 +31,7 @@
                     <td>{{ user.whatsapp }}</td>
                     <td>{{ convert_utc_to_ist(user.created_at.strftime("%Y-%m-%d %H:%M:%S")) }}</td>
                     <td>{{ user.is_admin }}</td>
+                    <td><a href="{{ url_for('admin.delete_user', id=user.id) }}" class="btn btn-danger btn-sm">Delete</a></td>
                 </tr>
             {% endfor %}
         </tbody>
