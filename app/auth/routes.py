@@ -61,33 +61,46 @@ def signup():
     form = UserSignupForm()
 
     if form.validate_on_submit():
+        # Check for a user with the given email id in the db
         user = User.query.filter_by(email=form.email.data).first()
-        if user is None:
-            print(f"Here is whatsapp: {form.whatsapp.data}")
-            user = User(
-                fullname=form.fullname.data,
-                email = form.email.data,
-                whatsapp = form.whatsapp.data
-            )
 
-            # Set password for the user using the set_hashed_password method
-            user.set_hashed_password(form.passwd.data)
-
-            # Add the user to the database
-            db.session.add(user)
-            db.session.commit()
+        if form.whatsapp.data:
+            # Check whether there is any user with the same whatsapp number!
+            whatsapp_user = User.query.filter_by(whatsapp=form.whatsapp.data).first()
         
-        form = UserSignupForm(formdata=None)
+        if user is None:
+            if whatsapp_user is None:
+                user = User(
+                    fullname=form.fullname.data,
+                    email = form.email.data,
+                    whatsapp = form.whatsapp.data
+                )
 
-        flash("Congratulations! Your account has been successfully created. You can now log in using the provided credentials.", 'success')
-        return redirect(url_for('auth.login'))
-    
-    our_users = User.query.order_by(User.created_at)
+                # Set password for the user using the set_hashed_password method
+                user.set_hashed_password(form.passwd.data)
+
+                # Add the user to the database
+                db.session.add(user)
+                db.session.commit()
+
+                flash("Congratulations! Your account has been successfully created. You can now log in using the provided credentials.", 'success')
+                form = UserSignupForm(formdata=None)
+
+                return redirect(url_for('auth.login'))
+            
+            else:
+                # Whatsapp number taken
+                flash("Whatsapp number is taken. Try different one!")
+                return redirect(url_for('auth.signup'))
+
+        else:
+            # User exists with the same email
+            flash("Email id taken. Try different one!")
+            return redirect(url_for('auth.signup'))
 
     return render_template(
         'signup.html',
-        form=form,
-        our_users=our_users
+        form=form
     )
 
 
