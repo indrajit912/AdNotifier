@@ -29,21 +29,21 @@
           </li>
           {% if current_user.is_authenticated %}
             <li class="nav-item">
-              <a class="nav-link" href="{{ url_for('auth.dashboard') }}">Dashboard</a>
+              <a class="nav-link active" href="{{ url_for('auth.dashboard') }}">Dashboard</a>
             </li>
             <!-- TODO: Add logic to check whether user is admin to show Admin page! -->
             <li class="nav-item">
-              <a class="nav-link" href="{{ url_for('admin.home') }}">Admin</a>
+              <a class="nav-link active" href="{{ url_for('admin.home') }}">Admin</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{{ url_for('auth.logout') }}">Logout</a>
+              <a class="nav-link active" href="{{ url_for('auth.logout') }}">Logout</a>
             </li>
           {% else %}
             <li class="nav-item">
-              <a class="nav-link" href="{{ url_for('auth.signup') }}">Register</a>
+              <a class="nav-link active" href="{{ url_for('auth.signup') }}">Register</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('auth.login') }}">Login</a>
+                <a class="nav-link active" href="{{ url_for('auth.login') }}">Login</a>
             </li>
           {% endif %}
         </ul>
