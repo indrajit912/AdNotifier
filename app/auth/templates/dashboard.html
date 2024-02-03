@@ -95,16 +95,12 @@
                     <div class="modal-body">
                       <form>
                         <div class="mb-3">
-                          <label for="recipient-name" class="col-form-label"
-                            >Advertisement Number:</label
-                          >
-                          <input type="text" class="form-control" id="recipient-name" />
+                          <label for="adv-num-{{ ad.id }}" class="col-form-label">Advertisement Number:</label>
+                          <input type="text" class="form-control" id="adv-num-{{ ad.id }}" value="{{ ad.advertisement_number }}"/>
                         </div>
                         <div class="mb-3">
-                          <label for="message-text" class="col-form-label"
-                            >URL:</label
-                          >
-                          <textarea class="form-control" id="message-text"></textarea>
+                          <label for="adv-url-{{ ad.id }}" class="col-form-label">URL:</label>
+                          <textarea class="form-control" id="adv-url-{{ ad.id }}">{{ ad.website_url }}</textarea>
                         </div>
                       </form>
                     </div>
@@ -116,7 +112,9 @@
                       >
                         Close
                       </button>
-                      <button type="button" class="btn btn-warning">Update</button>
+                      <button type="button" class="btn btn-warning me-md-2" data-bs-toggle="modal" data-bs-target="#updateModal{{ ad.id }}" onclick="updateDashboardAdvertisement('{{ ad.id }}')">
+                        Update
+                    </button>
                     </div>
                   </div>
                 </div>
@@ -135,6 +133,16 @@
       </div>
       {% endfor %}
     </div>
+
+    
+    <!-- Script to make the `auth.update_advertisement` route global so that the js can access it -->
+    <script type="text/javascript">
+      window.updateAdvertisementUrl = "{{ url_for('auth.update_advertisement') }}";
+    </script>
+
+
+    <script src="{{ url_for('auth.static', filename='js/dashboardModalUpdate.js') }}"></script>
+  
     
     
 {% endblock %}

@@ -3,7 +3,7 @@
 # Created On: Feb 01, 2024
 #
 
-from flask import render_template, url_for, redirect, flash, session, request
+from flask import render_template, url_for, redirect, flash, session, request, jsonify
 from flask_login import login_required, login_user, logout_user, current_user
 from sqlalchemy import desc
 
@@ -235,4 +235,30 @@ def delete_ad(id):
     else:
         # No add found
         flash("No advertisement found!", 'warning')
+        return redirect(url_for('auth.dashboard'))
+
+
+@auth_bp.route('/update_advertisement', methods=['POST'])
+@login_required
+def update_advertisement():
+    ad_id = int(request.json['adId'])
+    adv_num = request.json['advNum']
+    adv_url = request.json['advUrl']
+
+    ad_to_update = MonitoredAd.query.get_or_404(ad_id)
+    if ad_to_update.user_id == current_user.id:
+        ad_to_update.advertisement_number = adv_num
+        ad_to_update.website_url = adv_url
+
+        try:
+            db.session.commit()
+            flash("The advertisement updated succesfully.", 'success')
+            # Return a JSON response indicating success
+            return jsonify({'message': 'Advertisement updated successfully!'})
+
+        except:
+            flash("Error. Looks like there was a problem to update the information into the database.", 'danger')
+            return redirect(url_for('auth.dashboard'))
+    else:
+        flash("You are not authorized to do that request.", 'warning')
         return redirect(url_for('auth.dashboard'))
