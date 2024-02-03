@@ -9,90 +9,98 @@
 
     <h1 class="heading">Welcome admin!</h1>
 
-    <h2>All Users</h2>
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col">ID</th>
-                <th scope="col">Fullname</th>
-                <th scope="col">Email</th>
-                <th scope="col">Whatsapp</th>
-                <th scope="col">Joined</th>
-                <th scope="col">Admin</th>
-                <th scope="col">Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for user in users %}
+    <!-- <h2>All Users</h2> -->
+    <div class="table-responsive">
+        <table class="table table-striped table-hover table-bordered caption-top">
+            <caption>List of Users</caption>
+            <thead>
                 <tr>
-                    <th scope="row">{{ user.id }}</td>
-                    <td>{{ user.fullname }}</td>
-                    <td>{{ user.email }}</td>
-                    <td>{{ user.whatsapp }}</td>
-                    <td>{{ convert_utc_to_ist(user.created_at.strftime("%Y-%m-%d %H:%M:%S")) }}</td>
-                    <td>{{ user.is_admin }}</td>
-                    <td>
-                        <a href="{{ url_for('admin.delete_user', id=user.id) }}" class="btn btn-danger btn-sm">Delete</a>
-                        {% if current_user.email == indrajit %}
-                            <form method="post" action="{{ url_for('admin.toggle_admin', user_id=user.id) }}" style="display: inline;">
-                                {% if user.is_admin %}
-                                    <button type="submit" class="btn btn-danger btn-sm">Disable Admin</button>
-                                {% else %}
-                                    <button type="submit" class="btn btn-primary btn-sm">Make Admin</button>
-                                {% endif %}
-                            </form>
-                        {% endif %}
-                    </td>
+                    <th scope="col">ID</th>
+                    <th scope="col">Fullname</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Whatsapp</th>
+                    <th scope="col">Joined</th>
+                    <th scope="col">Admin</th>
+                    <th scope="col">Actions</th>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                    <tr>
+                        <th scope="row">{{ user.id }}</td>
+                        <td>{{ user.fullname }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>{{ user.whatsapp }}</td>
+                        <td>{{ convert_utc_to_ist(user.created_at.strftime("%Y-%m-%d %H:%M:%S")) }}</td>
+                        <td>{{ user.is_admin }}</td>
+                        <td>
+                            <a href="{{ url_for('admin.delete_user', id=user.id) }}" class="btn btn-danger btn-sm">Delete</a>
+                            {% if current_user.email == indrajit %}
+                                <form method="post" action="{{ url_for('admin.toggle_admin', user_id=user.id) }}" style="display: inline;">
+                                    {% if user.is_admin %}
+                                        <button type="submit" class="btn btn-danger btn-sm">Disable Admin</button>
+                                    {% else %}
+                                        <button type="submit" class="btn btn-primary btn-sm">Make Admin</button>
+                                    {% endif %}
+                                </form>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 
-    <h2>All Monitored Ads</h2>
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col">ID</th>
-                <th scope="col">Advertisement Number</th>
-                <th scope="col">Website URL</th>
-                <th scope="col">Count</th>
-                <th scope="col">User (ID)</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for ad in monitored_ads %}
+    <br><br>
+
+    <!-- <h2>All Monitored Ads</h2> -->
+    <div class="table-responsive">
+        <table class="table table-striped table-hover table-bordered caption-top">
+            <caption>List of MonitoredAds</caption>
+            <thead>
                 <tr>
-                    <th scope="row">{{ ad.id }}</td>
-                    <td>{{ ad.advertisement_number }}</td>
-                    <td>
-                        <!-- Button trigger modal -->
-                        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#showURL{{ ad.id }}">
-                          View URL
-                        </button>
+                    <th scope="col">ID</th>
+                    <th scope="col">Advertisement Number</th>
+                    <th scope="col">Website URL</th>
+                    <th scope="col">Count</th>
+                    <th scope="col">User (ID)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ad in monitored_ads %}
+                    <tr>
+                        <th scope="row">{{ ad.id }}</td>
+                        <td>{{ ad.advertisement_number }}</td>
+                        <td>
+                            <!-- Button trigger modal -->
+                            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#showURL{{ ad.id }}">
+                              View URL
+                            </button>
 
-                        <!-- Modal -->
-                        <div class="modal fade" id="showURL{{ ad.id }}" tabindex="-1" aria-labelledby="showUrlModalLabel{{ ad.id }}" aria-hidden="true">
-                          <div class="modal-dialog modal-dialog-scrollable">
-                            <div class="modal-content">
-                              <div class="modal-header">
-                                <h1 class="modal-title fs-5" id="showUrlModalLabel{{ ad.id }}">{{ ad.advertisement_number }}</h1>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                              </div>
-                              <div class="modal-body">{{ ad.website_url }}</div>
-                              <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <a href="{{ ad.website_url }}" target="_blank" class="btn btn-primary">Goto</a>
+                            <!-- Modal -->
+                            <div class="modal fade" id="showURL{{ ad.id }}" tabindex="-1" aria-labelledby="showUrlModalLabel{{ ad.id }}" aria-hidden="true">
+                              <div class="modal-dialog modal-dialog-scrollable">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="showUrlModalLabel{{ ad.id }}">{{ ad.advertisement_number }}</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                  </div>
+                                  <div class="modal-body">{{ ad.website_url }}</div>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <a href="{{ ad.website_url }}" target="_blank" class="btn btn-primary">Goto</a>
+                                  </div>
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        </div>
 
-                    </td>
-                    <td>{{ ad.occurrence_count }}</td>
-                    <td>{{ ad.user.fullname }} ({{ ad.user_id }})</td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+                        </td>
+                        <td>{{ ad.occurrence_count }}</td>
+                        <td>{{ ad.user.fullname }} ({{ ad.user_id }})</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 
 {% endblock %}
