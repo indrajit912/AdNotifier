@@ -44,6 +44,10 @@ def login():
 
     return render_template('login.html', form=form)
 
+@auth_bp.route('/forgot_password', methods=['GET', 'POST'])
+def forgot_password():
+    return "<h1>Will be updated soon!</h1>"
+
 @auth_bp.route('/dashboard', methods=['GET', 'POST'])
 @login_required
 def dashboard():
