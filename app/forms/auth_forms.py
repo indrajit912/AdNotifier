@@ -37,9 +37,3 @@ class UserSignupFormNext(FlaskForm):
 
     submit = SubmitField("Register")
 
-
-class AdvertisementForm(FlaskForm):
-    advertisement_number = StringField("Advertisement Number", validators=[DataRequired()])
-    website_url = StringField("Website URL", validators=[DataRequired()])
-
-    submit = SubmitField("Submit")

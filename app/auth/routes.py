@@ -8,7 +8,7 @@ from flask_login import login_required, login_user, logout_user, current_user
 from sqlalchemy import desc
 from datetime import datetime
 
-from app.forms.auth_forms import UserSignupForm, UserSignupFormNext, AdvertisementForm, UserLoginForm
+from app.forms.auth_forms import UserSignupForm, UserSignupFormNext, UserLoginForm
 from app.models.user import User, MonitoredAd
 from app.extensions import db
 from scripts.utils import convert_utc_to_ist, generate_otp
@@ -209,35 +209,6 @@ def add_advertisement():
         # Handle any errors that may occur during the process
         flash("Error. Looks like there was a problem to update the information into the database.", 'danger')
         return jsonify({'error': str(e)}), 500
-
-
-# @auth_bp.route('/add_advertisement', methods=['GET', 'POST'])
-# @login_required
-# def add_advertisement():
-#     form = AdvertisementForm()
-
-#     if form.validate_on_submit():
-#         ad_user_id = current_user.id
-
-#         monitored_ad = MonitoredAd(
-#             advertisement_number = form.advertisement_number.data,
-#             website_url = form.website_url.data,
-#             user_id = ad_user_id
-#         )
-
-#         # Clear the form
-#         form = AdvertisementForm(formdata=None)
-
-#         # Add the advertisement to the database
-#         db.session.add(monitored_ad)
-#         db.session.commit()
-
-#         flash("Advertisement entry added successfully!", 'success')
-#         return redirect(url_for('auth.dashboard'))
-    
-#     ads = MonitoredAd.query.order_by(MonitoredAd.created_at)
-
-#     return render_template('add_advertisement.html', form=form, ads=ads)
 
 
 @auth_bp.route('/delete_ad/<int:id>')
