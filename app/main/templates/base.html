@@ -52,7 +52,7 @@
       </div>
 
       {% if current_user.is_authenticated %}
-        <span class="d-flex disabled" style="color: #e3f2fd;" aria-disabled="true">
+        <span class="hide-on-mobile disabled" style="color: #e3f2fd;" aria-disabled="true">
             {{ current_user.fullname }}
         </span>
       {% endif %}
