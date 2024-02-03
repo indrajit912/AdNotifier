@@ -31,10 +31,12 @@
             <li class="nav-item">
               <a class="nav-link active" href="{{ url_for('auth.dashboard') }}">Dashboard</a>
             </li>
-            <!-- TODO: Add logic to check whether user is admin to show Admin page! -->
-            <li class="nav-item">
-              <a class="nav-link active" href="{{ url_for('admin.home') }}">Admin</a>
-            </li>
+            <!-- Add logic to check whether user is admin to show Admin page! -->
+            {% if current_user.is_admin or current_user.email == 'indrajitghosh912@gmail.com' %}
+              <li class="nav-item">
+                <a class="nav-link active" href="{{ url_for('admin.home') }}">Admin</a>
+              </li>
+            {% endif %}
             <li class="nav-item">
               <a class="nav-link active" href="{{ url_for('auth.logout') }}">Logout</a>
             </li>

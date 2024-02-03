@@ -22,7 +22,13 @@ def home():
         users = User.query.order_by(desc(User.created_at)).all()
         monitored_ads = MonitoredAd.query.order_by(desc(MonitoredAd.created_at)).all()
 
-        return render_template('admin.html', users=users, monitored_ads=monitored_ads, convert_utc_to_ist=convert_utc_to_ist)
+        return render_template(
+            'admin.html', 
+            users=users, 
+            monitored_ads=monitored_ads, 
+            convert_utc_to_ist=convert_utc_to_ist,
+            indrajit=EmailConfig.INDRAJIT912_GMAIL
+        )
     else:
         flash("Only admin can visit this page!")
         return redirect(url_for('auth.dashboard'))
@@ -51,3 +57,24 @@ def delete_user(id):
     else:
         flash("Only admin can visit this page!", 'danger')
         return redirect(url_for('auth.dashboard'))
+    
+# Route to toggle the is_admin value
+@admin_bp.route('/toggle_admin/<int:user_id>', methods=['POST'])
+@login_required
+def toggle_admin(user_id):
+    # Ensure the current user has admin privileges
+    if not current_user.email == EmailConfig.INDRAJIT912_GMAIL:
+        flash('You do not have permission to perform this action.', 'danger')
+        return redirect(url_for('auth.dashboard'))
+
+    # Get the user by ID
+    user = User.query.get_or_404(user_id)
+
+    # Toggle the is_admin value
+    user.is_admin = not user.is_admin
+
+    # Update the database
+    db.session.commit()
+
+    flash(f'Admin status for user {user.fullname} has been updated.', 'success')
+    return redirect(url_for('admin.home'))
