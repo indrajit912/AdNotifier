@@ -9,6 +9,7 @@ from sqlalchemy import desc
 from app.models.user import User, MonitoredAd
 from app.extensions import db
 from scripts.utils import convert_utc_to_ist
+from scripts.email_message import EmailMessage
 from config import EmailConfig
 
 from . import admin_bp
@@ -73,8 +74,45 @@ def toggle_admin(user_id):
     # Toggle the is_admin value
     user.is_admin = not user.is_admin
 
+    # Determine the current admin status
+    current_admin_status = "enabled" if user.is_admin else "disabled"
+
     # Update the database
     db.session.commit()
 
-    flash(f'Admin status for user {user.fullname} has been updated.', 'success')
-    return redirect(url_for('admin.home'))
+    # Send an email to that user
+    # Render the email template with the provided parameters
+    _email_html_text = render_template(
+        'admin_status.html',
+        username=user.fullname,
+        admin_status=current_admin_status
+    )
+
+    # Set subject based on admin_status
+    subject = f"AdNotifier: Your admin status {'Enabled' if user.is_admin else 'Disabled'}"
+
+    # Create the email message
+    msg = EmailMessage(
+        sender_email_id=EmailConfig.INDRAJITS_BOT_EMAIL_ID,
+        to=user.email,
+        subject=subject,
+        email_html_text=_email_html_text
+    )
+
+    try:
+        # Send the email to Indrajit
+        msg.send(
+            sender_email_password=EmailConfig.INDRAJITS_BOT_EMAIL_PASSWD, 
+            server_info=EmailConfig.GMAIL_SERVER,
+            print_success_status=False
+        )
+
+        flash(f'Admin status for user {user.fullname} has been updated.', 'success')
+        return redirect(url_for('admin.home'))
+
+    except:
+        # TODO: Handle email sending error better!
+        flash('An error occurred while attempting to send the email!', 'danger')
+        return redirect(url_for('admin.home'))
+
+    

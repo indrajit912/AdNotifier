@@ -1,0 +1,81 @@
+<!--
+    This template can be used to notify a user
+    when their admin status is changed.
+
+    Parameters:
+        `username`: the username of the recipient
+        `admin_status`: the updated admin status (e.g., "enabled" or "disabled")
+
+    Author: Indrajit Ghosh
+    Created On: Feb 3, 2024
+-->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Status Update</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #333;
+            text-align: left;
+        }
+
+        p {
+            margin-top: 10px;
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+
+        b {
+            font-weight: bold;
+        }
+
+        .status {
+            font-size: 18px;
+            color: #4285f4;
+        }
+
+        .contact-info {
+            margin-top: 20px;
+            font-size: 14px;
+        }
+
+        .owner {
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Hello {{ username }},</h1>
+        <div class="details">
+            <p>Your admin status for the webapp 'AdNotifier' has been <b>{{ admin_status }}</b>.</p>
+            <p>If you have any doubts or concerns, please contact the owner:</p>
+            <p class="contact-info">
+                <span class="owner">Indrajit Ghosh</span> (<a href="mailto:indrajitghosh912@gmail.com">indrajitghosh912@gmail.com</a>)
+            </p>
+        </div>
+    </div>
+</body>
+
+</html>

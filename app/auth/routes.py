@@ -110,7 +110,7 @@ def signup():
                     return redirect(url_for('auth.signup'))
 
                 except:
-                    # Handle email sending error
+                    # TODO: Handle email sending error better!
                     flash('An error occurred while attempting to send the OTP. Try again!', 'danger')
                     return redirect(url_for('auth.signup'))
 
