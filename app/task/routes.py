@@ -2,6 +2,7 @@ from . import task_bp
 from app.extensions import scheduler
 from app.tasks import check_adv_count
 
+
 @task_bp.route("/add")
 def add():
     """Add a task.

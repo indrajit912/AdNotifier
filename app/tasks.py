@@ -11,10 +11,10 @@ This scripts contains the tasks to be performed while the app is running!
 from .extensions import scheduler, db
 from app.models.user import MonitoredAd, User
 from scripts.utils import count_query_occurance
-from datetime import datetime
 from scripts.email_message import EmailMessage
 from config import EmailConfig
 from flask import render_template
+from apscheduler.triggers.cron import CronTrigger
 
 
 def send_email(dic:dict):
@@ -147,3 +147,6 @@ def check_adv_count():
 #     """
 #     print("running task 2!")  # noqa: T001
 
+# @scheduler.task(id="test", trigger=CronTrigger.from_crontab("12 15 * * *"))
+# def test():
+#     print("job 1")
