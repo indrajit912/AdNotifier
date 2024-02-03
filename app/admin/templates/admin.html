@@ -66,21 +66,19 @@
                     <td>{{ ad.advertisement_number }}</td>
                     <td>
                         <!-- Button trigger modal -->
-                        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#showUrlModal">
+                        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#showURL{{ ad.id }}">
                           View URL
                         </button>
 
                         <!-- Modal -->
-                        <div class="modal fade" id="showUrlModal" tabindex="-1" aria-labelledby="showUrlModalLabel" aria-hidden="true">
-                          <div class="modal-dialog">
+                        <div class="modal fade" id="showURL{{ ad.id }}" tabindex="-1" aria-labelledby="showUrlModalLabel{{ ad.id }}" aria-hidden="true">
+                          <div class="modal-dialog modal-dialog-scrollable">
                             <div class="modal-content">
                               <div class="modal-header">
-                                <h1 class="modal-title fs-5" id="showUrlModalLabel">{{ ad.advertisement_number }}</h1>
+                                <h1 class="modal-title fs-5" id="showUrlModalLabel{{ ad.id }}">{{ ad.advertisement_number }}</h1>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                               </div>
-                              <div class="modal-body">
-                                {{ ad.website_url }}
-                              </div>
+                              <div class="modal-body">{{ ad.website_url }}</div>
                               <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                 <a href="{{ ad.website_url }}" target="_blank" class="btn btn-primary">Goto</a>

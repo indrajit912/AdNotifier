@@ -5,6 +5,7 @@
 
 from flask import render_template, url_for, redirect, flash, session, request
 from flask_login import login_required, login_user, logout_user, current_user
+from sqlalchemy import desc
 
 from app.forms.auth_forms import UserSignupForm, UserSignupFormNext, AdvertisementForm, UserLoginForm
 from app.models.user import User, MonitoredAd
@@ -46,7 +47,7 @@ def login():
 @login_required
 def dashboard():
     user = current_user
-    user_ads = MonitoredAd.query.filter_by(user_id=current_user.id).order_by(MonitoredAd.last_updated).all()
+    user_ads = MonitoredAd.query.filter_by(user_id=current_user.id).order_by(desc(MonitoredAd.last_updated)).all()
     return render_template('dashboard.html', user=user, user_ads=user_ads, convert_utc_to_ist=convert_utc_to_ist)
 
 @auth_bp.route('/logout', methods=['GET', 'POST'])

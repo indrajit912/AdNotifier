@@ -37,16 +37,16 @@
             <div class="d-grid gap-2 d-flex">
 
                 <!-- View URL Modal -->
-                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#viewurlModal">
+                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#viewurlModal{{ ad.id }}">
                   View URL
                 </button>
 
                 <!-- Modal -->
-                <div class="modal fade" id="viewurlModal" tabindex="-1" aria-labelledby="viewurlModalLabel" aria-hidden="true">
-                  <div class="modal-dialog">
+                <div class="modal fade" id="viewurlModal{{ ad.id }}" tabindex="-1" aria-labelledby="viewurlModalLabel{{ ad.id }}" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-scrollable">
                     <div class="modal-content">
                       <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="viewurlModalLabel">{{ ad.advertisement_number }}</h1>
+                        <h1 class="modal-title fs-5" id="viewurlModalLabel{{ ad.id }}">{{ ad.advertisement_number }}</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                       </div>
                       <div class="modal-body">
@@ -66,23 +66,23 @@
                 type="button"
                 class="btn btn-warning me-md-2 btn-sm"
                 data-bs-toggle="modal"
-                data-bs-target="#updateModal"
+                data-bs-target="#updateModal{{ ad.id }}"
               >
                 Update
               </button>
             
               <div
                 class="modal fade"
-                id="updateModal"
+                id="updateModal{{ ad.id }}"
                 tabindex="-1"
-                aria-labelledby="updateModalLabel"
+                aria-labelledby="updateModalLabel{{ ad.id }}"
                 aria-hidden="true"
                 style="display: none"
               >
-                <div class="modal-dialog">
+                <div class="modal-dialog modal-dialog-centered">
                   <div class="modal-content">
                     <div class="modal-header">
-                      <h1 class="modal-title fs-5" id="updateModalLabel">
+                      <h1 class="modal-title fs-5" id="updateModalLabel{{ ad.id }}">
                         This will be updated soon!
                       </h1>
                       <button
