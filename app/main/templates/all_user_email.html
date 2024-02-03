@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Message Has Arrived</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            margin-top: 30px;
+        }
+        h1 {
+            color: #333;
+            text-align: left;
+            border-bottom: 2px solid #333;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        p {
+            margin-top: 10px;
+            margin-bottom: 10px;
+            line-height: 1.5;
+            color: #555;
+        }
+        b {
+            font-weight: bold;
+            color: #333;
+        }
+        i {
+            font-style: italic;
+            color: #777;
+        }
+        .details {
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Hello {{ name }},</h1>
+        <div class="details">
+            <p>We have monitored the advertisement numbers associated with your account in our database. The following advertisements have been identified with new updates on their respective websites. Please review the corresponding websites for more information.</p>
+            <p>
+                Best regards,<br>
+                <b>Indrajit</b>
+            </p>
+            <br>
+            <strong>Advertisement Details</strong>
+            <ul>
+                <!-- Loop through each ad and display details -->
+                {% for ad in ads %}
+                    <li><b>Advertisement Number</b>: {{ ad['adv_num'] }}</li>
+                    <li><b>Advertisement Website URL</b>: <a href="{{ ad['adv_url'] }}">Click here</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

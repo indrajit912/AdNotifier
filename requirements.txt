@@ -5,6 +5,7 @@ Flask-SQLAlchemy
 Flask-Migrate
 Flask-Login
 Flask-WTF
+Flask-APScheduler
 mysql-connector-python
 gunicorn
 python-dotenv

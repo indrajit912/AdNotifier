@@ -69,24 +69,24 @@ def convert_utc_to_ist(utc_datetime_str):
 
     return formatted_datetime
 
-def count_advertisement_numbers(url:str, advertisement_number:str):
+def count_query_occurance(url:str, query_str:str):
     """
-    Count the number of occurrences of a given advertisement number on a web page.
+    Count the number of occurrences of a given query_str on a web page.
 
     Parameters:
     - url (str): The URL of the web page to analyze.
-    - advertisement_number (str): The advertisement number to search for.
+    - query_str (str): The query to search for.
 
     Returns:
-    - int: The number of occurrences of the advertisement number on the page.
+    - int: The number of occurrences of the query_str on the page.
            Returns -1 if there is an error fetching the website content.
 
     Example:
     ```python
     url = "https://example.com"
-    advertisement_number = "ABC123"
-    occurrences = count_advertisement_numbers(url, advertisement_number)
-    print(f"The advertisement number '{advertisement_number}' appears {occurrences} times on the page.")
+    query_str = "ABC123"
+    occurrences = count_advertisement_numbers(url, query_str)
+    print(f"The advertisement number '{query_str}' appears {query_str} times on the page.")
     ```
     """
     try:
@@ -98,7 +98,7 @@ def count_advertisement_numbers(url:str, advertisement_number:str):
         soup = BeautifulSoup(response.text, 'html.parser')
 
         # Find all occurrences of the advertisement number on the page
-        occurrences = soup.body.text.count(advertisement_number)
+        occurrences = soup.body.text.count(query_str)
 
         return occurrences
 
