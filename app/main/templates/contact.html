@@ -1,0 +1,48 @@
+<!-- app/main/contact.html -->
+{% extends 'base.html' %}
+
+{% block title %}Contact Indrajit{% endblock %}
+
+{% block styles %}
+    {{ super() }}
+{% endblock %}
+
+{% block content %}
+    {% include 'flash_msgs.html' %}
+
+    <h1 class="heading">Contact Indrajit!</h1>
+
+    <form method="POST" class="form-container">
+        {{ form.hidden_tag() }}
+
+        <div class="mb-3">
+            {{ form.name.label(class="form-label") }}
+            {{ form.name(class="form-control", placeholder="Write your name here...") }}
+        </div>
+
+        <div class="mb-3">
+            {{ form.email.label(class="form-label") }}
+            {{ form.email(class="form-control", placeholder="Enter your email address...") }}
+            <div class="form-text">
+                We'll never share your email with anyone else.
+            </div>
+        </div>
+
+        
+
+        <div class="mb-3">
+            {{ form.subject.label(class="form-label") }}
+            {{ form.subject(class="form-control", placeholder="Subject here...") }}
+        </div>
+
+        <div class="mb-3">
+            {{ form.message.label(class="form-label") }}
+            <!-- TODO: Add rich text editor -->
+            {{ form.message(class="form-control", rows="6", placeholder="Write something here. For example, 'Hey Indrajit I found a bug!' etc etc.") }}
+        </div>
+
+        {{ form.send(class="btn btn-primary") }}
+    </form>
+
+
+{% endblock %}
