@@ -181,34 +181,63 @@ def signup():
 
     return render_template('signup.html', form=form)
 
-
-@auth_bp.route('/add_advertisement', methods=['GET', 'POST'])
+@auth_bp.route('/add_advertisement', methods=['POST'])
 @login_required
 def add_advertisement():
-    form = AdvertisementForm()
+    try:
+        # Get the data from the POST request
+        advertisement_number = request.form.get('advertisement_number')
+        website_url = request.form.get('website_url')
 
-    if form.validate_on_submit():
         ad_user_id = current_user.id
 
         monitored_ad = MonitoredAd(
-            advertisement_number = form.advertisement_number.data,
-            website_url = form.website_url.data,
+            advertisement_number = advertisement_number,
+            website_url = website_url,
             user_id = ad_user_id
         )
 
-        # Clear the form
-        form = AdvertisementForm(formdata=None)
-
-        # Add the advertisement to the database
+        # Add the new advertisement to the database
         db.session.add(monitored_ad)
         db.session.commit()
 
+        # Return a success response
         flash("Advertisement entry added successfully!", 'success')
-        return redirect(url_for('auth.dashboard'))
-    
-    ads = MonitoredAd.query.order_by(MonitoredAd.created_at)
+        return jsonify({'success': True}), 200
 
-    return render_template('add_advertisement.html', form=form, ads=ads)
+    except Exception as e:
+        # Handle any errors that may occur during the process
+        flash("Error. Looks like there was a problem to update the information into the database.", 'danger')
+        return jsonify({'error': str(e)}), 500
+
+
+# @auth_bp.route('/add_advertisement', methods=['GET', 'POST'])
+# @login_required
+# def add_advertisement():
+#     form = AdvertisementForm()
+
+#     if form.validate_on_submit():
+#         ad_user_id = current_user.id
+
+#         monitored_ad = MonitoredAd(
+#             advertisement_number = form.advertisement_number.data,
+#             website_url = form.website_url.data,
+#             user_id = ad_user_id
+#         )
+
+#         # Clear the form
+#         form = AdvertisementForm(formdata=None)
+
+#         # Add the advertisement to the database
+#         db.session.add(monitored_ad)
+#         db.session.commit()
+
+#         flash("Advertisement entry added successfully!", 'success')
+#         return redirect(url_for('auth.dashboard'))
+    
+#     ads = MonitoredAd.query.order_by(MonitoredAd.created_at)
+
+#     return render_template('add_advertisement.html', form=form, ads=ads)
 
 
 @auth_bp.route('/delete_ad/<int:id>')

@@ -23,9 +23,48 @@
                 <li><b>Admin</b>: {{ user.is_admin }}</li>
             </ul>
         </p>
-        <a href="{{ url_for('auth.logout') }}" class="btn btn-primary">Logout</a>
-        <!-- TODO: Use Modal to add advertisement -->
-        <a href="{{ url_for('auth.add_advertisement') }}" class="btn btn-primary">Add now</a>
+        
+
+        <!-- Button trigger addUserAdv modal -->
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUserAdvModal">
+          Add now
+        </button>
+
+        <!-- Modal -->
+        <div class="modal fade" id="addUserAdvModal" tabindex="-1" aria-labelledby="addUserAdvModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="addUserAdvModalLabel">Add your advertisement</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Calcel"></button>
+              </div>
+              <div class="modal-body">
+              
+                <!-- Add Advertisement form here -->
+                <form>
+                  <div class="mb-3">
+                    <label for="adv-number" class="col-form-label">Advertisement Number</label>
+                    <input type="text" class="form-control" id="adv-number" placeholder="e.g- 'ADVT. NO.1/2020'"/>
+                  </div>
+                  <div class="mb-3">
+                    <label for="adv-web-url" class="col-form-label">Website URL</label>
+                    <textarea class="form-control" id="adv-web-url" placeholder="e.g.- https://www.wbcsconline.in/"></textarea>
+                  </div>
+                </form>
+              
+              
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" id="addUserAdvertisementButton" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUserAdvModal" >Add it</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- End of Modal thing here -->
+
+        <a href="{{ url_for('auth.logout') }}" class="btn btn-warning">Logout</a>
+        
       </div>
     </div>
 
@@ -165,13 +204,20 @@
       </div>
       {% endfor %}
     </div>
-    
-    <!-- Script to make the `auth.update_advertisement` route global so that the js can access it -->
+
+    <!-- Include jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+    <!-- Script to make the `auth.update_advertisement` route global -->
     <script type="text/javascript">
       window.updateAdvertisementUrl = "{{ url_for('auth.update_advertisement') }}";
+      window.addAdvertisementUrl = "{{ url_for('auth.add_advertisement') }}";
+      window.dashboardUrl = "{{ url_for('auth.dashboard') }}";
     </script>
 
+    <!-- Include your custom scripts -->
     <script src="{{ url_for('auth.static', filename='js/dashboardModalUpdate.js') }}"></script>
-  
+    <script src="{{ url_for('auth.static', filename='js/add_advertisement.js') }}"></script>
+
     
 {% endblock %}
