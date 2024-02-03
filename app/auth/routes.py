@@ -6,6 +6,7 @@
 from flask import render_template, url_for, redirect, flash, session, request, jsonify
 from flask_login import login_required, login_user, logout_user, current_user
 from sqlalchemy import desc
+from datetime import datetime
 
 from app.forms.auth_forms import UserSignupForm, UserSignupFormNext, AdvertisementForm, UserLoginForm
 from app.models.user import User, MonitoredAd
@@ -249,6 +250,7 @@ def update_advertisement():
     if ad_to_update.user_id == current_user.id:
         ad_to_update.advertisement_number = adv_num
         ad_to_update.website_url = adv_url
+        ad_to_update.last_updated = datetime.utcnow()
 
         try:
             db.session.commit()
