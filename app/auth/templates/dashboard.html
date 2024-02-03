@@ -31,11 +31,36 @@
         <div class="card h-100">
           <div class="card-body">
             <h5 class="card-title">{{ ad.advertisement_number }}</h5>
-            <div><span class="fw-bold">URL</span>: <a href="{{ ad.website_url }}" target="_blank">{{ ad.website_url }}</a></div>
             <div><span class="fw-bold">Date added</span>: {{ convert_utc_to_ist(ad.created_at.strftime("%Y-%m-%d %H:%M:%S")) }}</div> 
             <br>
-            <!-- TODO: Add logic to these buttons -->
+            
             <div class="d-grid gap-2 d-md-flex">
+              <div>
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                  View URL
+                </button>
+
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">{{ ad.advertisement_number }}</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                        {{ ad.website_url }}
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <a href="{{ ad.website_url }}" target="_blank" class="btn btn-primary">Goto</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+              <!-- TODO: Add logic to update button -->
               <a href="#" class="btn btn-warning me-md-2 btn-sm">Update</a>
             <a href="{{ url_for('auth.delete_ad', id=ad.id) }}" class="btn btn-danger btn-sm">Delete</a> 
             </div>

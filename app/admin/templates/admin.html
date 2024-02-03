@@ -64,7 +64,32 @@
                 <tr>
                     <th scope="row">{{ ad.id }}</td>
                     <td>{{ ad.advertisement_number }}</td>
-                    <td><a href="{{ ad.website_url }}" target="_blank">{{ ad.website_url }}</a></td>
+                    <td>
+                        <!-- Button trigger modal -->
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                          View URL
+                        </button>
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                          <div class="modal-dialog">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="exampleModalLabel">{{ ad.advertisement_number }}</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                              </div>
+                              <div class="modal-body">
+                                {{ ad.website_url }}
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <a href="{{ ad.website_url }}" target="_blank" class="btn btn-primary">Goto</a>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                    </td>
                     <td>{{ ad.occurrence_count }}</td>
                     <td>{{ ad.user.fullname }} ({{ ad.user_id }})</td>
                 </tr>
