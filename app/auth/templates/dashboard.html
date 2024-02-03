@@ -37,7 +37,7 @@
             <!-- TODO: Add logic to these buttons -->
             <div class="d-grid gap-2 d-md-flex">
               <a href="#" class="btn btn-warning me-md-2 btn-sm">Update</a>
-            <a href="#" class="btn btn-danger btn-sm">Delete</a> 
+            <a href="{{ url_for('auth.delete_ad', id=ad.id) }}" class="btn btn-danger btn-sm">Delete</a> 
             </div>
              
           </div>

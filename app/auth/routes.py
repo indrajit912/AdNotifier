@@ -210,15 +210,28 @@ def add_advertisement():
 
 
 @auth_bp.route('/delete_ad/<int:id>')
+@login_required
 def delete_ad(id):
     ad_to_delete = MonitoredAd.query.get_or_404(id)
+    
+    if ad_to_delete is not None:
+        # proceed
+        if ad_to_delete.user_id == current_user.id:
+            # Delete the ad
+            try:
+                db.session.delete(ad_to_delete)
+                db.session.commit()
 
-    try:
-        db.session.delete(ad_to_delete)
-        db.session.commit()
-
-        flash("Advertisement deleted successfully!", 'success')
-        return redirect(url_for('auth.add_advertisement'))
-    except:
-        flash("Opps! There was a problem deleting user. Try again.", 'danger')
-        return redirect(url_for('main.index'))
+                flash("Advertisement deleted successfully!", 'success')
+                return redirect(url_for('auth.dashboard'))
+            
+            except:
+                flash("Opps! There was a problem deleting user. Try again.", 'danger')
+                return redirect(url_for('auth.dashboard'))
+        else:
+            flash("You don't have the permission to access this page!", 'info')
+            return redirect(url_for('auth.dashboard'))
+    else:
+        # No add found
+        flash("No advertisement found!", 'warning')
+        return redirect(url_for('auth.dashboard'))
