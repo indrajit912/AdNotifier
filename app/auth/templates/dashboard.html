@@ -34,19 +34,19 @@
             <div><span class="fw-bold">Date added</span>: {{ convert_utc_to_ist(ad.created_at.strftime("%Y-%m-%d %H:%M:%S")) }}</div> 
             <br>
             
-            <div class="d-grid gap-2 d-md-flex">
-              <div>
-                <!-- Button trigger modal -->
-                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            <div class="d-grid gap-2 d-flex">
+
+                <!-- View URL Modal -->
+                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#viewurlModal">
                   View URL
                 </button>
 
                 <!-- Modal -->
-                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal fade" id="viewurlModal" tabindex="-1" aria-labelledby="viewurlModalLabel" aria-hidden="true">
                   <div class="modal-dialog">
                     <div class="modal-content">
                       <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">{{ ad.advertisement_number }}</h1>
+                        <h1 class="modal-title fs-5" id="viewurlModalLabel">{{ ad.advertisement_number }}</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                       </div>
                       <div class="modal-body">
@@ -59,9 +59,70 @@
                     </div>
                   </div>
                 </div>
-            </div>
+
               <!-- TODO: Add logic to update button -->
-              <a href="#" class="btn btn-warning me-md-2 btn-sm">Update</a>
+
+              <button
+                type="button"
+                class="btn btn-warning me-md-2 btn-sm"
+                data-bs-toggle="modal"
+                data-bs-target="#updateModal"
+              >
+                Update
+              </button>
+            
+              <div
+                class="modal fade"
+                id="updateModal"
+                tabindex="-1"
+                aria-labelledby="updateModalLabel"
+                aria-hidden="true"
+                style="display: none"
+              >
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h1 class="modal-title fs-5" id="updateModalLabel">
+                        This will be updated soon!
+                      </h1>
+                      <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"
+                      ></button>
+                    </div>
+                    <div class="modal-body">
+                      <form>
+                        <div class="mb-3">
+                          <label for="recipient-name" class="col-form-label"
+                            >Advertisement Number:</label
+                          >
+                          <input type="text" class="form-control" id="recipient-name" />
+                        </div>
+                        <div class="mb-3">
+                          <label for="message-text" class="col-form-label"
+                            >URL:</label
+                          >
+                          <textarea class="form-control" id="message-text"></textarea>
+                        </div>
+                      </form>
+                    </div>
+                    <div class="modal-footer">
+                      <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal"
+                      >
+                        Close
+                      </button>
+                      <button type="button" class="btn btn-warning">Update</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
             <a href="{{ url_for('auth.delete_ad', id=ad.id) }}" class="btn btn-danger btn-sm">Delete</a> 
             </div>
              
