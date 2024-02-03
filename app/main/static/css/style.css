@@ -191,3 +191,9 @@ footer {
     font-size: 1.2rem;
     margin-bottom: 20px;
 }
+
+/* Style for bootstrap icon */
+.bi {
+    width: 1.5em;
+    height: 1.5em;
+}
