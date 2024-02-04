@@ -8,7 +8,7 @@ from flask_login import login_required, login_user, logout_user, current_user
 from sqlalchemy import desc
 from datetime import datetime
 
-from app.forms.auth_forms import UserSignupForm, UserSignupFormNext, UserLoginForm
+from app.forms.auth_forms import UserSignupForm, UserSignupFormNext, UserLoginForm, ResetPasswordForm, ForgotPasswordForm
 from app.models.user import User, MonitoredAd
 from app.extensions import db
 from scripts.utils import convert_utc_to_ist, generate_otp
@@ -35,9 +35,9 @@ def login():
 
                 return redirect(url_for('auth.dashboard'))
             else:
-                flash("Wrong passsword. Try again!")
+                flash("Wrong passsword. Try again!", 'error')
         else:
-            flash("That user doesn't exist! Try again...")
+            flash("That user doesn't exist! Try again...", 'error')
         
         form = UserLoginForm(formdata=None)
 
@@ -46,7 +46,82 @@ def login():
 
 @auth_bp.route('/forgot_password', methods=['GET', 'POST'])
 def forgot_password():
-    return "<h1>Will be updated soon!</h1>"
+    form = ForgotPasswordForm()
+
+    if form.validate_on_submit():
+        # Check if the email exists in the database
+        user = User.query.filter_by(email=form.email.data).first()
+        
+        if user:
+
+            # Generate a password reset token and send it via email
+            reset_token = user.get_reset_password_token()
+            reset_url = url_for('auth.reset_password', token=reset_token, _external=True)
+
+            # Email reset URL to the user
+            _email_html_text = render_template(
+                'emails/email_reset_password.html',
+                reset_url=reset_url,
+                username=user.fullname
+            )
+
+            msg = EmailMessage(
+                sender_email_id=EmailConfig.INDRAJITS_BOT_EMAIL_ID,
+                to=user.email,
+                subject="AdNotifier: Password Reset Request",
+                email_html_text=_email_html_text
+            )
+
+            try:
+                msg.send(
+                    sender_email_password=EmailConfig.INDRAJITS_BOT_EMAIL_PASSWD,
+                    server_info=EmailConfig.GMAIL_SERVER,
+                    print_success_status=False
+                )
+
+                flash('Password reset instructions sent to your email. Please check and follow the link.', 'info')
+                return redirect(url_for('auth.login'))
+
+            except Exception as e:
+                # TODO: Handle email sending error better
+                flash('An error occurred while attempting to send the password reset instructions. Try again!', 'danger')
+                return redirect(url_for('auth.forgot_password'))
+
+        else:
+            flash("That email doesn't exist! Try again...", 'warning')
+
+    return render_template('forgot_password.html', form=form)
+
+
+@auth_bp.route('/reset_password/<token>', methods=['GET', 'POST'])
+def reset_password(token):
+    user = User.verify_reset_password_token(token)
+
+    if not user:
+        flash('Invalid or expired reset token. Please try again.', 'danger')
+        return redirect(url_for('auth.forgot_password'))
+    
+    form = ResetPasswordForm()
+
+    if form.validate_on_submit():
+        # Set the password for the user
+        user.set_hashed_password(form.new_password.data)
+
+        # Commit the changes
+        db.session.commit()
+
+        # TODO: delete these if Signup route is rewritten! Clear the session data
+        session.pop('fullname', None)
+        session.pop('email', None)
+        session.pop('step', None)
+        session.pop('otp', None)
+
+
+        flash('Password reset successfully! You can now log in with your new password.', 'success')
+        return redirect(url_for('auth.login'))
+    
+    return render_template('reset_password.html', form=form)
+
 
 @auth_bp.route('/dashboard', methods=['GET', 'POST'])
 @login_required
@@ -84,7 +159,7 @@ def signup():
                 # Email otp
                 # Render the email template with the provided parameters
                 _email_html_text = render_template(
-                    'email_otp.html',
+                    'emails/email_otp.html',
                     username=form.fullname.data,
                     otp=otp
                 )

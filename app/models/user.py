@@ -5,6 +5,8 @@
 
 from datetime import datetime
 import secrets
+from itsdangerous import URLSafeTimedSerializer
+from flask import current_app
 from flask_login import UserMixin
 
 from app.extensions import db
@@ -59,5 +61,32 @@ class User(db.Model, UserMixin):
         password_with_salt = password + self.password_salt
         hashed_password = sha256_hash(password_with_salt)
         return hashed_password == self.password_hash
+    
+
+    def get_reset_password_token(self):
+        auth_serializer = URLSafeTimedSerializer(
+            secret_key=current_app.config['SECRET_KEY'], salt="password reset"
+        )
+        token = auth_serializer.dumps({'id': self.id})
+        return token
+    
+    @staticmethod
+    def verify_reset_password_token(token):
+        auth_serializer = URLSafeTimedSerializer(
+            secret_key=current_app.config['SECRET_KEY'], salt="password reset"
+        )
+
+        try:
+            data = auth_serializer.loads(token, max_age=3600)
+        except Exception as e:
+            return None  # Invalid token
+        
+        user_id = data.get('id')
+
+        if user_id is None:
+            return None  # Invalid token structure
+        
+        return User.query.get(user_id)
+
     
     
