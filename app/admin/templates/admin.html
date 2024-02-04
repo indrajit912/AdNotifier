@@ -21,16 +21,14 @@
                 </tr>
             </thead>
             <tbody>
-                {% for user in users %}
-                    <tr>
-                        <td>
-                            <a href="{{ url_for('task.schedule') }}" class="btn btn-primary btn-sm">Schedule</a>
-                            <a href="{{ url_for('task.stop') }}" class="btn btn-danger btn-sm">Stop</a>
-                        </td>
-                        <td>{{ adv_job.name }}</td>
-                        <td>{{ adv_job.trigger }}</td>
-                    </tr>
-                {% endfor %}
+                <tr>
+                    <td>
+                        <a href="{{ url_for('task.schedule') }}" class="btn btn-primary btn-sm">Schedule</a>
+                        <a href="{{ url_for('task.stop') }}" class="btn btn-danger btn-sm">Stop</a>
+                    </td>
+                    <td>{{ adv_job.name }}</td>
+                    <td>{{ adv_job.trigger }}</td>
+                </tr>
             </tbody>
         </table>
     </div>
@@ -62,7 +60,11 @@
                         <td>{{ convert_utc_to_ist(user.created_at.strftime("%Y-%m-%d %H:%M:%S")) }}</td>
                         <td>{{ user.is_admin }}</td>
                         <td>
-                            <a href="{{ url_for('admin.delete_user', id=user.id) }}" class="btn btn-danger btn-sm">Delete</a>
+                            {% if user.id == current_user.id or user.email == indrajit %}
+                                <button type="button" class="btn btn-danger btn-sm" disabled>Delete</button>
+                            {% else %}
+                                <a href="{{ url_for('admin.delete_user', id=user.id) }}" class="btn btn-danger btn-sm">Delete</a>
+                            {% endif %}
                             {% if current_user.email == indrajit %}
                                 <form method="post" action="{{ url_for('admin.toggle_admin', user_id=user.id) }}" style="display: inline;">
                                     {% if user.is_admin %}

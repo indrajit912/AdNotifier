@@ -44,6 +44,9 @@ def delete_user(id):
     # TODO: Change the following condition to `if current_user.is_admin`
     if current_user.is_admin or current_user.email == EmailConfig.INDRAJIT912_GMAIL:
         user_to_delete = User.query.get_or_404(id)
+        if user_to_delete.email == EmailConfig.INDRAJIT912_GMAIL:
+            flash("You don't have the right to do so!", 'warning')
+            return redirect(url_for('admin.home'))
         
         if current_user.id == user_to_delete.id:
             flash("You cannot delete yourself!", 'warning')
