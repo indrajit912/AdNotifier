@@ -6,13 +6,17 @@ $(document).ready(function () {
     // Add a click event listener to the button
     $('#addUserAdvertisementButton').on('click', function () {
       // Get the values from the form
+      var advTitle = $('#adv-title').val();
       var advNumber = $('#adv-number').val();
       var webUrl = $('#adv-web-url').val();
+      var advDesc = $('#adv-description').val();
   
       // Create an object with the form values
       var formData = {
+        title: advTitle,
         advertisement_number: advNumber,
-        website_url: webUrl
+        website_url: webUrl,
+        description: advDesc
       };
   
       // Send a POST request using jQuery

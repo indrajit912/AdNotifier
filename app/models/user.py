@@ -14,11 +14,13 @@ from scripts.utils import sha256_hash
 
 
 class MonitoredAd(db.Model):
-    # TODO: add attr `heading`, `description`
+    # TODO: add attr `title`, `description`
     id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(170), nullable=False)
     advertisement_number = db.Column(db.String(100), nullable=False)
     website_url = db.Column(db.String(255), nullable=False)
-    occurrence_count = db.Column(db.Integer, default=0)  # New field to store the count
+    description = db.Column(db.Text, nullable=True)
+    occurrence_count = db.Column(db.Integer, default=0)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     last_updated = db.Column(db.DateTime, default=datetime.utcnow)
     
@@ -35,10 +37,12 @@ class User(db.Model, UserMixin):
     # TODO: add attr `nickname`, `whatsapp_verified: bool`
     id = db.Column(db.Integer, primary_key=True)
     fullname = db.Column(db.String(100), nullable=False)
+    nickname = db.Column(db.String(100), nullable=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(128), nullable=False)
     password_salt = db.Column(db.String(32), nullable=False)
     whatsapp = db.Column(db.Integer, default=None)
+    whatsapp_verified = db.Column(db.Boolean, default=False)
     is_admin = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     last_updated = db.Column(db.DateTime, default=datetime.utcnow)
@@ -60,6 +64,11 @@ class User(db.Model, UserMixin):
         password_with_salt = password + salt
         hashed_password = sha256_hash(password_with_salt)
         self.password_hash = hashed_password
+
+    def set_nickname(self):
+        """Sets the nickname if not given"""
+        if self.nickname is None:
+            self.nickname = self.fullname
 
     def check_password(self, password):
         # Combine entered password and stored salt, then hash and compare with stored hash

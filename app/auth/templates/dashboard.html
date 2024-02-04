@@ -43,13 +43,25 @@
                 <!-- Add Advertisement form here -->
                 <form>
                   <div class="mb-3">
+                    <label for="adv-title" class="col-form-label">Enter a Title</label>
+                    <input type="text" class="form-control" id="adv-title" placeholder="e.g- IISER Pune 2024 Exam"/>
+                  </div>
+
+                  <div class="mb-3">
                     <label for="adv-number" class="col-form-label">Advertisement Number</label>
                     <input type="text" class="form-control" id="adv-number" placeholder="e.g- 'ADVT. NO.1/2020'"/>
                   </div>
+
                   <div class="mb-3">
-                    <label for="adv-web-url" class="col-form-label">Website URL</label>
-                    <textarea class="form-control" id="adv-web-url" placeholder="e.g.- https://www.wbcsconline.in/"></textarea>
+                    <label for="adv-web-url" class="col-form-label">Paste the Website URL</label>
+                    <textarea class="form-control" id="adv-web-url" placeholder="e.g.- https://www.iiserpune.ac.in/opportunities"></textarea>
                   </div>
+
+                  <div class="mb-3">
+                    <label for="adv-description" class="col-form-label">Description (optional)</label>
+                    <textarea class="form-control" id="adv-description" placeholder="e.g.- Level 10, Grade A post. The last date of application was Jul 04, 2023" rows="4"></textarea>
+                  </div>
+
                 </form>
               
               
@@ -75,13 +87,13 @@
       <div class="col">
         <div class="card h-100">
           <div class="card-body">
-            <h5 class="card-title">{{ ad.advertisement_number }}</h5>
+            <h5 class="card-title">{{ ad.title }}</h5>
             <div><span class="fw-bold">Date added</span>: {{ convert_utc_to_ist(ad.created_at.strftime("%Y-%m-%d %H:%M:%S")) }}</div> 
             <br>
             
             <!-- View URL Button to trigger modal -->
             <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#viewurlModal{{ ad.id }}">
-              View URL
+              View
             </button>
 
             <!-- Update button to trigger modal -->
@@ -100,20 +112,26 @@
             </button>
             
             
-            <!-- View URL Modal -->
+            <!-- View Modal -->
             <div class="modal fade" id="viewurlModal{{ ad.id }}" tabindex="-1" aria-labelledby="viewurlModalLabel{{ ad.id }}" aria-hidden="true">
-              <div class="modal-dialog modal-dialog-scrollable">
+              <div class="modal-dialog modal-dialog-scrollable modal-xl">
                 <div class="modal-content">
                   <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="viewurlModalLabel{{ ad.id }}">{{ ad.advertisement_number }}</h1>
+                    <h1 class="modal-title fs-5" id="viewurlModalLabel{{ ad.id }}">{{ ad.title }}</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
                   <div class="modal-body">
-                    {{ ad.website_url }}
+                    <b>Advertisement Number</b>:  {{ ad.advertisement_number }}
+                    <br><br>
+                    <b>Website</b>: <br> {{ ad.website_url }}
+                    {% if ad.description %}
+                        <br><br>
+                        <b>Description</b>: <br> {{ ad.description }}
+                    {% endif %}
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <a href="{{ ad.website_url }}" target="_blank" class="btn btn-primary">Goto</a>                    
+                    <a href="{{ ad.website_url }}" target="_blank" class="btn btn-primary">Goto website</a>                    
                   </div>
                 </div>
               </div>
@@ -145,12 +163,20 @@
                   <div class="modal-body">
                     <form>
                       <div class="mb-3">
-                        <label for="adv-num-{{ ad.id }}" class="col-form-label">Advertisement Number:</label>
-                        <input type="text" class="form-control" id="adv-num-{{ ad.id }}" value="{{ ad.advertisement_number }}"/>
+                        <label for="adv-titleUpdate-{{ ad.id }}" class="col-form-label">Advertisement Title:</label>
+                        <input type="text" class="form-control" id="adv-titleUpdate-{{ ad.id }}" value="{{ ad.title }}"/>
                       </div>
                       <div class="mb-3">
-                        <label for="adv-url-{{ ad.id }}" class="col-form-label">URL:</label>
-                        <textarea class="form-control" id="adv-url-{{ ad.id }}">{{ ad.website_url }}</textarea>
+                        <label for="adv-numUpdate-{{ ad.id }}" class="col-form-label">Paste Advertisement Number:</label>
+                        <input type="text" class="form-control" id="adv-numUpdate-{{ ad.id }}" value="{{ ad.advertisement_number }}"/>
+                      </div>
+                      <div class="mb-3">
+                        <label for="adv-urlUpdate-{{ ad.id }}" class="col-form-label">Paste URL below:</label>
+                        <textarea class="form-control" id="adv-urlUpdate-{{ ad.id }}">{{ ad.website_url }}</textarea>
+                      </div>
+                      <div class="mb-3">
+                        <label for="adv-descUpdate-{{ ad.id }}" class="col-form-label">Description (optional):</label>
+                        <textarea class="form-control" id="adv-descUpdate-{{ ad.id }}">{{ ad.description }}</textarea>
                       </div>
                     </form>
                   </div>

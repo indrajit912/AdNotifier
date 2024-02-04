@@ -42,6 +42,8 @@ def create_admin():
     # TODO: Add some password protection here!
     fullname = input("Enter fullname: ")
     email = input("Enter email address: ")
+    nickname = input("Enter a nickname (optional): ")
+    whatsapp = input("Enter your whatsapp number (optional): ")
     password = getpass.getpass("Enter password: ")
     confirm_password = getpass.getpass("Enter password again: ")
     if password != confirm_password:
@@ -50,7 +52,9 @@ def create_admin():
         try:
             user = User(
                 fullname=fullname,
+                nickname=nickname,
                 email=email,
+                whatsapp=whatsapp,
                 is_admin=True
             )
             user.set_hashed_password(password)

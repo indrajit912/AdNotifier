@@ -232,14 +232,18 @@ def logout():
 def add_advertisement():
     try:
         # Get the data from the POST request
+        title = request.form.get('title')
         advertisement_number = request.form.get('advertisement_number')
         website_url = request.form.get('website_url')
+        description = request.form.get('description')
 
         ad_user_id = current_user.id
 
         monitored_ad = MonitoredAd(
+            title=title,
             advertisement_number = advertisement_number,
             website_url = website_url,
+            description=description,
             user_id = ad_user_id
         )
 
@@ -289,13 +293,17 @@ def delete_ad(id):
 @login_required
 def update_advertisement():
     ad_id = int(request.json['adId'])
+    ad_title = request.json['advTitle']
     adv_num = request.json['advNum']
     adv_url = request.json['advUrl']
+    adv_desc = request.json['advDesc']
 
     ad_to_update = MonitoredAd.query.get_or_404(ad_id)
     if ad_to_update.user_id == current_user.id:
+        ad_to_update.title = ad_title
         ad_to_update.advertisement_number = adv_num
         ad_to_update.website_url = adv_url
+        ad_to_update.description = adv_desc
         ad_to_update.last_updated = datetime.utcnow()
 
         try:

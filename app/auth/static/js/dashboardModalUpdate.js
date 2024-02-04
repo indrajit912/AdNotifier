@@ -12,8 +12,10 @@ function updateDashboardAdvertisement(adId) {
     var updateAdvertisementUrl = window.updateAdvertisementUrl;
 
     // Get the values entered by the user
-    var advNum = document.querySelector('#adv-num-' + adId).value;
-    var advUrl = document.querySelector('#adv-url-' + adId).value;
+    var advTitle = document.querySelector('#adv-titleUpdate-' + adId).value;
+    var advNum = document.querySelector('#adv-numUpdate-' + adId).value;
+    var advUrl = document.querySelector('#adv-urlUpdate-' + adId).value;
+    var advDesc = document.querySelector('#adv-descUpdate-' + adId).value;
 
     // Make a POST request to the server
     fetch(updateAdvertisementUrl, {
@@ -23,8 +25,10 @@ function updateDashboardAdvertisement(adId) {
         },
         body: JSON.stringify({
             adId: adId,
+            advTitle: advTitle,
             advNum: advNum,
             advUrl: advUrl,
+            advDesc: advDesc
         }),
     })
     .then(response => response.json())
