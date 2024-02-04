@@ -129,7 +129,7 @@ def check_adv_count():
             }
         }
 
-        # send_email(email_listing)      
+        # send_email(email_listing)   # TODO: Uncomment it!
 
 
 

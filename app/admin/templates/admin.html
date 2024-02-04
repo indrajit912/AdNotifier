@@ -9,6 +9,34 @@
 
     <h1 class="heading">Welcome admin!</h1>
 
+    <!-- <h2>Task</h2> -->
+    <div class="table-responsive">
+        <table class="table table-striped table-hover table-bordered caption-top">
+            <caption>Scheduled Task</caption>
+            <thead>
+                <tr>
+                    <th scope="col">Task Actions</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Trigger</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                    <tr>
+                        <td>
+                            <a href="{{ url_for('task.schedule') }}" class="btn btn-primary btn-sm">Schedule</a>
+                            <a href="{{ url_for('task.stop') }}" class="btn btn-danger btn-sm">Stop</a>
+                        </td>
+                        <td>{{ adv_job.name }}</td>
+                        <td>{{ adv_job.trigger }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <br><br>
+
     <!-- <h2>All Users</h2> -->
     <div class="table-responsive">
         <table class="table table-striped table-hover table-bordered caption-top">
@@ -27,7 +55,7 @@
             <tbody>
                 {% for user in users %}
                     <tr>
-                        <th scope="row">{{ user.id }}</td>
+                        <td scope="row">{{ user.id }}</td>
                         <td>{{ user.fullname }}</td>
                         <td>{{ user.email }}</td>
                         <td>{{ user.whatsapp }}</td>
@@ -69,7 +97,7 @@
             <tbody>
                 {% for ad in monitored_ads %}
                     <tr>
-                        <th scope="row">{{ ad.id }}</td>
+                        <td scope="row">{{ ad.id }}</td>
                         <td>{{ ad.advertisement_number }}</td>
                         <td>
                             <!-- Button trigger modal -->

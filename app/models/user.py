@@ -14,6 +14,7 @@ from scripts.utils import sha256_hash
 
 
 class MonitoredAd(db.Model):
+    # TODO: add attr `heading`, `description`
     id = db.Column(db.Integer, primary_key=True)
     advertisement_number = db.Column(db.String(100), nullable=False)
     website_url = db.Column(db.String(255), nullable=False)
@@ -26,8 +27,12 @@ class MonitoredAd(db.Model):
     # Foreign Key to refer to the user
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
+    def __repr__(self):
+        return f"<MonitoredAd(id={self.id}, advertisement_number='{self.advertisement_number}', website_url='{self.website_url}', user_id={self.user_id})>"
+
 
 class User(db.Model, UserMixin):
+    # TODO: add attr `nickname`, `whatsapp_verified: bool`
     id = db.Column(db.Integer, primary_key=True)
     fullname = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)

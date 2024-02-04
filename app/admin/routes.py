@@ -3,11 +3,11 @@
 # Created On: Feb 02, 2024
 #
 from flask import render_template, url_for, redirect, flash
-from flask_login import login_required, login_user, logout_user, current_user
+from flask_login import login_required, current_user
 from sqlalchemy import desc
 
 from app.models.user import User, MonitoredAd
-from app.extensions import db
+from app.extensions import db, scheduler
 from scripts.utils import convert_utc_to_ist
 from scripts.email_message import EmailMessage
 from config import EmailConfig
@@ -22,11 +22,13 @@ def home():
         # Retrieve all users and monitored ads from the database
         users = User.query.order_by(desc(User.created_at)).all()
         monitored_ads = MonitoredAd.query.order_by(desc(MonitoredAd.created_at)).all()
+        adv_job = scheduler.get_job("check_adv_count_job")
 
         return render_template(
             'admin.html', 
             users=users, 
             monitored_ads=monitored_ads, 
+            adv_job = adv_job,
             convert_utc_to_ist=convert_utc_to_ist,
             indrajit=EmailConfig.INDRAJIT912_GMAIL
         )

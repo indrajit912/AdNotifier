@@ -9,19 +9,19 @@ from app.extensions import scheduler
 from app.utils.decorators import admin_required
 from app.tasks import check_adv_count
 from flask import render_template
-from datetime import datetime, timedelta
+import time
 
 
-@task_bp.route("/schedule_count")
+@task_bp.route("/schedule")
 @admin_required
-def schedule_count():
+def schedule():
     """Add a task to the app.
 
-    :url: /schedule_count/
+    :url: /task/schedule
     :returns: job
     """
     # Check if the job already exists
-    existing_job = scheduler.get_job("check_adv_count job")
+    existing_job = scheduler.get_job("check_adv_count_job")
 
     if existing_job:
         # Job already exists, you can handle this case if needed
@@ -32,8 +32,8 @@ def schedule_count():
         func=check_adv_count,
         trigger="interval",
         seconds=10,
-        id="check_adv_count job",
-        name="check_adv_count job",
+        id="check_adv_count_job",
+        name="Checking users job notifications ...",
         replace_existing=True,
     )
 
@@ -41,3 +41,19 @@ def schedule_count():
     formatted_next_run_time = job.next_run_time.strftime("%b %d, %Y %I:%M:%S %p")
 
     return render_template('schedule_count.html', job=job, formatted_next_run_time=formatted_next_run_time)
+
+
+@task_bp.route('/stop')
+@admin_required
+def stop():
+    # Check if the job already exists
+    existing_job = scheduler.get_job("check_adv_count_job")
+    job_name = existing_job.name
+    job_trigger = existing_job.trigger
+
+    time.sleep(1)
+    scheduler.remove_job("check_adv_count_job")
+
+    return render_template('job_stopped.html', job_name=job_name, job_trigger=job_trigger)
+
+    

@@ -3,25 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Task Scheduled</title>
+    <title>Task stopped</title>
     <link rel="stylesheet" href="{{ url_for('task.static', filename='css/task_style.css') }}">
 </head>
 <body>
     <div>
-        <h1>Task Started!</h1>
-        <p>Task has been scheduled successfully!</p>
-        <p>Job ID: {{ job.id }}</p>
-        <p>Name: {{ job.name }}</p>
-        <p>Trigger: {{ job.trigger }}</p>
-        <p>Next Run Time: {{ formatted_next_run_time }}</p>
+        <h1>Task Stopped!.</h1>
+        <p>Task has been stopped successfully!</p>
+        <p>Name: {{ job_name }}</p>
+        <p>Trigger: {{ job_trigger }}</p>
         <!-- Add any additional information you want to display about the scheduled task -->
 
         <!-- Button for redirecting to the dashboard -->
-        <button id="adminBtn">Admin Page</button>
+        <button id="dashboardButton">Admin page</button>
 
         <!-- Script for handling the redirection -->
         <script>
-            document.getElementById("adminBtn").addEventListener("click", function() {
+            document.getElementById("dashboardButton").addEventListener("click", function() {
                 window.location.href = "{{ url_for('admin.home') }}";
             });
         </script>
