@@ -60,11 +60,56 @@
                         <td>{{ convert_utc_to_ist(user.created_at.strftime("%Y-%m-%d %H:%M:%S")) }}</td>
                         <td>{{ user.is_admin }}</td>
                         <td>
+                            <!-- Start of Delete user btn logic -->
+
                             {% if user.id == current_user.id or user.email == indrajit %}
                                 <button type="button" class="btn btn-danger btn-sm" disabled>Delete</button>
                             {% else %}
-                                <a href="{{ url_for('admin.delete_user', id=user.id) }}" class="btn btn-danger btn-sm">Delete</a>
+
+                                <button type="button" class="btn btn-danger me-md-2 btn-sm" data-bs-toggle="modal" data-bs-target="#userDelBtn{{ user.id }}">
+                                  Delete
+                                </button>
+
+                                <!-- Delete Modal -->
+                                <div class="modal fade" id="userDelBtn{{ user.id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="userDelBtnLabel{{ user.id }}" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                      <div class="modal-content">
+                                    
+                                        <div class="modal-header">
+                                          <h1 class="modal-title fs-5" id="userDelBtnLabel{{ user.id }}">Delete '{{ user.fullname }}' ?</h1>
+                                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                    
+                                        <div class="modal-body">
+                                          Ensure that you are certain about deleting the user before proceeding.
+                                        </div>
+                                    
+                                        <div class="modal-footer">
+                                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                          <!-- <button type="button" class="btn btn-primary">Understood</button> -->
+                                          <a href="{{ url_for('admin.delete_user', id=user.id) }}" class="btn btn-danger">Delete</a> 
+                                        </div>
+                                    
+                                      </div>
+                                    </div>
+                                </div>
+
                             {% endif %}
+                            
+                  
+
+
+
+                            <!-- {% if user.id == current_user.id or user.email == indrajit %}
+                                <button type="button" class="btn btn-danger btn-sm" disabled>Delete</button>
+                            {% else %}
+                                <a href="{{ url_for('admin.delete_user', id=user.id) }}" class="btn btn-danger btn-sm">Delete</a>
+                            {% endif %} -->
+
+
+
+                            <!-- End of Delete user btn logic -->
+
                             {% if current_user.email == indrajit %}
                                 <form method="post" action="{{ url_for('admin.toggle_admin', user_id=user.id) }}" style="display: inline;">
                                     {% if user.is_admin %}
