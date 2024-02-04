@@ -38,6 +38,24 @@ class UserSignupFormNext(FlaskForm):
     submit = SubmitField("Register")
 
 
+class EmailRegistrationForm(FlaskForm):
+    fullname = StringField("Fullname", validators=[DataRequired()])
+    email = EmailField("Email", validators=[DataRequired()])
+
+    submit = SubmitField("Next")
+
+
+class UserRegistrationForm(FlaskForm):
+    passwd = PasswordField(
+        "Password", 
+        validators=[DataRequired(), EqualTo('confirm_passwd', message='Passwords must match')]
+    )
+    confirm_passwd = PasswordField("Confirm password")
+    whatsapp = IntegerField("WhatsApp", validators=[Optional()])
+
+    submit = SubmitField("Register")
+
+
 class ForgotPasswordForm(FlaskForm):
     email = EmailField(
         'Email',

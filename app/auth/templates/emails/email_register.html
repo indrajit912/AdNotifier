@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Account Registration</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #3498db;
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+
+        p {
+            margin-bottom: 15px;
+            font-size: 16px;
+            color: #555;
+        }
+
+        a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .footer {
+            margin-top: 20px;
+            color: #888;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>New Account Registration Instructions</h1>
+        
+        <p>Dear <strong>{{ username }}</strong>,</p>
+        
+        <p>We have received a request to register you for the AdNotifier web application. To complete your registration, please click on the link provided below:</p>
+
+        <p><a href="{{ acc_registration_url }}" target="_blank">{{ acc_registration_url }}</a></p>
+
+        <p>This link will remain valid for a duration of 1 hour.</p> 
+
+        <p>If you did not initiate this request, kindly disregard this email.</p>
+
+        <p class="footer">Thank you!</p>
+    </div>
+</body>
+</html>

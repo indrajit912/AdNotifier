@@ -8,10 +8,12 @@ from flask_login import login_required, login_user, logout_user, current_user
 from sqlalchemy import desc
 from datetime import datetime
 
-from app.forms.auth_forms import UserSignupForm, UserSignupFormNext, UserLoginForm, ResetPasswordForm, ForgotPasswordForm
+from app.forms.auth_forms import EmailRegistrationForm, UserRegistrationForm, UserLoginForm, ResetPasswordForm, ForgotPasswordForm
 from app.models.user import User, MonitoredAd
 from app.extensions import db
-from scripts.utils import convert_utc_to_ist, generate_otp
+from app.utils.decorators import logout_required
+from app.utils.token import get_token_for_email_registration, confirm_email_registration_token
+from scripts.utils import convert_utc_to_ist
 from scripts.email_message import EmailMessage
 from config import EmailConfig
 from . import auth_bp
@@ -110,17 +112,103 @@ def reset_password(token):
         # Commit the changes
         db.session.commit()
 
-        # TODO: delete these if Signup route is rewritten! Clear the session data
-        session.pop('fullname', None)
-        session.pop('email', None)
-        session.pop('step', None)
-        session.pop('otp', None)
-
-
         flash('Password reset successfully! You can now log in with your new password.', 'success')
         return redirect(url_for('auth.login'))
     
     return render_template('reset_password.html', form=form)
+
+
+@auth_bp.route('/register_email', methods=['GET', 'POST'])
+@logout_required
+def register_email():
+    form = EmailRegistrationForm()
+
+    if form.validate_on_submit():
+        # Check whether the email already exists in the database
+        user = User.query.filter_by(email=form.email.data).first()
+        if user:
+            flash("Email id taken. Try different one!", 'warning')
+            return redirect(url_for('auth.register_email'))
+        else:
+            # Get the token
+            token = get_token_for_email_registration(fullname=form.fullname.data, email=form.email.data)
+            acc_registration_url = url_for('auth.register_user', token=token, _external=True)
+            
+            # TODO: Send acc_registration_url to the new user form.email.data.
+            _email_html_text = render_template(
+                'emails/email_register.html',
+                acc_registration_url=acc_registration_url,
+                username=form.fullname.data
+            )
+
+            msg = EmailMessage(
+                sender_email_id=EmailConfig.INDRAJITS_BOT_EMAIL_ID,
+                to=form.email.data,
+                subject="AdNotifier: New Account Registration",
+                email_html_text=_email_html_text
+            )
+
+            try:
+                msg.send(
+                    sender_email_password=EmailConfig.INDRAJITS_BOT_EMAIL_PASSWD,
+                    server_info=EmailConfig.GMAIL_SERVER,
+                    print_success_status=False
+                )
+
+                flash('Almost there! New account registration instructions sent to your email. Please check and follow the link.', 'info')
+                form = EmailRegistrationForm(formdata=None)
+                return render_template('register_email.html', form=form)
+            
+            except Exception as e:
+                # TODO: Handle email sending error better
+                flash('An error occurred while attempting to send the account registration link through email. Try again!', 'danger')
+                return redirect(url_for('auth.register_email'))
+
+
+    return render_template('register_email.html', form=form)
+
+
+@auth_bp.route('/register_user/<token>', methods=['GET', 'POST'])
+def register_user(token):
+    user_data = confirm_email_registration_token(token)
+
+    if not user_data:
+        flash('Invalid or expired reset token. Please try again.', 'danger')
+        return redirect(url_for('auth.register_email'))
+    
+    form = UserRegistrationForm()
+
+    if form.validate_on_submit():
+
+        if form.whatsapp.data:
+            # Check whether there is any user with the same whatsapp number!
+            whatsapp_user = User.query.filter_by(whatsapp=form.whatsapp.data).first()
+        else:
+            whatsapp_user = None
+
+        if whatsapp_user is None:
+            # Create the user
+            user = User(
+                fullname=user_data['fullname'],
+                email = user_data['email'],
+                whatsapp = form.whatsapp.data
+            )
+
+            # Set password for the user using the set_hashed_password method
+            user.set_hashed_password(form.passwd.data)
+
+            # Add the user to the database
+            db.session.add(user)
+            db.session.commit()
+
+            flash("Congratulations! Your account has been successfully created. You can now log in using the provided credentials.", 'success')
+            return redirect(url_for('auth.login'))
+
+        else:
+            # Whatsapp number taken
+            flash("Whatsapp number is taken. Try different one!", 'warning')
+    
+    return render_template('register_user.html', form=form, user_data=user_data)
 
 
 @auth_bp.route('/dashboard', methods=['GET', 'POST'])
@@ -138,127 +226,6 @@ def logout():
 
     return redirect(url_for('auth.login'))
 
-@auth_bp.route('/signup', methods=['GET', 'POST'])
-def signup():
-    form_step = int(request.form.get('step', session.get('step', 1)))
-
-    if form_step == 1:
-        form = UserSignupForm()
-    elif form_step == 2:
-        form = UserSignupFormNext()
-
-    if form.validate_on_submit():
-        if form_step == 1:
-            # Check for a user with the given email id in the db
-            exsting_user = User.query.filter_by(email=form.email.data).first()
-
-            if exsting_user is None:
-                # Process the first step, generate OTP, and send it to the email
-                otp = generate_otp()
-
-                # Email otp
-                # Render the email template with the provided parameters
-                _email_html_text = render_template(
-                    'emails/email_otp.html',
-                    username=form.fullname.data,
-                    otp=otp
-                )
-
-                # Create the email message
-                msg = EmailMessage(
-                    sender_email_id=EmailConfig.INDRAJITS_BOT_EMAIL_ID,
-                    to=form.email.data,
-                    subject="AdNotifier: OTP for your registration!",
-                    email_html_text=_email_html_text
-                )
-
-                # Send OTP via email
-                try:
-                    # Send the email to Indrajit
-                    msg.send(
-                        sender_email_password=EmailConfig.INDRAJITS_BOT_EMAIL_PASSWD, 
-                        server_info=EmailConfig.GMAIL_SERVER,
-                        print_success_status=False
-                    )
-
-                    # Store the form data in the session
-                    session['otp'] = otp
-                    session['fullname'] = form.fullname.data
-                    session['email'] = form.email.data
-                    session['step'] = 2
-
-                    flash('OTP sent to your email. Please check and enter below.', 'info')
-                    return redirect(url_for('auth.signup'))
-
-                except:
-                    # TODO: Handle email sending error better!
-                    flash('An error occurred while attempting to send the OTP. Try again!', 'danger')
-                    return redirect(url_for('auth.signup'))
-
-                
-            else:
-                # User exists already
-                flash("Email id taken. Try different one!", 'warning')
-                return redirect(url_for('auth.signup'))
-        
-        elif form_step == 2:
-
-            if form.otp.data == session['otp']:
-                # OTP matched!
-                if form.whatsapp.data:
-                    # Check whether there is any user with the same whatsapp number!
-                    whatsapp_user = User.query.filter_by(whatsapp=form.whatsapp.data).first()
-                else:
-                    whatsapp_user = None
-
-                if whatsapp_user is None:
-                    # Process the second step, complete registration, etc.
-                    user = User(
-                        fullname=session['fullname'],
-                        email = session['email'],
-                        whatsapp = form.whatsapp.data
-                    )
-
-                    # Set password for the user using the set_hashed_password method
-                    user.set_hashed_password(form.passwd.data)
-
-                    # Add the user to the database
-                    db.session.add(user)
-                    db.session.commit()
-
-                    # Clear the session data
-                    session.pop('fullname', None)
-                    session.pop('email', None)
-                    session.pop('step', None)
-
-                    flash("Congratulations! Your account has been successfully created. You can now log in using the provided credentials.", 'success')
-                    return redirect(url_for('auth.login'))
-
-                else:
-                    # Whatsapp number taken
-                    flash("Whatsapp number is taken. Try different one!", 'warning')
-
-                    # Clear the session data
-                    session.pop('fullname', None)
-                    session.pop('email', None)
-                    session.pop('step', None)
-                    session.pop('otp', None)
-
-                    return redirect(url_for('auth.signup'))
-            
-            else:
-                # Wrong otp
-                flash("Wrong OTP. Please try again.", 'danger')
-
-                # Clear the session data
-                session.pop('fullname', None)
-                session.pop('email', None)
-                session.pop('step', None)
-                session.pop('otp', None)
-
-                return redirect(url_for('auth.signup'))
-
-    return render_template('signup.html', form=form)
 
 @auth_bp.route('/add_advertisement', methods=['POST'])
 @login_required

@@ -1,0 +1,35 @@
+<!-- app/auth/register_email.html -->
+{% extends 'base.html' %}
+
+{% block title %}Email Registration{% endblock %}
+
+{% block content %}
+
+{% include 'flash_msgs.html' %}
+    <h1 class="heading">Register Yourself</h1>
+
+    <form method="POST" class="form-container">
+        {{ form.hidden_tag() }}
+
+        <div class="mb-3">
+            {{ form.fullname.label(class="form-label") }}
+            {{ form.fullname(class="form-control", placeholder="e.g- Indrajit Ghosh") }}
+        </div>
+
+        <div class="mb-3">
+            {{ form.email.label(class="form-label") }}
+            {{ form.email(class="form-control", placeholder="e.g- someone@somewhere.com") }}
+            <div class="form-text">We'll never share your email with anyone else.</div>
+        </div>
+
+        <div class="col-sm-10">
+            {{ form.submit(class="btn btn-primary") }}
+        </div>
+    </form>
+
+    <br>
+    {% if acc_registration_url %}
+        <h2>Registration URL</h2>
+        <a href="{{ acc_registration_url }}">{{ acc_registration_url }}</a>
+    {% endif %}
+{% endblock %}

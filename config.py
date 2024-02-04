@@ -50,6 +50,7 @@ class DatabaseConfig:
 class DevelopmentConfig:
     DEBUG = True
     SECRET_KEY = os.environ.get('SECRET_KEY') or token_hex(16)
+    SECURITY_PASSWORD_SALT = os.environ.get('SECURITY_PASSWORD_SALT') or token_hex(16)
 
     SQLALCHEMY_DATABASE_URI = DatabaseConfig.pscale_connection_uri \
         or 'sqlite:///' + os.path.join(BASE_DIR, 'app.db')
@@ -59,6 +60,7 @@ class DevelopmentConfig:
 class ProductionConfig:
     DEBUG = False
     SECRET_KEY = os.environ.get('SECRET_KEY') or token_hex(16)
+    SECURITY_PASSWORD_SALT = os.environ.get('SECURITY_PASSWORD_SALT') or token_hex(16)
 
     SQLALCHEMY_DATABASE_URI = DatabaseConfig.pscale_connection_uri \
         or 'sqlite:///' + os.path.join(BASE_DIR, 'app.db')

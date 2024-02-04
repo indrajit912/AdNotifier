@@ -65,7 +65,7 @@ class User(db.Model, UserMixin):
 
     def get_reset_password_token(self):
         auth_serializer = URLSafeTimedSerializer(
-            secret_key=current_app.config['SECRET_KEY'], salt="password reset"
+            secret_key=current_app.config['SECRET_KEY'], salt=current_app.config['SECURITY_PASSWORD_SALT']
         )
         token = auth_serializer.dumps({'id': self.id})
         return token
@@ -73,7 +73,7 @@ class User(db.Model, UserMixin):
     @staticmethod
     def verify_reset_password_token(token):
         auth_serializer = URLSafeTimedSerializer(
-            secret_key=current_app.config['SECRET_KEY'], salt="password reset"
+            secret_key=current_app.config['SECRET_KEY'], salt=current_app.config['SECURITY_PASSWORD_SALT']
         )
 
         try:
