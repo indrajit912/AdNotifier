@@ -95,7 +95,7 @@
             </button>
 
             <!-- Delete btn to trigger modal -->
-            <button type="button" class="btn btn-danger me-md-2 btn-sm" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+            <button type="button" class="btn btn-danger me-md-2 btn-sm" data-bs-toggle="modal" data-bs-target="#delAdModal{{ ad.id }}">
               Delete
             </button>
             
@@ -112,14 +112,12 @@
                     {{ ad.website_url }}
                   </div>
                   <div class="modal-footer">
-                    <a href="{{ ad.website_url }}" target="_blank" class="btn btn-primary">Goto</a>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>                    
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <a href="{{ ad.website_url }}" target="_blank" class="btn btn-primary">Goto</a>                    
                   </div>
                 </div>
               </div>
             </div>
-
-
         
             
             <!-- Update modal -->
@@ -174,11 +172,11 @@
 
 
             <!-- Delete Modal -->
-            <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal fade" id="delAdModal{{ ad.id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="delAdModalLabel{{ ad.id }}" aria-hidden="true">
               <div class="modal-dialog">
                 <div class="modal-content">
                   <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Delete Advertisement!</h1>
+                    <h1 class="modal-title fs-5" id="delAdModalLabel{{ ad.id }}">Delete Advertisement!</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
                   <div class="modal-body">
