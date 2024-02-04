@@ -96,28 +96,63 @@
 
                             {% endif %}
                             
-                  
-
-
-
-                            <!-- {% if user.id == current_user.id or user.email == indrajit %}
-                                <button type="button" class="btn btn-danger btn-sm" disabled>Delete</button>
-                            {% else %}
-                                <a href="{{ url_for('admin.delete_user', id=user.id) }}" class="btn btn-danger btn-sm">Delete</a>
-                            {% endif %} -->
-
-
-
                             <!-- End of Delete user btn logic -->
 
                             {% if current_user.email == indrajit %}
-                                <form method="post" action="{{ url_for('admin.toggle_admin', user_id=user.id) }}" style="display: inline;">
+
+                                <!-- Admin toggler -->
+                                <button
+                                  type="button"
+                                  class="btn btn-danger me-md-2 btn-sm"
+                                  data-bs-toggle="modal"
+                                  data-bs-target="#adminTogglerModal{{ user.id }}"
+                                >
                                     {% if user.is_admin %}
-                                        <button type="submit" class="btn btn-danger btn-sm">Disable Admin</button>
+                                        Disable Admin
                                     {% else %}
-                                        <button type="submit" class="btn btn-primary btn-sm">Make Admin</button>
+                                        Make Admin
                                     {% endif %}
-                                </form>
+
+                                </button>
+
+                                <!-- Delete Modal -->
+                                <div class="modal fade" id="adminTogglerModal{{ user.id }}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="adminTogglerModalLabel{{ user.id }}" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                      <div class="modal-content">
+
+                                        <div class="modal-header">
+                                            <h1 class="modal-title fs-5" id="adminTogglerModalLabel{{ user.id }}">
+                                                {% if user.is_admin %}
+                                                    Disable '{{ user.fullname }}' from admin ?
+                                                {% else %}
+                                                    Make '{{ user.fullname }}' admin ?
+                                                {% endif %}
+                                            </h1>
+                                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+
+                                        <div class="modal-body">
+                                          Ensure that you are certain about toggling the admin status of that user.
+                                        </div>
+
+                                        <div class="modal-footer">
+                                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                          <form method="post" action="{{ url_for('admin.toggle_admin', user_id=user.id) }}" style="display: inline;">
+                                                {% if user.is_admin %}
+                                                    <button type="submit" class="btn btn-danger">Disable Admin</button>
+                                                {% else %}
+                                                    <button type="submit" class="btn btn-danger">Make Admin</button>
+                                                {% endif %}
+                                          </form>
+                                           
+                                        </div>
+
+                                      </div>
+                                    </div>
+                                </div>
+
+                                <!-- End of admin toggling -->
+
                             {% endif %}
                         </td>
                     </tr>
