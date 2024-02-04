@@ -3,7 +3,7 @@
 # Created On: Feb 01, 2024
 #
 
-from flask import render_template, url_for, redirect, flash, session, request, jsonify
+from flask import render_template, url_for, redirect, flash, request, jsonify
 from flask_login import login_required, login_user, logout_user, current_user
 from sqlalchemy import desc
 from datetime import datetime
