@@ -1,0 +1,25 @@
+body {
+    font-family: 'Ubuntu Mono', monospace;
+    background-color: #2c2c2c;
+    color: #ffffff;
+    margin: 0;
+    padding: 0;
+}
+
+div {
+    padding: 20px;
+    background-color: #333333;
+    border-radius: 5px;
+    margin: 50px auto;
+    width: 70%;
+}
+
+h1 {
+    color: #4caf50;
+}
+
+p {
+    color: #ffffff;
+}
+
+/* Add any additional styling you want for specific elements */

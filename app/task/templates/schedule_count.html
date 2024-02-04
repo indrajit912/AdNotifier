@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schedule Count</title>
+    <link rel="stylesheet" href="{{ url_for('task.static', filename='css/task_style.css') }}">
+</head>
+<body>
+    <div>
+        <h1>Schedule Count</h1>
+        <p>Task has been scheduled successfully!</p>
+        <p>Job ID: {{ job.id }}</p>
+        <p>Name: {{ job.name }}</p>
+        <p>Trigger: {{ job.trigger }}</p>
+        <p>Next Run Time: {{ formatted_next_run_time }}</p>
+        <!-- Add any additional information you want to display about the scheduled task -->
+
+        <!-- Button for redirecting to the dashboard -->
+        <button id="dashboardButton">Dashboard</button>
+
+        <!-- Script for handling the redirection -->
+        <script>
+            document.getElementById("dashboardButton").addEventListener("click", function() {
+                window.location.href = "{{ url_for('auth.dashboard') }}";
+            });
+        </script>
+    </div>
+</body>
+</html>
