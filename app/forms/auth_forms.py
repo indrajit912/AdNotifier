@@ -27,6 +27,7 @@ class UserRegistrationForm(FlaskForm):
         validators=[DataRequired(), EqualTo('confirm_passwd', message='Passwords must match')]
     )
     confirm_passwd = PasswordField("Confirm password")
+    nickname = StringField("Nickname", validators=[Optional()])
     whatsapp = IntegerField("WhatsApp", validators=[Optional()])
 
     submit = SubmitField("Register")

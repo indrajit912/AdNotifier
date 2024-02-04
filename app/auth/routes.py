@@ -64,7 +64,7 @@ def forgot_password():
             _email_html_text = render_template(
                 'emails/email_reset_password.html',
                 reset_url=reset_url,
-                username=user.fullname
+                username=user.nickname
             )
 
             msg = EmailMessage(
@@ -191,11 +191,15 @@ def register_user(token):
             user = User(
                 fullname=user_data['fullname'],
                 email = user_data['email'],
+                nickname = form.nickname.data,
                 whatsapp = form.whatsapp.data
             )
 
             # Set password for the user using the set_hashed_password method
             user.set_hashed_password(form.passwd.data)
+
+            # Set nickname for the user using set_nickname method
+            user.set_nickname()
 
             # Add the user to the database
             db.session.add(user)

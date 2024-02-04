@@ -29,6 +29,11 @@
         </div>
 
         <div class="mb-3">
+            {{ form.nickname.label(class="form-label") }}
+            {{ form.nickname(class="form-control", placeholder="Optional: What should I call you?") }}
+        </div>
+
+        <div class="mb-3">
             {{ form.whatsapp.label(class="form-label") }}
             {{ form.whatsapp(class="form-control", placeholder="This is optional") }}
         </div>

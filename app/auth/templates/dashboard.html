@@ -17,8 +17,16 @@
         <h5 class="card-title">Welcome to your dashboard!</h5>
         <p class="card-text">
             <ul>
+                {% if user.nickname != user.fullname %}
+                  <li><b>Nickname</b>: {{ user.nickname }}</li>
+                {% endif %}
                 <li><b>Email</b>: {{ user.email }}</li>
-                <li><b>WhatsApp number</b>: {{ user.whatsapp }}</li>
+                <li>
+                  <b>WhatsApp number</b>: {{ user.whatsapp }}.
+                  {% if not user.whatsapp %}
+                    (<a href="#" class="form-text">Wanna add?</a>)
+                  {% endif %}
+                </li>
                 <li><b>Account Created</b>: {{ convert_utc_to_ist(user.created_at.strftime("%Y-%m-%d %H:%M:%S")) }}</li>
                 <li><b>Admin</b>: {{ user.is_admin }}</li>
             </ul>
