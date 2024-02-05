@@ -28,7 +28,7 @@ class UserRegistrationForm(FlaskForm):
     )
     confirm_passwd = PasswordField("Confirm password")
     nickname = StringField("Nickname", validators=[Optional()])
-    whatsapp = IntegerField("WhatsApp", validators=[Optional()])
+    telegram = IntegerField("Telegram User ID", validators=[Optional()])
 
     submit = SubmitField("Register")
 

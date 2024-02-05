@@ -33,7 +33,7 @@ def all_users():
     with current_app.app_context():
         users = User.query.all()
         for user in users:
-            print(user.email, user.is_admin)
+            print(user.nickname, user.email, user.is_admin)
 
 
 @cli.command("create_admin")
@@ -43,7 +43,7 @@ def create_admin():
     fullname = input("Enter fullname: ")
     email = input("Enter email address: ")
     nickname = input("Enter a nickname (optional): ")
-    whatsapp = input("Enter your whatsapp number (optional): ")
+    telegram = input("Enter your telegram id (optional): ")
     password = getpass.getpass("Enter password: ")
     confirm_password = getpass.getpass("Enter password again: ")
     if password != confirm_password:
@@ -54,10 +54,11 @@ def create_admin():
                 fullname=fullname,
                 nickname=nickname,
                 email=email,
-                whatsapp=whatsapp,
+                telegram=telegram,
                 is_admin=True
             )
             user.set_hashed_password(password)
+            user.set_nickname()
 
             db.session.add(user)
             db.session.commit()

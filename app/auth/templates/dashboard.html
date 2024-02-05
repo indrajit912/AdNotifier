@@ -18,17 +18,17 @@
         <p class="card-text">
             <ul>
                 {% if user.nickname != user.fullname %}
-                  <li><b>Nickname</b>: {{ user.nickname }}</li>
+                  <li><b>Nickname</b>: <code>{{ user.nickname }}</code> </li>
                 {% endif %}
-                <li><b>Email</b>: {{ user.email }}</li>
+                <li><b>Email</b>: <code>{{ user.email }}</code></li>
                 <li>
-                  <b>WhatsApp number</b>: {{ user.whatsapp }}.
-                  {% if not user.whatsapp %}
+                  <b>Telegram ID</b>: <code>{{ user.telegram }}</code> 
+                  {% if not user.telegram %}
                     (<a href="#" class="form-text">Wanna add?</a>)
                   {% endif %}
                 </li>
-                <li><b>Account Created</b>: {{ convert_utc_to_ist(user.created_at.strftime("%Y-%m-%d %H:%M:%S")) }}</li>
-                <li><b>Admin</b>: {{ user.is_admin }}</li>
+                <li><b>Account Created</b>: <code>{{ convert_utc_to_ist(user.created_at.strftime("%Y-%m-%d %H:%M:%S")) }}</code> </li>
+                <li><b>Admin</b>: <code>{{ user.is_admin }}</code> </li>
             </ul>
         </p>
         

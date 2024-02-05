@@ -180,19 +180,19 @@ def register_user(token):
 
     if form.validate_on_submit():
 
-        if form.whatsapp.data:
-            # Check whether there is any user with the same whatsapp number!
-            whatsapp_user = User.query.filter_by(whatsapp=form.whatsapp.data).first()
+        if form.telegram.data:
+            # Check whether there is any user with the same telegram number!
+            telegram_user = User.query.filter_by(telegram=form.telegram.data).first()
         else:
-            whatsapp_user = None
+            telegram_user = None
 
-        if whatsapp_user is None:
+        if telegram_user is None:
             # Create the user
             user = User(
                 fullname=user_data['fullname'],
                 email = user_data['email'],
                 nickname = form.nickname.data,
-                whatsapp = form.whatsapp.data
+                telegram = form.telegram.data
             )
 
             # Set password for the user using the set_hashed_password method
@@ -209,8 +209,8 @@ def register_user(token):
             return redirect(url_for('auth.login'))
 
         else:
-            # Whatsapp number taken
-            flash("Whatsapp number is taken. Try different one!", 'warning')
+            # Telegram id taken
+            flash("Telegram id is taken. Try different one!", 'warning')
     
     return render_template('register_user.html', form=form, user_data=user_data)
 

@@ -14,7 +14,6 @@ from scripts.utils import sha256_hash
 
 
 class MonitoredAd(db.Model):
-    # TODO: add attr `title`, `description`
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(170), nullable=False)
     advertisement_number = db.Column(db.String(100), nullable=False)
@@ -34,15 +33,14 @@ class MonitoredAd(db.Model):
 
 
 class User(db.Model, UserMixin):
-    # TODO: add attr `nickname`, `whatsapp_verified: bool`
     id = db.Column(db.Integer, primary_key=True)
     fullname = db.Column(db.String(100), nullable=False)
     nickname = db.Column(db.String(100), nullable=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(128), nullable=False)
     password_salt = db.Column(db.String(32), nullable=False)
-    whatsapp = db.Column(db.Integer, default=None)
-    whatsapp_verified = db.Column(db.Boolean, default=False)
+    telegram = db.Column(db.Integer, default=None)
+    telegram_verified = db.Column(db.Boolean, default=False)
     is_admin = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     last_updated = db.Column(db.DateTime, default=datetime.utcnow)
@@ -52,7 +50,7 @@ class User(db.Model, UserMixin):
 
     
     def __repr__(self):
-        return f"User(id={self.id}, fullname={self.fullname}, email={self.email}, whatsapp={self.whatsapp}, is_admin={self.is_admin}, created_at={self.created_at}, last_updated={self.last_updated})"
+        return f"User(id={self.id}, fullname={self.fullname}, email={self.email}, telegram={self.telegram}, telegram_verified={self.telegram_verified}, is_admin={self.is_admin}, created_at={self.created_at}, last_updated={self.last_updated})"
 
     def set_hashed_password(self, password):
         """Sets the password_hash"""

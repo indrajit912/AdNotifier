@@ -44,7 +44,7 @@
                     <th scope="col">ID</th>
                     <th scope="col">Fullname</th>
                     <th scope="col">Email</th>
-                    <th scope="col">Whatsapp</th>
+                    <th scope="col">Telegram</th>
                     <th scope="col">Joined</th>
                     <th scope="col">Admin</th>
                     <th scope="col">Actions</th>
@@ -54,11 +54,11 @@
                 {% for user in users %}
                     <tr>
                         <td scope="row">{{ user.id }}</td>
-                        <td>{{ user.fullname }}</td>
-                        <td>{{ user.email }}</td>
-                        <td>{{ user.whatsapp }}</td>
-                        <td>{{ convert_utc_to_ist(user.created_at.strftime("%Y-%m-%d %H:%M:%S")) }}</td>
-                        <td>{{ user.is_admin }}</td>
+                        <td><code>{{ user.fullname }}</code></td>
+                        <td><code>{{ user.email }}</code> </td>
+                        <td><code>{{ user.telegram }}</code> </td>
+                        <td><code>{{ convert_utc_to_ist(user.created_at.strftime("%Y-%m-%d %H:%M:%S")) }}</code> </td>
+                        <td><code>{{ user.is_admin }}</code> </td>
                         <td>
                             <!-- Start of Delete user btn logic -->
 
@@ -170,8 +170,7 @@
             <thead>
                 <tr>
                     <th scope="col">ID</th>
-                    <th scope="col">Advertisement Number</th>
-                    <th scope="col">Website URL</th>
+                    <th scope="col">Advertisement</th>
                     <th scope="col">Count</th>
                     <th scope="col">User (ID)</th>
                 </tr>
@@ -180,11 +179,10 @@
                 {% for ad in monitored_ads %}
                     <tr>
                         <td scope="row">{{ ad.id }}</td>
-                        <td>{{ ad.advertisement_number }}</td>
                         <td>
                             <!-- Button trigger modal -->
                             <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#showURL{{ ad.id }}">
-                              View URL
+                              View
                             </button>
 
                             <!-- Modal -->
@@ -192,13 +190,22 @@
                               <div class="modal-dialog modal-dialog-scrollable">
                                 <div class="modal-content">
                                   <div class="modal-header">
-                                    <h1 class="modal-title fs-5" id="showUrlModalLabel{{ ad.id }}">{{ ad.advertisement_number }}</h1>
+                                    <h1 class="modal-title fs-5" id="showUrlModalLabel{{ ad.id }}">{{ ad.title }}</h1>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                   </div>
-                                  <div class="modal-body">{{ ad.website_url }}</div>
+                                  <div class="modal-body">
+                                    <b>Advertisement Number</b>:  {{ ad.advertisement_number }}
+                                    <br><br>
+                                    <b>Website</b>: <br> {{ ad.website_url }}
+                                    {% if ad.description %}
+                                        <br><br>
+                                        <b>Description</b>: <br> {{ ad.description }}
+                                    {% endif %}
+
+                                  </div>
                                   <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                    <a href="{{ ad.website_url }}" target="_blank" class="btn btn-primary">Goto</a>
+                                    <a href="{{ ad.website_url }}" target="_blank" class="btn btn-primary">Goto website</a>
                                   </div>
                                 </div>
                               </div>
@@ -206,7 +213,7 @@
 
                         </td>
                         <td>{{ ad.occurrence_count }}</td>
-                        <td>{{ ad.user.fullname }} ({{ ad.user_id }})</td>
+                        <td><code>{{ ad.user.fullname }} ({{ ad.user_id }})</code></td>
                     </tr>
                 {% endfor %}
             </tbody>
