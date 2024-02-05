@@ -7,7 +7,7 @@ function handleUpdateResponse(response) {
     }, 1000);
 }
 
-// Function that update the advertisement from user's dashboard
+// Function that update the advertisement from the user's dashboard
 function updateDashboardAdvertisement(adId) {
     var updateAdvertisementUrl = window.updateAdvertisementUrl;
 
@@ -35,13 +35,18 @@ function updateDashboardAdvertisement(adId) {
     .then(data => {
         // Handle the response...
         handleUpdateResponse(data);
-    })
-    .then(data => {
-        // Handle the response, e.g., show a success message
-        alert('Advertisement updated successfully!');
-        // Close the modal
-        var modal = new bootstrap.Modal(document.getElementById('updateModal' + adId));
-        modal.hide();
+
+        // Check for success or error
+        if ('message' in data) {
+            // Show success message
+            alert('Advertisement updated successfully!');
+            // Close the modal
+            var modal = new bootstrap.Modal(document.getElementById('updateModal' + adId));
+            modal.hide();
+        } else if ('error' in data) {
+            // Show error message
+            alert('Error: ' + data.error);
+        }
     })
     .catch(error => {
         console.error('Error:', error);

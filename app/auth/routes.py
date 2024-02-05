@@ -321,21 +321,35 @@ def update_advertisement():
 
     ad_to_update = MonitoredAd.query.get_or_404(ad_id)
     if ad_to_update.user_id == current_user.id:
-        ad_to_update.title = ad_title
-        ad_to_update.advertisement_number = adv_num
-        ad_to_update.website_url = adv_url
-        ad_to_update.description = adv_desc
-        ad_to_update.last_updated = datetime.utcnow()
+        # Check the occurrence count
+        occurrence_count = count_query_occurance(url=adv_url, query_str=adv_num)
 
-        try:
-            db.session.commit()
-            flash("The advertisement updated succesfully.", 'success')
-            # Return a JSON response indicating success
-            return jsonify({'message': 'Advertisement updated successfully!'})
+        if occurrence_count > 0:
+            # Everything fine!
+            ad_to_update.title = ad_title
+            ad_to_update.advertisement_number = adv_num
+            ad_to_update.website_url = adv_url
+            ad_to_update.description = adv_desc
+            ad_to_update.last_updated = datetime.utcnow()
 
-        except:
-            flash("Error. Looks like there was a problem to update the information into the database.", 'danger')
-            return redirect(url_for('auth.dashboard'))
+            try:
+                db.session.commit()
+                flash("The advertisement updated successfully.", 'success')
+                return jsonify({'message': 'Advertisement updated successfully!'})
+
+            except:
+                flash("Error. Looks like there was a problem updating the information into the database.", 'danger')
+                return jsonify({'error': 'Database error'})
+
+        elif occurrence_count == 0:
+            # Adv num is not on the page.
+            flash(f"The advertisement with the number '{adv_num}' is not present on the webpage. Please retry with a different advertisement number.", 'warning')
+            return jsonify({'error': 'Advertisement not found'})
+
+        else:
+            # Error in the URL
+            flash("An error occurred while trying to access the webpage. Please verify that the URL is valid.", 'error')
+            return jsonify({'error': 'URL error'})
     else:
-        flash("You are not authorized to do that request.", 'warning')
-        return redirect(url_for('auth.dashboard'))
+        flash("You are not authorized to make that request.", 'warning')
+        return jsonify({'error': 'Unauthorized'})
