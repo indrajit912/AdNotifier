@@ -34,14 +34,15 @@ class DatabaseConfig:
     DB_USERNAME = os.environ.get("DB_USERNAME")
     DB_PASSWORD = os.environ.get("DB_PASSWORD")
     DB_NAME = os.environ.get("DB_NAME")
+    INDRAJIT_CLEVER_CLOUD_MYSQL_URI = os.environ.get("INDRAJIT_CLEVER_CLOUD_MYSQL_URI")
 
     # Database URI
     # Check if any of the required credentials is None
     if '' in (DB_HOST, DB_USERNAME, DB_PASSWORD, DB_NAME):
-        pscale_connection_uri = None
+        could_db_connection_uri = INDRAJIT_CLEVER_CLOUD_MYSQL_URI
     else:
         # Construct the Planet Scale Database URI
-        pscale_connection_uri = (
+        could_db_connection_uri = (
             f"mysql+mysqlconnector://{DB_USERNAME}:{DB_PASSWORD}@{DB_HOST}/{DB_NAME}"
             "?ssl_ca=/etc/ssl/cert.pem"
         )
@@ -52,7 +53,7 @@ class DevelopmentConfig:
     SECRET_KEY = os.environ.get('SECRET_KEY') or token_hex(16)
     SECURITY_PASSWORD_SALT = os.environ.get('SECURITY_PASSWORD_SALT') or token_hex(16)
 
-    SQLALCHEMY_DATABASE_URI = DatabaseConfig.pscale_connection_uri \
+    SQLALCHEMY_DATABASE_URI = DatabaseConfig.could_db_connection_uri \
         or 'sqlite:///' + os.path.join(BASE_DIR, 'app.db')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
@@ -62,6 +63,6 @@ class ProductionConfig:
     SECRET_KEY = os.environ.get('SECRET_KEY') or token_hex(16)
     SECURITY_PASSWORD_SALT = os.environ.get('SECURITY_PASSWORD_SALT') or token_hex(16)
 
-    SQLALCHEMY_DATABASE_URI = DatabaseConfig.pscale_connection_uri \
+    SQLALCHEMY_DATABASE_URI = DatabaseConfig.could_db_connection_uri \
         or 'sqlite:///' + os.path.join(BASE_DIR, 'app.db')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
