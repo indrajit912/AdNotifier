@@ -83,7 +83,7 @@
         </div>
         <!-- End of Modal thing here -->
 
-        <a href="{{ url_for('auth.logout') }}" class="btn btn-warning">Logout</a>
+        <a href="{{ url_for('auth.change_password', user_id=user.id) }}" class="btn btn-warning">Change Password</a>
         
       </div>
     </div>

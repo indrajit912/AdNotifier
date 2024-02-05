@@ -8,7 +8,7 @@ from flask_login import login_required, login_user, logout_user, current_user
 from sqlalchemy import desc
 from datetime import datetime
 
-from app.forms.auth_forms import EmailRegistrationForm, UserRegistrationForm, UserLoginForm, ResetPasswordForm, ForgotPasswordForm
+from app.forms.auth_forms import EmailRegistrationForm, UserRegistrationForm, UserLoginForm, ResetPasswordForm, ForgotPasswordForm, ChangePasswordForm
 from app.models.user import User, MonitoredAd
 from app.extensions import db
 from app.utils.decorators import logout_required
@@ -354,3 +354,39 @@ def update_advertisement():
     else:
         flash("You are not authorized to make that request.", 'warning')
         return jsonify({'error': 'Unauthorized'})
+
+
+@auth_bp.route('/change_password/<int:user_id>', methods=['GET', 'POST'])
+@login_required
+def change_password(user_id):
+    form = ChangePasswordForm()
+    
+    user_to_update = User.query.get_or_404(user_id)
+
+    if current_user.id == user_to_update.id:
+        # Change the passwd
+        if form.validate_on_submit():
+            old_password = form.old_password.data
+            new_password = form.new_password.data
+
+            if user_to_update.check_password(old_password):
+                # Change password
+                user_to_update.set_hashed_password(new_password)
+
+                # Commit the changes
+                db.session.commit()
+
+                flash("Password changed successfully.", 'success')
+                return redirect(url_for('auth.dashboard'))
+
+            else:
+                # Password doesn't match
+                flash("The old password you provided is incorrect. Please attempt it again.", 'error')
+                return redirect(url_for('auth.dashboard', user_id=current_user.id))
+
+    else:
+        flash("Modifying passwords that belong to others is not allowed.", 'info')
+        return redirect(url_for('auth.dashboard'))
+
+    
+    return render_template('change_password.html', form=form)
