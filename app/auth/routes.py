@@ -330,6 +330,7 @@ def update_advertisement():
             ad_to_update.advertisement_number = adv_num
             ad_to_update.website_url = adv_url
             ad_to_update.description = adv_desc
+            ad_to_update.occurrence_count = occurrence_count
             ad_to_update.last_updated = datetime.utcnow()
 
             try:
