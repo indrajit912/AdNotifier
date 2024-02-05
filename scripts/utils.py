@@ -91,7 +91,10 @@ def count_query_occurance(url:str, query_str:str):
     """
     try:
         # Fetch HTML content of the website
-        response = requests.get(url)
+        try:
+            response = requests.get(url)
+        except requests.exceptions.SSLError:
+            response = requests.get(url, verify=False)
         response.raise_for_status()  # Raise an HTTPError for bad responses
 
         # Parse the HTML content
@@ -101,6 +104,7 @@ def count_query_occurance(url:str, query_str:str):
         occurrences = soup.body.text.count(query_str)
 
         return occurrences
+
 
     except requests.RequestException as e:
         return -1  # Error indicator

@@ -13,7 +13,7 @@ from app.models.user import User, MonitoredAd
 from app.extensions import db
 from app.utils.decorators import logout_required
 from app.utils.token import get_token_for_email_registration, confirm_email_registration_token
-from scripts.utils import convert_utc_to_ist
+from scripts.utils import convert_utc_to_ist, count_query_occurance
 from scripts.email_message import EmailMessage
 from config import EmailConfig
 from . import auth_bp
@@ -241,24 +241,41 @@ def add_advertisement():
         website_url = request.form.get('website_url')
         description = request.form.get('description')
 
-        ad_user_id = current_user.id
+        # Calculate the count
+        occurrence_count = count_query_occurance(url=website_url, query_str=advertisement_number)
+        
+        if occurrence_count > 0:
+            # Everything is fine!
 
-        monitored_ad = MonitoredAd(
-            title=title,
-            advertisement_number = advertisement_number,
-            website_url = website_url,
-            description=description,
-            user_id = ad_user_id
-        )
+            ad_user_id = current_user.id
 
-        # Add the new advertisement to the database
-        db.session.add(monitored_ad)
-        db.session.commit()
+            monitored_ad = MonitoredAd(
+                title=title,
+                advertisement_number = advertisement_number,
+                website_url = website_url,
+                description=description,
+                occurrence_count=occurrence_count,
+                user_id = ad_user_id
+            )
 
-        # Return a success response
-        flash("Advertisement entry added successfully!", 'success')
-        return jsonify({'success': True}), 200
+            # Add the new advertisement to the database
+            db.session.add(monitored_ad)
+            db.session.commit()
 
+            # Return a success response
+            flash("Advertisement entry added successfully!", 'success')
+            return jsonify({'success': True}), 200
+        
+        elif occurrence_count == 0:
+            # Adv num is not on the page.
+            flash(f"The advertisement with the number '{advertisement_number}' is not present on the webpage. Please retry with a different advertisement number.", 'warning')
+            return jsonify({'error': False}), 500
+        
+        else:
+            # Error in the URL
+            flash("An error occurred while trying to access the webpage. Please verify that the URL is valid.", 'error')
+            return jsonify({'error': False}), 500
+        
     except Exception as e:
         # Handle any errors that may occur during the process
         flash("Error. Looks like there was a problem to update the information into the database.", 'danger')
