@@ -11,6 +11,9 @@ AdNotifier is a Python web app designed to scrape specific websites for advertis
 - Notification system to inform users about new advertisements.
 - Ability to add and track multiple advertisement numbers.
 
+## Coming Soon: Exciting Features
+- TODO: Connect with friends and share your unique advertisements with them.
+- TODO: Exchange messages with your friends seamlessly.
 
 ## User Signup and Advertisement Tracking
 - Sign up for an account on the application.
