@@ -21,6 +21,7 @@ To use AdNotifier, follow these steps:
 1. **User-Friendly**: Easy to use and reliable.
 2. **Secure Password Handling**: User passwords are hashed and securely stored, ensuring privacy.
 3. **Email Notifications**: Users receive email notifications for updates related to their specified advertisement numbers.
+4. **Telegram Notifications**: Additionally, users can also receive notifications on Telegram by adding their Telegram `user ID` to their account. Stay informed through multiple channels!
 
 ## Future Features (Coming Soon)
 
