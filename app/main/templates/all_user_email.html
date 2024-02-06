@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,6 +12,7 @@
             padding: 0;
             background-color: #f4f4f4;
         }
+
         .container {
             max-width: 800px;
             margin: 0 auto;
@@ -20,6 +22,7 @@
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
             margin-top: 30px;
         }
+
         h1 {
             color: #333;
             text-align: left;
@@ -27,27 +30,54 @@
             padding-bottom: 10px;
             margin-bottom: 20px;
         }
+
         p {
             margin-top: 10px;
             margin-bottom: 10px;
             line-height: 1.5;
             color: #555;
         }
+
         b {
             font-weight: bold;
             color: #333;
         }
+
         i {
             font-style: italic;
             color: #777;
         }
+
         .details {
             padding: 20px;
             border-radius: 5px;
             box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
         }
+
+        .card {
+            background-color: #f8f8f8;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        @media only screen and (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .card {
+                padding: 10px;
+            }
+        }
     </style>
 </head>
+
 <body>
     <div class="container">
         <h1>Hello {{ name }},</h1>
@@ -62,11 +92,21 @@
             <ul>
                 <!-- Loop through each ad and display details -->
                 {% for ad in ads %}
+                <div class="card">
+                    <h3>Ad # {{ loop.index }}</h3>
+                    {% if ad['adv_count'] <= 0 %}
+                    <div class="card">
+                        <p><b>Note:</b> <i>Issue Detected!</i> The following ad has either been removed from the respective website, or the URL may have changed. Please verify by visiting the website. Additionally, you can log into your account to check.</p>
+                    </div>
+                    {% endif %}
+                    <li><b>Advertisement Title</b>: {{ ad['adv_title'] }}</li>
                     <li><b>Advertisement Number</b>: {{ ad['adv_num'] }}</li>
                     <li><b>Advertisement Website URL</b>: <a href="{{ ad['adv_url'] }}">Click here</a></li>
+                </div>
                 {% endfor %}
             </ul>
         </div>
     </div>
 </body>
+
 </html>

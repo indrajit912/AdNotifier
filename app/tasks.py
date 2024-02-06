@@ -15,9 +15,25 @@ from scripts.email_message import EmailMessage
 from config import EmailConfig
 from flask import render_template
 from apscheduler.triggers.cron import CronTrigger
+from pprint import pprint
 
 
 def send_email(dic:dict):
+    """
+       dic = {
+            'user_email@somewhere.com': {
+                'name': "Indrajit Ghosh",
+                'ads': [
+                    {
+                        'adv_url': 'https://wbcsconline.com',
+                        'adv_num': 'ADV-83-2020',
+                        'adv_title': ad_title,
+                        'adv_count': 37 
+                    }
+                ]
+            }
+        }
+    """
     for user_email, val in dic.items():
         msg_html_str = render_template(
             'all_user_email.html',
@@ -41,13 +57,66 @@ def send_email(dic:dict):
                 print_success_status=False
             )
 
-            print("Email sent!")
+            print(f"Email sent to '{user_email}'!")
 
         except Exception as e:
             # Handle email sending error
-            print("Error occured during email!")
+            print(f"Error occured during email!\n{e}")
 
-
+test_dic = {
+            'rs_math1902@isibang.ac.in': {
+                'name': "Indrajit Office",
+                'ads': [
+                    {
+                        'adv_url': 'https://wbcsconline.com',
+                        'adv_num': 'ADV-83-2020',
+                        'adv_title': "SOme title",
+                        'adv_count': 37 
+                    },
+                    {
+                        'adv_url': 'https://fb.com',
+                        'adv_num': 'ADV-8e-2020',
+                        'adv_title': "SOme title 2",
+                        'adv_count': 0 
+                    },
+                    {
+                        'adv_url': 'https://yobae.com',
+                        'adv_num': 'ADV-ew-2020',
+                        'adv_title': "SOme title aother",
+                        'adv_count': 3 
+                    },
+                    {
+                        'adv_url': 'https://hell.com',
+                        'adv_num': 'ADV-83-df',
+                        'adv_title': "SOme title aother",
+                        'adv_count': -1
+                    }
+                ]
+            },
+            'indrajitghosh2014@gmail.com': {
+                'name': "Indrajit Office",
+                'ads': [
+                    {
+                        'adv_url': 'https://wbcsconline.com',
+                        'adv_num': 'ADV-83-2020',
+                        'adv_title': "SOme title",
+                        'adv_count': 37 
+                    },
+                    {
+                        'adv_url': 'https://fb.com',
+                        'adv_num': 'ADV-8e-2020',
+                        'adv_title': "SOme title 2",
+                        'adv_count': 0 
+                    },
+                    {
+                        'adv_url': 'https://hell.com',
+                        'adv_num': 'ADV-83-df',
+                        'adv_title': "SOme title aother",
+                        'adv_count': 36
+                    }
+                ]
+            }
+        }
 
 def check_adv_count():
     """
@@ -57,23 +126,10 @@ def check_adv_count():
     with scheduler.app.app_context():
         ads = MonitoredAd.query.all()
 
-        # The following dict should contain
-        #  {'useremail@gmail.com': {'name': "Indrajit Ghosh", 'ads': [MonitoredAd]}}
-        # email_listing = {
-        #     'rs_math1902@isibang.ac.in': {
-        #         'name': "Indrajit Ghosh",
-        #         'ads': [
-        #             {
-        #                 'adv_url': 'https://wbcsconline.com',
-        #                 'adv_num': 'ADV-83-2020'
-        #             }
-        #         ]
-        #     }
-        # }
-
         email_listing = {}
         
         for ad in ads:
+            ad_title = ad.title
             ad_num = ad.advertisement_number
             ad_url = ad.website_url
             ad_user = ad.user
@@ -82,55 +138,49 @@ def check_adv_count():
             # Count the occurances
             new_count = count_query_occurance(url=ad_url, query_str=ad_num)
 
-            # TODO: Check the counts > prev_counts
-            if new_count > ad_prev_count:
-                # Update the db
+            if new_count != ad_prev_count:
+                # TODO: uncomment - Update the db
                 # ad.occurrence_count = new_count
                 # ad.last_updated = datetime.utcnow()
 
                 # db.session.commit()
 
+
                 # Add to the dict
-                if ad_prev_count != 0:
-                    if ad_user.email in email_listing.keys():
-                        email_listing[ad_user.email]['ads'].append(
-                            {
-                                'adv_url': ad_url,
-                                'adv_num': ad_num
-                            }
-                        )
-                    else:
-                        email_listing.setdefault(
-                            ad_user.email, {
-                                'name': ad_user.fullname,
-                                'ads': [
-                                    {
-                                        'adv_url': ad_url,
-                                        'adv_num': ad_num
-                                    }
-                                ]
-                            }
-                        )
-
-            else:
-                pass
+                if ad_user.email in email_listing.keys():
+                    email_listing[ad_user.email]['ads'].append(
+                        {
+                            'adv_url': ad_url,
+                            'adv_num': ad_num,
+                            'adv_title': ad_title,
+                            'adv_count': new_count
+                        }
+                    )
+                else:
+                    email_listing.setdefault(
+                        ad_user.email, {
+                            'name': ad_user.fullname,
+                            'ads': [
+                                {
+                                    'adv_url': ad_url,
+                                    'adv_num': ad_num,
+                                    'adv_title': ad_title,
+                                    'adv_count': new_count
+                                }
+                            ]
+                        }
+                    )
+            
         
         
-        # TODO: Email users
-        email_listing = {
-            'rs_math1902@isibang.ac.in': {
-                'name': "Indrajit Ghosh",
-                'ads': [
-                    {
-                        'adv_url': 'https://wbcsconline.com',
-                        'adv_num': 'ADV-83-2020'
-                    }
-                ]
-            }
-        }
+        if email_listing:
+            # TODO: Email users
+            pprint(email_listing)
+            send_email(email_listing)   # TODO: Uncomment it!
+        else:
+            print("\n\nBot: Greetings, Indrajit! I've reviewed all ads, but no alterations were detected in their respective URLs. I'll attempt again in the future.\n\n")
 
-        # send_email(email_listing)   # TODO: Uncomment it!
-
+        send_email(test_dic)
 
 
 # @scheduler.task(
@@ -150,3 +200,5 @@ def check_adv_count():
 # @scheduler.task(id="test", trigger=CronTrigger.from_crontab("12 15 * * *"))
 # def test():
 #     print("job 1")
+            
+
