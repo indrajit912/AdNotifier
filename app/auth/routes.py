@@ -8,7 +8,7 @@ from flask_login import login_required, login_user, logout_user, current_user
 from sqlalchemy import desc
 from datetime import datetime
 
-from app.forms.auth_forms import EmailRegistrationForm, UserRegistrationForm, UserLoginForm, ResetPasswordForm, ForgotPasswordForm, ChangePasswordForm
+from app.forms.auth_forms import EmailRegistrationForm, UserRegistrationForm, UserLoginForm, ResetPasswordForm, ForgotPasswordForm, ChangePasswordForm, AddTelegramForm
 from app.models.user import User, MonitoredAd
 from app.extensions import db
 from app.utils.decorators import logout_required
@@ -388,5 +388,32 @@ def change_password(user_id):
         flash("Modifying passwords that belong to others is not allowed.", 'info')
         return redirect(url_for('auth.dashboard'))
 
-    
     return render_template('change_password.html', form=form)
+
+@auth_bp.route('/add_telegram/<int:user_id>', methods=['GET', 'POST'])
+@login_required
+def add_telegram(user_id):
+    form = AddTelegramForm()
+
+    user_to_update = User.query.get_or_404(user_id)
+
+    if current_user.id == user_to_update.id:
+        if user_to_update.telegram is not None:
+            flash("Your Telegram user ID has already been included in our database.", 'info')
+            return redirect(url_for('auth.dashboard'))
+    
+        # Change the telegram id
+        if form.validate_on_submit():
+            user_to_update.telegram = form.telegram_id.data
+
+            # Commit
+            db.session.commit()
+
+            flash("Your telegram user id added successfully.", 'success')
+            return redirect(url_for('auth.dashboard'))
+
+    else:
+        flash("Altering the Telegram user ID of others is not permitted.", 'info')
+        return redirect(url_for('auth.dashboard'))
+
+    return render_template('add_telegram.html', form=form)

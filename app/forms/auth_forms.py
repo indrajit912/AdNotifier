@@ -77,3 +77,9 @@ class ChangePasswordForm(FlaskForm):
     )
     submit = SubmitField('Submit')
 
+
+class AddTelegramForm(FlaskForm):
+    telegram_id = IntegerField("Enter Telegram User ID", validators=[DataRequired()])
+
+    submit = SubmitField('Submit')
+

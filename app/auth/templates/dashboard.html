@@ -24,7 +24,7 @@
                 <li>
                   <b>Telegram ID</b>: <code>{{ user.telegram }}</code> 
                   {% if not user.telegram %}
-                    (<a href="#" class="form-text">Wanna add?</a>)
+                    (<a href="{{ url_for('auth.add_telegram', user_id=user.id) }}" class="form-text">Wanna add?</a>)
                   {% endif %}
                 </li>
                 <li><b>Account Created</b>: <code>{{ convert_utc_to_ist(user.created_at.strftime("%Y-%m-%d %H:%M:%S")) }}</code> </li>

@@ -1,0 +1,57 @@
+<!-- app/auth/add_telegram.html -->
+{% extends 'base.html' %}
+
+{% block title %}Add Telegram{% endblock %}
+
+{% block content %}
+
+{% include 'flash_msgs.html' %}
+    <h1 class="heading">Add Your Telegram <code>User ID</code></h1>
+
+    <form method="POST" class="form-container">
+        {{ form.hidden_tag() }}
+
+        <div class="mb-3">
+            {{ form.telegram_id.label(class="form-label") }}
+            {{ form.telegram_id(class="form-control", placeholder="e.g- 117283748") }}
+            <div class="form-text">
+                Not sure about your Telegram <code>User ID</code>? 
+                <button type="button" style="display: inline;" data-bs-toggle="modal" data-bs-target="#telegramModal">
+                    <span class="text-decoration-underline" style="color: #007BFF;">Here's</span>
+                </button>
+                 how to find it!
+            </div>
+        </div>
+        
+        <div class="col-sm-10">
+            {{ form.submit(class="btn btn-primary") }}
+            <a href="{{ url_for('auth.dashboard') }}" class="btn btn-secondary">Back</a>
+        </div>
+        
+
+            <!-- Modal -->
+            <div class="modal fade" id="telegramModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="telegramModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="telegramModalLabel">How to Find Your Telegram <code>user ID</code></h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Locating someone on Telegram is made simple by using their Telegram username, serving as their unique ID on the platform. Additionally, every Telegram profile is linked to a <strong>numerical</strong> <code>user ID</code>.</p>
+                    
+                        <p>A Telegram <code>user ID</code> is a <i>numeric</i> identifier exclusive to a particular Telegram account. In contrast, a Telegram ID is your username, visible when others view your Telegram profile.</p>
+                    
+                        <p>To discover your Telegram <code>user ID</code>, access your Telegram account, tap the search icon, enter <a href="https://telegram.me/userinfobot"><code>@userinfobot</code></a>, and select it from the search results. Once open, click the "Start" button at the bottom, and the bot will provide you with your Telegram <code>user ID</code>. Note that this bot cannot be used to find someone else's Telegram <code>user ID</code>.</p>
+                    </div>
+
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Understood</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Modal end -->
+    </form>
+
+{% endblock %}
