@@ -140,10 +140,10 @@ def check_adv_count():
 
             if new_count != ad_prev_count:
                 # TODO: uncomment - Update the db
-                # ad.occurrence_count = new_count
-                # ad.last_updated = datetime.utcnow()
+                ad.occurrence_count = new_count
+                ad.last_updated = datetime.utcnow()
 
-                # db.session.commit()
+                db.session.commit()
 
 
                 # Add to the dict
@@ -180,7 +180,7 @@ def check_adv_count():
         else:
             print("\n\nBot: Greetings, Indrajit! I've reviewed all ads, but no alterations were detected in their respective URLs. I'll attempt again in the future.\n\n")
 
-        send_email(test_dic)
+      #  send_email(test_dic)
 
 
 # @scheduler.task(
