@@ -140,11 +140,7 @@ def check_adv_count():
             new_count = count_query_occurance(url=ad_url, query_str=ad_num)
 
             if new_count != ad_prev_count:
-<<<<<<< HEAD
                 # uncomment - Update the db
-=======
-                # TODO: uncomment - Update the db
->>>>>>> 88751b4019f510e2f71a3665c93e124631505c7f
                 ad.occurrence_count = new_count
                 ad.last_updated = datetime.utcnow()
 
@@ -184,11 +180,6 @@ def check_adv_count():
             send_email(email_listing)   # Uncomment it!
         else:
             print("\n\nBot: Greetings, Indrajit! I've reviewed all ads, but no alterations were detected in their respective URLs. I'll attempt again in the future.\n\n")
-
-<<<<<<< HEAD
-=======
-      #  send_email(test_dic)
->>>>>>> 88751b4019f510e2f71a3665c93e124631505c7f
 
 
 # @scheduler.task(
