@@ -16,6 +16,7 @@ from config import EmailConfig
 from flask import render_template
 from apscheduler.triggers.cron import CronTrigger
 from pprint import pprint
+from datetime import datetime
 
 
 def send_email(dic:dict):
@@ -139,11 +140,11 @@ def check_adv_count():
             new_count = count_query_occurance(url=ad_url, query_str=ad_num)
 
             if new_count != ad_prev_count:
-                # TODO: uncomment - Update the db
-                # ad.occurrence_count = new_count
-                # ad.last_updated = datetime.utcnow()
+                # uncomment - Update the db
+                ad.occurrence_count = new_count
+                ad.last_updated = datetime.utcnow()
 
-                # db.session.commit()
+                db.session.commit()
 
 
                 # Add to the dict
@@ -174,13 +175,12 @@ def check_adv_count():
         
         
         if email_listing:
-            # TODO: Email users
+            # Email users
             pprint(email_listing)
-            send_email(email_listing)   # TODO: Uncomment it!
+            send_email(email_listing)   # Uncomment it!
         else:
             print("\n\nBot: Greetings, Indrajit! I've reviewed all ads, but no alterations were detected in their respective URLs. I'll attempt again in the future.\n\n")
 
-        send_email(test_dic)
 
 
 # @scheduler.task(
