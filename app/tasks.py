@@ -64,60 +64,7 @@ def send_email(dic:dict):
             # Handle email sending error
             print(f"Error occured during email!\n{e}")
 
-test_dic = {
-            'rs_math1902@isibang.ac.in': {
-                'name': "Indrajit Office",
-                'ads': [
-                    {
-                        'adv_url': 'https://wbcsconline.com',
-                        'adv_num': 'ADV-83-2020',
-                        'adv_title': "SOme title",
-                        'adv_count': 37 
-                    },
-                    {
-                        'adv_url': 'https://fb.com',
-                        'adv_num': 'ADV-8e-2020',
-                        'adv_title': "SOme title 2",
-                        'adv_count': 0 
-                    },
-                    {
-                        'adv_url': 'https://yobae.com',
-                        'adv_num': 'ADV-ew-2020',
-                        'adv_title': "SOme title aother",
-                        'adv_count': 3 
-                    },
-                    {
-                        'adv_url': 'https://hell.com',
-                        'adv_num': 'ADV-83-df',
-                        'adv_title': "SOme title aother",
-                        'adv_count': -1
-                    }
-                ]
-            },
-            'indrajitghosh2014@gmail.com': {
-                'name': "Indrajit Office",
-                'ads': [
-                    {
-                        'adv_url': 'https://wbcsconline.com',
-                        'adv_num': 'ADV-83-2020',
-                        'adv_title': "SOme title",
-                        'adv_count': 37 
-                    },
-                    {
-                        'adv_url': 'https://fb.com',
-                        'adv_num': 'ADV-8e-2020',
-                        'adv_title': "SOme title 2",
-                        'adv_count': 0 
-                    },
-                    {
-                        'adv_url': 'https://hell.com',
-                        'adv_num': 'ADV-83-df',
-                        'adv_title': "SOme title aother",
-                        'adv_count': 36
-                    }
-                ]
-            }
-        }
+
 
 def check_adv_count():
     """

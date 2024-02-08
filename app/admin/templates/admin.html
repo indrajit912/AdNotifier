@@ -164,6 +164,7 @@
     <br><br>
 
     <!-- <h2>All Monitored Ads</h2> -->
+    {% if current_user.email == indrajit %}
     <div class="table-responsive">
         <table class="table table-striped table-hover table-bordered caption-top">
             <caption>List of MonitoredAds</caption>
@@ -220,5 +221,6 @@
             </tbody>
         </table>
     </div>
+    {% endif %}
 
 {% endblock %}
