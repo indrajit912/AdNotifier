@@ -7,9 +7,28 @@
 
 import random
 import hashlib
+import telegram
 from datetime import datetime, timedelta, timezone
 import requests
 from bs4 import BeautifulSoup
+
+def send_telegram_message_by_BOT(bot_token:str, user_id:str, message:str='Hello World!'):
+    """
+    Sends msg to a user from a bot
+    Parameter:
+    ----------
+        `bot_token`: str; The token of the bot which sends the msg
+        `user_id`: str; Telegram user_id of the receipent # use 'userinfobot' in 
+                        telegram to know the user_id
+        `message`: str
+    """
+    message = message.replace('&', 'and')
+    telegram_api_url = f"https://api.telegram.org/bot{bot_token}/sendMessage?chat_id={user_id}&text={message}"
+    try:
+        requests.get(telegram_api_url)
+    except Exception as err:
+        print(f"\n\nERROR: Telegram message couldn't be sent to {user_id}. \n {err}.\n")
+
 
 def generate_otp():
     """Generate a random 6-digit OTP (One-Time Password).

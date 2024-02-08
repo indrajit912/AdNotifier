@@ -22,6 +22,8 @@ BASE_DIR = Path(__file__).parent.resolve()
 
 DB_HOST = os.environ.get("DB_HOST")
 
+INDRA_ADNOTIFIER_TELEGRAM_BOT_TOKEN = os.environ.get("INDRA_ADNOTIFIER_TELEGRAM_BOT_TOKEN")
+
 class EmailConfig:
     INDRAJITS_BOT_EMAIL_ID = os.environ.get("INDRAJITS_BOT_EMAIL_ID")
     INDRAJITS_BOT_EMAIL_PASSWD = os.environ.get("INDRAJITS_BOT_APP_PASSWORD")

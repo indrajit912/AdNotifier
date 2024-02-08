@@ -10,7 +10,8 @@ This scripts contains the tasks to be performed while the app is running!
 
 from .extensions import scheduler, db
 from app.models.user import MonitoredAd, User
-from scripts.utils import count_query_occurance
+from scripts.utils import count_query_occurance, send_telegram_message_by_BOT
+from config import INDRA_ADNOTIFIER_TELEGRAM_BOT_TOKEN
 from scripts.email_message import EmailMessage
 from config import EmailConfig
 from flask import render_template
@@ -19,11 +20,18 @@ from pprint import pprint
 from datetime import datetime
 
 
-def send_email(dic:dict):
+def notify_user(dic:dict):
     """
+    Sends email and telegram notification to user!
+    Author: Indrajit Ghosh
+    Created On: Feb 06, 2024
+
+    Accepts: `dict`
+    --------
        dic = {
             'user_email@somewhere.com': {
                 'name': "Indrajit Ghosh",
+                'telegram': 228394822,
                 'ads': [
                     {
                         'adv_url': 'https://wbcsconline.com',
@@ -64,6 +72,25 @@ def send_email(dic:dict):
             # Handle email sending error
             print(f"Error occured during email!\n{e}")
 
+        
+        # Send telegram message.
+        telegram_user_id = val['telegram']
+        if telegram_user_id:
+            tel_msg = f"Hello {val['name']}, greetings from AdNotifier!\nThe following ads has some new notifications. Check the corresponding websites!.\n\n Best wishes,\nIndrajit Ghosh\n\n"
+            for i, ad in enumerate(val['ads']):
+                tel_msg += f"Ad # {i}" + "-" * 15 + "\n"
+                tel_msg += f"Adv title: {ad['adv_title']}\n"
+                tel_msg += f"Adv number: {ad['adv_num']}\n"
+                tel_msg += f"Adv url: {ad['adv_url']}\n"
+                tel_msg += "-"*20 + "\n"
+
+            # Send telegram msg
+            send_telegram_message_by_BOT(
+                bot_token=INDRA_ADNOTIFIER_TELEGRAM_BOT_TOKEN,
+                user_id=telegram_user_id,
+                message=tel_msg
+            )
+            
 
 
 def check_adv_count():
@@ -82,6 +109,11 @@ def check_adv_count():
             ad_url = ad.website_url
             ad_user = ad.user
             ad_prev_count = ad.occurrence_count
+            telegram = (
+                ad_user.telegram
+                if ad_user.telegram
+                else ''
+            )
 
             # Count the occurances
             new_count = count_query_occurance(url=ad_url, query_str=ad_num)
@@ -108,6 +140,7 @@ def check_adv_count():
                     email_listing.setdefault(
                         ad_user.email, {
                             'name': ad_user.fullname,
+                            'telegram': telegram,
                             'ads': [
                                 {
                                     'adv_url': ad_url,
@@ -120,11 +153,12 @@ def check_adv_count():
                     )
             
         
-        
         if email_listing:
-            # Email users
             pprint(email_listing)
-            send_email(email_listing)   # Uncomment it!
+
+            # Email the user.
+            notify_user(email_listing)
+            
         else:
             print("\n\nBot: Greetings, Indrajit! I've reviewed all ads, but no alterations were detected in their respective URLs. I'll attempt again in the future.\n\n")
 

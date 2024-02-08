@@ -31,7 +31,7 @@ def schedule():
     job = scheduler.add_job(
         func=check_adv_count,
         trigger="interval",
-        days=2,
+        days=5,
         id="check_adv_count_job",
         name="Checking users job notifications ...",
         replace_existing=True,
