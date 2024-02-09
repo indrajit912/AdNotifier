@@ -2,16 +2,17 @@
 # Author: Indrajit Ghosh
 # Created On: Feb 02, 2024
 #
-from flask import render_template, url_for, redirect, flash
+from flask import render_template, url_for, redirect, flash, current_app
 from flask_login import login_required, current_user
 from sqlalchemy import desc
 import logging
 
 from app.models.user import User, MonitoredAd
 from app.extensions import db, scheduler
+from app.utils.decorators import admin_required
 from scripts.utils import convert_utc_to_ist
 from scripts.email_message import EmailMessage
-from config import EmailConfig
+from config import EmailConfig, LOG_FILE
 
 from . import admin_bp
 
@@ -127,3 +128,16 @@ def toggle_admin(user_id):
         return redirect(url_for('admin.home'))
 
     
+@admin_bp.route('/logs')
+@login_required
+@admin_required
+def view_logs():
+    try:
+        # Read and display the content of the log file
+        with open(str(LOG_FILE), 'r') as log_file:
+            logs = log_file.read()
+            return render_template('logs.html', logs=logs)
+    except Exception as e:
+        # Handle any exceptions that may occur during file reading
+        current_app.logger.error(f"Error reading log file: {e}")
+        return render_template('log_error.html', error_message="Error reading log file")

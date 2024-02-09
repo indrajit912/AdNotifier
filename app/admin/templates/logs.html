@@ -1,0 +1,59 @@
+<!-- app/admin/templates/logs.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Logs</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #282c34; /* Dark terminal-style background */
+            color: #d0d0d0; /* Even lighter text color */
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 20px;
+            background-color: #000000; /* Dark container background */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 50px;
+            border-radius: 5px;
+        }
+
+        pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #d0d0d0; /* Even lighter text color */
+        }
+
+        h1 {
+            color: #61dafb; /* Light blue header color */
+        }
+
+        .timestamp {
+            color: #56b6c2; /* Different color for timestamp */
+        }
+
+        /* Media query for smaller screens */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+                margin-top: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Website Logs</h1>
+        <pre>{{ logs }}</pre>
+        
+    </div>
+</body>
+</html>
