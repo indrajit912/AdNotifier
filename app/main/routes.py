@@ -5,18 +5,21 @@
 #
 
 from . import main_bp
+import logging
 from flask import flash, redirect, render_template, url_for
 from app.forms.main_forms import ContactIndrajitForm
 from scripts.email_message import EmailMessage
 from config import EmailConfig
+
+logger = logging.getLogger(__name__)
 
 #######################################################
 #                      Homepage
 #######################################################
 @main_bp.route('/')
 def index():
+    logger.info("Visited homepage.")
     return render_template("index.html")
-
 
 @main_bp.route('/contact', methods=['GET', 'POST'])
 def contact():
@@ -56,11 +59,13 @@ def contact():
             form = ContactIndrajitForm(formdata=None)
 
             flash("Your email has been successfully delivered to Indrajit, and he will respond to you shortly.", 'success')
+            logger.info("Email sent to Indrajit by some user!")
             return redirect(url_for('main.contact'))
 
         except Exception as e:
             # Handle email sending error
             flash("Error occured during email!")
+            logger.error("Error occured during email to Indrajit.")
             return redirect(url_for('main.contact'))
 
     return render_template('contact.html', form=form)

@@ -8,7 +8,21 @@ import logging
 from flask import Flask
 from .extensions import db, migrate, login_manager, scheduler
 
-from config import ProductionConfig
+from config import ProductionConfig, LOG_FILE
+
+def configure_logging(app: Flask):
+    logging.basicConfig(
+        format='[%(asctime)s] %(levelname)s %(name)s: %(message)s',
+        filename=str(LOG_FILE)
+    )
+    logging.getLogger().setLevel(logging.INFO)
+    logging.getLogger("apscheduler").setLevel(logging.INFO)
+
+    if app.debug:
+        logging.getLogger().setLevel(logging.DEBUG)
+        
+        # Fix werkzeug handler in debug mode
+        logging.getLogger('werkzeug').handlers = []
 
 
 def create_app(config_class=ProductionConfig):
@@ -20,6 +34,9 @@ def create_app(config_class=ProductionConfig):
     app = Flask(__name__)
     app.config.from_object(config_class)
 
+    # Configure logging
+    configure_logging(app)
+
     # Initialize extensions
     db.init_app(app)
     migrate.init_app(app, db)
@@ -28,7 +45,6 @@ def create_app(config_class=ProductionConfig):
     login_manager.login_view = 'auth.login'
 
     scheduler.init_app(app)
-    logging.getLogger("apscheduler").setLevel(logging.INFO)
 
     from . import tasks
     scheduler.start()

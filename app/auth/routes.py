@@ -7,6 +7,7 @@ from flask import render_template, url_for, redirect, flash, request, jsonify
 from flask_login import login_required, login_user, logout_user, current_user
 from sqlalchemy import desc
 from datetime import datetime
+import logging
 
 from app.forms.auth_forms import EmailRegistrationForm, UserRegistrationForm, UserLoginForm, ResetPasswordForm, ForgotPasswordForm, ChangePasswordForm, AddTelegramForm
 from app.models.user import User, MonitoredAd
@@ -18,6 +19,7 @@ from scripts.email_message import EmailMessage
 from config import EmailConfig
 from . import auth_bp
 
+logger = logging.getLogger(__name__)
 
 # Login view (route)
 @auth_bp.route('/login', methods=['GET', 'POST'])
@@ -34,6 +36,7 @@ def login():
                 # Password matched!
                 login_user(user)
                 flash("Login successful!", 'success')
+                logger.info(f"User '{user.email}' successfully logged in.")
 
                 return redirect(url_for('auth.dashboard'))
             else:
@@ -82,11 +85,13 @@ def forgot_password():
                 )
 
                 flash('Password reset instructions sent to your email. Please check and follow the link.', 'info')
+                logger.info(f"Password reset instructions sent to '{user.email}'.")
                 return redirect(url_for('auth.login'))
 
             except Exception as e:
                 # TODO: Handle email sending error better
                 flash('An error occurred while attempting to send the password reset instructions. Try again!', 'danger')
+                logger.error("An error occurred while attempting to send the password reset instructions")
                 return redirect(url_for('auth.forgot_password'))
 
         else:
@@ -113,6 +118,7 @@ def reset_password(token):
         db.session.commit()
 
         flash('Password reset successfully! You can now log in with your new password.', 'success')
+        logger.info(f"Password reset successful for '{user.email}'.")
         return redirect(url_for('auth.login'))
     
     return render_template('reset_password.html', form=form)
@@ -134,7 +140,7 @@ def register_email():
             token = get_token_for_email_registration(fullname=form.fullname.data, email=form.email.data)
             acc_registration_url = url_for('auth.register_user', token=token, _external=True)
             
-            # TODO: Send acc_registration_url to the new user form.email.data.
+            # Send acc_registration_url to the new user form.email.data.
             _email_html_text = render_template(
                 'emails/email_register.html',
                 acc_registration_url=acc_registration_url,
@@ -156,12 +162,14 @@ def register_email():
                 )
 
                 flash('Almost there! New account registration instructions sent to your email. Please check and follow the link.', 'info')
+                logger.info(f"New acc registration instruction sent over email to '{form.email.data}'.")
                 form = EmailRegistrationForm(formdata=None)
                 return render_template('register_email.html', form=form)
             
             except Exception as e:
                 # TODO: Handle email sending error better
                 flash('An error occurred while attempting to send the account registration link through email. Try again!', 'danger')
+                logger.error("Error occurred while attempting to send the account registration link through email.")
                 return redirect(url_for('auth.register_email'))
 
 
@@ -206,6 +214,7 @@ def register_user(token):
             db.session.commit()
 
             flash("Congratulations! Your account has been successfully created. You can now log in using the provided credentials.", 'success')
+            logger.info(f"New account created successfully for user '{user.email}'.")
             return redirect(url_for('auth.login'))
 
         else:
@@ -227,6 +236,7 @@ def dashboard():
 def logout():
     logout_user()
     flash("You have been logged out successfully!", 'success')
+    logger.info("User logged out successfully.")
 
     return redirect(url_for('auth.login'))
 
@@ -264,6 +274,7 @@ def add_advertisement():
 
             # Return a success response
             flash("Advertisement entry added successfully!", 'success')
+            logger.info(f"User '{current_user.email}' added one entry to their dashboard.")
             return jsonify({'success': True}), 200
         
         elif occurrence_count == 0:
@@ -279,6 +290,7 @@ def add_advertisement():
     except Exception as e:
         # Handle any errors that may occur during the process
         flash("Error. Looks like there was a problem to update the information into the database.", 'danger')
+        logger.error(f"Database Error occured when user '{current_user.email}' tried to add entry to their dashboard.")
         return jsonify({'error': str(e)}), 500
 
 
@@ -336,6 +348,7 @@ def update_advertisement():
             try:
                 db.session.commit()
                 flash("The advertisement updated successfully.", 'success')
+                logger.info(f"User entry updated by the user '{current_user.email}'.")
                 return jsonify({'message': 'Advertisement updated successfully!'})
 
             except:
@@ -377,6 +390,7 @@ def change_password(user_id):
                 db.session.commit()
 
                 flash("Password changed successfully.", 'success')
+                logger.info(f"Password changed successfully for the user '{user_to_update.email}'.")
                 return redirect(url_for('auth.dashboard'))
 
             else:
@@ -410,6 +424,7 @@ def add_telegram(user_id):
             db.session.commit()
 
             flash("Your telegram user id added successfully.", 'success')
+            logger.info(f"Telegram id added for user '{user_to_update.email}.'")
             return redirect(url_for('auth.dashboard'))
 
     else:

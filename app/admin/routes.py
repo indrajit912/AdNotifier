@@ -5,6 +5,7 @@
 from flask import render_template, url_for, redirect, flash
 from flask_login import login_required, current_user
 from sqlalchemy import desc
+import logging
 
 from app.models.user import User, MonitoredAd
 from app.extensions import db, scheduler
@@ -14,15 +15,18 @@ from config import EmailConfig
 
 from . import admin_bp
 
+logger = logging.getLogger(__name__)
+
 @admin_bp.route('/')
 @login_required
 def home():
-    # TODO: Change the following condition to `if current_user.is_admin`
+    # Change the following condition to `if current_user.is_admin`
     if current_user.is_admin or current_user.email == EmailConfig.INDRAJIT912_GMAIL:
         # Retrieve all users and monitored ads from the database
         users = User.query.order_by(desc(User.created_at)).all()
         monitored_ads = MonitoredAd.query.order_by(desc(MonitoredAd.created_at)).all()
         adv_job = scheduler.get_job("check_adv_count_job")
+        logger.info(f"Admin dashboard visited by the admin '{current_user.email}'.")
 
         return render_template(
             'admin.html', 
@@ -41,7 +45,7 @@ def home():
 @login_required
 def delete_user(id):
     # Check whether current user is an admin
-    # TODO: Change the following condition to `if current_user.is_admin`
+    # Change the following condition to `if current_user.is_admin`
     if current_user.is_admin or current_user.email == EmailConfig.INDRAJIT912_GMAIL:
         user_to_delete = User.query.get_or_404(id)
         if user_to_delete.email == EmailConfig.INDRAJIT912_GMAIL:
@@ -53,6 +57,7 @@ def delete_user(id):
             return redirect(url_for('admin.home'))
         else:
             try:
+                logger.info(f"User '{user_to_delete.email} is deleted by admin '{current_user.fullname}'.")
                 db.session.delete(user_to_delete)
                 db.session.commit()
 
@@ -113,6 +118,7 @@ def toggle_admin(user_id):
         )
 
         flash(f'Admin status for user {user.fullname} has been updated.', 'success')
+        logger.info(f"Admin status for user '{user.fullname}' has been updated.")
         return redirect(url_for('admin.home'))
 
     except:
