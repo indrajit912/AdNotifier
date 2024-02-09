@@ -42,6 +42,37 @@ AdNotifier uses Bootstrap for the frontend, along with a custom CSS stylesheet (
 - Website: [https://indrajitghosh.onrender.com](https://indrajitghosh.onrender.com)
 - GitHub: [indrajit912](https://github.com/indrajit912)
 
+## Local Deployment Instructions
+
+To run the application locally, follow these steps:
+
+1. Clone the repository using the following command:
+    ```bash
+    git clone https://github.com/indrajit912/AdNotifier.git
+    ```
+
+2. Navigate to the `AdNotifier` directory:
+    ```bash
+    cd AdNotifier
+    ```
+
+3. Set up a virtual environment and install the required dependencies:
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+4. Create the database by entering the Flask shell:
+    ```bash
+    flask shell
+    from app import db
+    db.create_all()
+    ```
+
+5. Create an admin user:
+    ```bash
+    python manage.py create_admin
+    ```
+
 ## How to Contribute
 
 If you would like to contribute to AdNotifier, please follow these steps:
