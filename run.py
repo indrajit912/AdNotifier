@@ -34,11 +34,13 @@ from config import FLASK_ENV, DevelopmentConfig, ProductionConfig
 # Choose the appropriate configuration based on the environment
 if FLASK_ENV == 'dev':
     app_config = DevelopmentConfig
+    PORT = 8080
 elif FLASK_ENV == 'prod':
     app_config = ProductionConfig
+    PORT = 5000
 
 
 app = create_app(config_class=app_config)
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8080)
+    app.run(host='0.0.0.0', port=PORT)
