@@ -131,7 +131,7 @@ def toggle_admin(user_id):
 @admin_bp.route('/logs')
 @login_required
 @admin_required
-def view_logs():
+def logs():
     try:
         # Read and display the content of the log file
         with open(str(LOG_FILE), 'r') as log_file:

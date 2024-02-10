@@ -48,11 +48,35 @@
             }
         }
     </style>
+    <script>
+        // Function to scroll to the top of the page
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Function to scroll to the bottom of the page
+        function scrollToBottom() {
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        }
+    </script>
 </head>
 <body>
     <div class="container">
+
+        <a href="{{ url_for('admin.home') }}" style="color: #61dafb; text-decoration: none; margin-bottom: 20px; display: block;">
+            <!-- Add a button with a link to the admin dashboard -->
+            &lt; Back to Admin Dashboard
+        </a>
+
         <h1>Website Logs</h1>
+
+        <!-- Button to go to the bottom of the page -->
+        <button onclick="scrollToBottom()" class="btn" style="margin-top: 10px;">Scroll to Bottom</button>
+
         <pre>{{ logs }}</pre>
+
+        <!-- Button to go to the top of the page -->
+        <button onclick="scrollToTop()" class="btn" style="margin-bottom: 10px;">Scroll to Top</button>
         
     </div>
 </body>
