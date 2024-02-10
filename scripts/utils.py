@@ -128,3 +128,24 @@ def count_query_occurance(url:str, query_str:str):
     except requests.RequestException as e:
         return -1  # Error indicator
     
+
+def get_lines_in_reverse(file_path):
+    """
+    Reads a text file and returns its lines in reversed order as a string.
+
+    Parameters:
+    - file_path (str): The path to the text file.
+
+    Returns:
+    - str: Reversed lines of the text file joined by newline characters.
+           If an error occurs, returns an error message.
+    """
+    try:
+        with open(file_path, 'r') as file:
+            lines = file.readlines()
+            reversed_lines = [line.strip() for line in reversed(lines)]
+            return '\n'.join(reversed_lines)
+    except FileNotFoundError:
+        return f"Error: File '{file_path}' not found."
+    except Exception as e:
+        return f"An error occurred: {e}"

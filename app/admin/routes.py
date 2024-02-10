@@ -10,7 +10,7 @@ import logging
 from app.models.user import User, MonitoredAd
 from app.extensions import db, scheduler
 from app.utils.decorators import admin_required
-from scripts.utils import convert_utc_to_ist
+from scripts.utils import convert_utc_to_ist, get_lines_in_reverse
 from scripts.email_message import EmailMessage
 from config import EmailConfig, LOG_FILE
 
@@ -133,10 +133,10 @@ def toggle_admin(user_id):
 @admin_required
 def logs():
     try:
-        # Read and display the content of the log file
-        with open(str(LOG_FILE), 'r') as log_file:
-            logs = log_file.read()
-            return render_template('logs.html', logs=logs)
+        # Get the content of the log file
+        logs = get_lines_in_reverse(LOG_FILE)
+        
+        return render_template('logs.html', logs=logs)
     except Exception as e:
         # Handle any exceptions that may occur during file reading
         current_app.logger.error(f"Error reading log file: {e}")
