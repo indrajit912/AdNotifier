@@ -12,7 +12,7 @@ Usage:
     >>> python3 run.py
 
     - Run the gunicorn server
-    >>> /env/bin/gunicorn -c gunicorn_config.py run:app
+    >>> /env/bin/gunicorn --bind 0.0.0.0:5000 run:app
 
 Database initialization:
     1. flask shell
@@ -39,7 +39,6 @@ elif FLASK_ENV == 'prod':
 
 
 app = create_app(config_class=app_config)
-
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080)
