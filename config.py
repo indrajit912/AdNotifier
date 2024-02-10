@@ -24,6 +24,8 @@ DB_HOST = os.environ.get("DB_HOST")
 
 INDRA_ADNOTIFIER_TELEGRAM_BOT_TOKEN = os.environ.get("INDRA_ADNOTIFIER_TELEGRAM_BOT_TOKEN")
 
+FLASK_ENV = os.environ.get("FLASK_ENV")
+
 LOG_FILE = BASE_DIR / "app.log"
 
 class EmailConfig:

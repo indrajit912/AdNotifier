@@ -8,7 +8,11 @@
 This script starts the Flask development server to run the web application.
 
 Usage:
-    python3 run.py
+    - Run the Flask development server:
+    >>> python3 run.py
+
+    - Run the gunicorn server
+    >>> /env/bin/gunicorn -c gunicorn_config.py run:app
 
 Database initialization:
     1. flask shell
@@ -25,9 +29,16 @@ Note: Flask Migration
 """
 
 from app import create_app
-from config import DevelopmentConfig
+from config import FLASK_ENV, DevelopmentConfig, ProductionConfig
 
-app = create_app(DevelopmentConfig) # Change the config before deploying
+# Choose the appropriate configuration based on the environment
+if FLASK_ENV == 'dev':
+    app_config = DevelopmentConfig
+elif FLASK_ENV == 'prod':
+    app_config = ProductionConfig
+
+
+app = create_app(config_class=app_config)
 
 
 if __name__ == '__main__':
