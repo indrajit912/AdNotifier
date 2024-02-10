@@ -290,7 +290,7 @@ def add_advertisement():
     except Exception as e:
         # Handle any errors that may occur during the process
         flash("Error. Looks like there was a problem to update the information into the database.", 'danger')
-        logger.error(f"Database Error occured when user '{current_user.email}' tried to add entry to their dashboard.")
+        logger.error(f"Database Error occured when user '{current_user.email}' tried to add entry to their dashboard.{e}")
         return jsonify({'error': str(e)}), 500
 
 

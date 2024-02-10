@@ -120,7 +120,12 @@ def count_query_occurance(url:str, query_str:str):
         soup = BeautifulSoup(response.text, 'html.parser')
 
         # Find all occurrences of the advertisement number on the page
-        occurrences = soup.body.text.count(query_str)
+        occurrences = (
+            soup.body.text.count(query_str)
+            if soup.body
+            else
+            soup.text.count(query_str)
+        )
 
         return occurrences
 
