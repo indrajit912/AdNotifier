@@ -11,7 +11,7 @@ from wtforms.validators import DataRequired, EqualTo, Optional, Length
 class UserLoginForm(FlaskForm):
     email = EmailField("Email address", validators=[DataRequired()])
     passwd = PasswordField("Password", validators=[DataRequired()])
-    submit = SubmitField("Submit")
+    submit = SubmitField("Log in")
 
 
 class EmailRegistrationForm(FlaskForm):
