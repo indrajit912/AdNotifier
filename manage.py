@@ -7,9 +7,27 @@ from flask import current_app
 from flask.cli import FlaskGroup
 from app.extensions import db
 from app.models.user import User
+from app.utils.database_helpers import update_page_content_hashes
 import getpass
 
 cli = FlaskGroup(current_app)
+
+@cli.command("update_hashes")
+def update_hashes():
+    """
+    Command-line utility to update the page_content_hash for MonitoredAd records.
+
+    This command calculates and updates the page_content_hash for MonitoredAd records
+    with a None value.
+
+    Usage:
+        python manage.py update_page_content_hashes
+
+    Returns:
+        None
+    """
+    with current_app.app_context():
+        update_page_content_hashes()
 
 @cli.command("all_users")
 def all_users():

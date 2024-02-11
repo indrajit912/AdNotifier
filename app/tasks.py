@@ -10,7 +10,7 @@ This scripts contains the tasks to be performed while the app is running!
 
 from .extensions import scheduler, db
 from app.models.user import MonitoredAd, User
-from scripts.utils import count_query_occurance, send_telegram_message_by_BOT
+from scripts.utils import count_query_occurance, send_telegram_message_by_BOT, get_webpage_sha256
 from config import INDRA_ADNOTIFIER_TELEGRAM_BOT_TOKEN
 from scripts.email_message import EmailMessage
 from config import EmailConfig
@@ -109,6 +109,7 @@ def check_adv_count():
             ad_url = ad.website_url
             ad_user = ad.user
             ad_prev_count = ad.occurrence_count
+            ad_pg_tracking = ad.webpage_tracking
             telegram = (
                 ad_user.telegram
                 if ad_user.telegram
@@ -151,6 +152,44 @@ def check_adv_count():
                             ]
                         }
                     )
+            else:
+                # TODO: Check the website content hash
+                current_hash = get_webpage_sha256(ad.website_url)
+                
+                if current_hash != -1:
+                    if not current_hash == ad.page_content_hash:
+                        # Update the db
+                        ad.page_content_hash = current_hash
+                        ad.last_updated = datetime.utcnow()
+
+                        db.session.commit()
+                        
+                        # Add to the dict
+                        if ad_user.email in email_listing.keys():
+                            email_listing[ad_user.email]['ads'].append(
+                                {
+                                    'adv_url': ad_url,
+                                    'adv_num': ad_num,
+                                    'adv_title': ad_title,
+                                    'adv_count': new_count
+                                }
+                            )
+                        else:
+                            email_listing.setdefault(
+                                ad_user.email, {
+                                    'name': ad_user.fullname,
+                                    'telegram': telegram,
+                                    'ads': [
+                                        {
+                                            'adv_url': ad_url,
+                                            'adv_num': ad_num,
+                                            'adv_title': ad_title,
+                                            'adv_count': new_count
+                                        }
+                                    ]
+                                }
+                            )
+
             
         
         if email_listing:

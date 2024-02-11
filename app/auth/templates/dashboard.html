@@ -71,11 +71,6 @@
                     <textarea class="form-control" id="adv-description" placeholder="e.g.- Level 10, Grade A post. The last date of application was Jul 04, 2023" rows="4"></textarea>
                   </div>
 
-                  <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" role="switch" id="webpageTracking">
-                    <label class="form-check-label" for="webpageTracking">Webpage content tracking (optional)</label>
-                  </div>
-
                 </form>
               
               
@@ -143,14 +138,11 @@
                         <b>Description</b>: <br> <code>{{ ad.description }}</code>
                     {% endif %}
                     
-                    {% if ad.webpage_tracking %}
-                        <br><br>
-                        <b>Webpage content tracking</b>: <code>{{ ad.webpage_tracking }}</code>
-                        {% if current_user.is_admin %}
-                          <br>
-                          <b>Webpage SHA-256 hash</b>: <code>{{ ad.page_content_hash }}</code>
-                        {% endif %}
+                    {% if current_user.is_admin %}
+                      <br><br>
+                      <b>Webpage SHA-256 hash</b>: <code>{{ ad.page_content_hash }}</code>
                     {% endif %}
+
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -200,15 +192,6 @@
                       <div class="mb-3">
                         <label for="adv-descUpdate-{{ ad.id }}" class="col-form-label">Description (optional):</label>
                         <textarea class="form-control" id="adv-descUpdate-{{ ad.id }}">{{ ad.description }}</textarea>
-                      </div>
-                      <div class="form-check form-switch">
-                        <!-- Check the calue of ad.page_tracking and then modify the property `checked` -->
-                        {% if ad.webpage_tracking %}
-                          <input class="form-check-input" type="checkbox" role="switch" id="webpageTracking-{{ ad.id }}" checked>
-                        {% else %}
-                          <input class="form-check-input" type="checkbox" role="switch" id="webpageTracking-{{ ad.id }}">
-                        {% endif %}
-                        <label class="form-check-label" for="webpageTracking-{{ ad.id }}">Webpage content tracking (optional)</label>
                       </div>
                     </form>
                   </div>

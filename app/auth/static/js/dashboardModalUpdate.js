@@ -16,7 +16,6 @@ function updateDashboardAdvertisement(adId) {
     var advNum = document.querySelector('#adv-numUpdate-' + adId).value;
     var advUrl = document.querySelector('#adv-urlUpdate-' + adId).value;
     var advDesc = document.querySelector('#adv-descUpdate-' + adId).value;
-    var webpageTracking = document.querySelector('#webpageTracking-' + adId).checked;
 
     // Make a POST request to the server
     fetch(updateAdvertisementUrl, {
@@ -29,8 +28,7 @@ function updateDashboardAdvertisement(adId) {
             advTitle: advTitle,
             advNum: advNum,
             advUrl: advUrl,
-            advDesc: advDesc,
-            webpageTracking: webpageTracking
+            advDesc: advDesc
         }),
     })
     .then(response => response.json())

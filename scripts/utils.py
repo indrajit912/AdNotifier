@@ -28,7 +28,6 @@ def send_telegram_message_by_BOT(bot_token:str, user_id:str, message:str='Hello 
     except Exception as err:
         print(f"\n\nERROR: Telegram message couldn't be sent to {user_id}. \n {err}.\n")
 
-
 def generate_otp():
     """Generate a random 6-digit OTP (One-Time Password).
 
@@ -86,6 +85,35 @@ def convert_utc_to_ist(utc_datetime_str):
     formatted_datetime = ist_datetime.strftime("%b %d, %Y %I:%M %p IST")
 
     return formatted_datetime
+
+def get_webpage_sha256(url):
+    """
+    Retrieve the content of a webpage at the specified URL, compute its SHA-256 hash, and return the hash.
+
+    Author: Indrajit Ghosh
+    Created On: Feb 11, 2024
+
+    :param url: The URL of the webpage.
+    :type url: str
+
+    :return: The SHA-256 hash of the webpage content.
+             If an error occurs during the request or parsing, returns -1.
+    :rtype: str or int
+    """
+    try:
+        try:
+            res = requests.get(url)
+        except requests.exceptions.SSLError:
+            res = requests.get(url, verify=False)
+        res.raise_for_status()
+
+        soup = BeautifulSoup(res.text, 'html.parser')
+        return sha256_hash(soup.text)
+
+    except requests.RequestException as e:
+        # If an error occurs during the request or parsing, return -1
+        return -1
+
 
 def count_query_occurance(url:str, query_str:str):
     """

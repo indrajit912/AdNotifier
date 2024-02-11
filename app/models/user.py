@@ -5,8 +5,6 @@
 
 from datetime import datetime
 import secrets
-import requests
-from bs4 import BeautifulSoup
 from itsdangerous import URLSafeTimedSerializer
 from flask import current_app
 from flask_login import UserMixin
@@ -24,27 +22,13 @@ class MonitoredAd(db.Model):
     occurrence_count = db.Column(db.Integer, default=0)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     last_updated = db.Column(db.DateTime, default=datetime.utcnow)
-    webpage_tracking = db.Column(db.Boolean, default=False)
     page_content_hash = db.Column(db.String(128), nullable=True)
-    
-    # You can add additional fields as needed, e.g., last_checked_at, notification_status, etc.
 
     # Foreign Key to refer to the user
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     def __repr__(self):
         return f"<MonitoredAd(id={self.id}, advertisement_number='{self.advertisement_number}', website_url='{self.website_url}', user_id={self.user_id})>"
-
-    def set_page_content_hash(self):
-        """Sets the page content hash"""
-        if self.webpage_tracking:
-            res = requests.get(self.website_url)
-            res.raise_for_status()
-
-            soup = BeautifulSoup(res.text, 'html.parser')
-            self.page_content_hash = sha256_hash(soup.text)
-        else:
-            self.page_content_hash = None
     
 
 class User(db.Model, UserMixin):

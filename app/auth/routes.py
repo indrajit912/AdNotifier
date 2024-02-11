@@ -14,7 +14,7 @@ from app.models.user import User, MonitoredAd
 from app.extensions import db
 from app.utils.decorators import logout_required
 from app.utils.token import get_token_for_email_registration, confirm_email_registration_token
-from scripts.utils import convert_utc_to_ist, count_query_occurance
+from scripts.utils import convert_utc_to_ist, count_query_occurance, get_webpage_sha256
 from scripts.email_message import EmailMessage
 from config import EmailConfig
 from . import auth_bp
@@ -250,12 +250,6 @@ def add_advertisement():
         advertisement_number = request.form.get('advertisement_number')
         website_url = request.form.get('website_url')
         description = request.form.get('description')
-        webpage_tracking = (
-            True
-            if request.form.get('webpage_tracking') == 'true'
-            else
-            False
-        )
 
         # Calculate the count
         occurrence_count = count_query_occurance(url=website_url, query_str=advertisement_number)
@@ -271,11 +265,19 @@ def add_advertisement():
                 website_url = website_url,
                 description=description,
                 occurrence_count=occurrence_count,
-                webpage_tracking=webpage_tracking,
                 user_id = ad_user_id
             )
 
-            monitored_ad.set_page_content_hash()
+            # Set web page hash
+            h = get_webpage_sha256(url=monitored_ad.website_url)
+            if h != -1:
+                # Hash found
+                monitored_ad.page_content_hash = h
+            else:
+                flash(f"Cannot reach the webpage '{monitored_ad.website_url}' rightnow. Try again later!")
+                return jsonify({'error': False}), 500
+            
+            monitored_ad.last_updated = datetime.utcnow()
 
             # Add the new advertisement to the database
             db.session.add(monitored_ad)
@@ -339,7 +341,6 @@ def update_advertisement():
     adv_num = request.json['advNum']
     adv_url = request.json['advUrl']
     adv_desc = request.json['advDesc']
-    adv_page_tracking = request.json['webpageTracking']
 
     ad_to_update = MonitoredAd.query.get_or_404(ad_id)
     if ad_to_update.user_id == current_user.id:
@@ -353,10 +354,17 @@ def update_advertisement():
             ad_to_update.website_url = adv_url
             ad_to_update.description = adv_desc
             ad_to_update.occurrence_count = occurrence_count
-            ad_to_update.last_updated = datetime.utcnow()
-            ad_to_update.webpage_tracking = adv_page_tracking
 
-            ad_to_update.set_page_content_hash()
+            # Set web page hash
+            h = get_webpage_sha256(url=ad_to_update.website_url)
+            if h != -1:
+                # Hash found
+                ad_to_update.page_content_hash = h
+            else:
+                flash(f"Cannot reach the webpage '{ad_to_update.website_url}' rightnow. Try again later!")
+                return jsonify({'error': False}), 500
+            
+            ad_to_update.last_updated = datetime.utcnow()
 
             try:
                 db.session.commit()
