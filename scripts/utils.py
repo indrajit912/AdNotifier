@@ -7,7 +7,6 @@
 
 import random
 import hashlib
-import telegram
 from datetime import datetime, timedelta, timezone
 import requests
 from bs4 import BeautifulSoup

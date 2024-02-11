@@ -77,6 +77,7 @@ def toggle_admin(user_id):
     # Ensure the current user has admin privileges
     if not current_user.email == EmailConfig.INDRAJIT912_GMAIL:
         flash('You do not have permission to perform this action.', 'danger')
+        logger.warning(f"The user '{current_user.email}' tried to toggle admin status!")
         return redirect(url_for('auth.dashboard'))
 
     # Get the user by ID

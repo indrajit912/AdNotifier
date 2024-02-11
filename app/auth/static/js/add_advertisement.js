@@ -10,13 +10,15 @@ $(document).ready(function () {
     var advNumber = $('#adv-number').val();
     var webUrl = $('#adv-web-url').val();
     var advDesc = $('#adv-description').val();
+    var webpageTracking = $('#webpageTracking').prop('checked');
 
     // Create an object with the form values
     var formData = {
       title: advTitle,
       advertisement_number: advNumber,
       website_url: webUrl,
-      description: advDesc
+      description: advDesc,
+      webpage_tracking: webpageTracking
     };
 
     // Send a POST request using jQuery

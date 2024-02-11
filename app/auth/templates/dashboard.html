@@ -65,9 +65,15 @@
                     <textarea class="form-control" id="adv-web-url" placeholder="e.g.- https://www.iiserpune.ac.in/opportunities"></textarea>
                   </div>
 
+
                   <div class="mb-3">
                     <label for="adv-description" class="col-form-label">Description (optional)</label>
                     <textarea class="form-control" id="adv-description" placeholder="e.g.- Level 10, Grade A post. The last date of application was Jul 04, 2023" rows="4"></textarea>
+                  </div>
+
+                  <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" role="switch" id="webpageTracking">
+                    <label class="form-check-label" for="webpageTracking">Webpage content tracking (optional)</label>
                   </div>
 
                 </form>
@@ -129,12 +135,21 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
                   <div class="modal-body">
-                    <b>Advertisement Number</b>:  {{ ad.advertisement_number }}
+                    <b>Advertisement Number</b>:  <code>{{ ad.advertisement_number }}</code>
                     <br><br>
-                    <b>Website</b>: <br> {{ ad.website_url }}
+                    <b>Website</b>: <br> <code>{{ ad.website_url }}</code>
                     {% if ad.description %}
                         <br><br>
-                        <b>Description</b>: <br> {{ ad.description }}
+                        <b>Description</b>: <br> <code>{{ ad.description }}</code>
+                    {% endif %}
+                    
+                    {% if ad.webpage_tracking %}
+                        <br><br>
+                        <b>Webpage content tracking</b>: <code>{{ ad.webpage_tracking }}</code>
+                        {% if current_user.is_admin %}
+                          <br>
+                          <b>Webpage SHA-256 hash</b>: <code>{{ ad.page_content_hash }}</code>
+                        {% endif %}
                     {% endif %}
                   </div>
                   <div class="modal-footer">
@@ -185,6 +200,15 @@
                       <div class="mb-3">
                         <label for="adv-descUpdate-{{ ad.id }}" class="col-form-label">Description (optional):</label>
                         <textarea class="form-control" id="adv-descUpdate-{{ ad.id }}">{{ ad.description }}</textarea>
+                      </div>
+                      <div class="form-check form-switch">
+                        <!-- Check the calue of ad.page_tracking and then modify the property `checked` -->
+                        {% if ad.webpage_tracking %}
+                          <input class="form-check-input" type="checkbox" role="switch" id="webpageTracking-{{ ad.id }}" checked>
+                        {% else %}
+                          <input class="form-check-input" type="checkbox" role="switch" id="webpageTracking-{{ ad.id }}">
+                        {% endif %}
+                        <label class="form-check-label" for="webpageTracking-{{ ad.id }}">Webpage content tracking (optional)</label>
                       </div>
                     </form>
                   </div>

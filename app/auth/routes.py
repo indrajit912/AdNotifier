@@ -250,6 +250,12 @@ def add_advertisement():
         advertisement_number = request.form.get('advertisement_number')
         website_url = request.form.get('website_url')
         description = request.form.get('description')
+        webpage_tracking = (
+            True
+            if request.form.get('webpage_tracking') == 'true'
+            else
+            False
+        )
 
         # Calculate the count
         occurrence_count = count_query_occurance(url=website_url, query_str=advertisement_number)
@@ -265,8 +271,11 @@ def add_advertisement():
                 website_url = website_url,
                 description=description,
                 occurrence_count=occurrence_count,
+                webpage_tracking=webpage_tracking,
                 user_id = ad_user_id
             )
+
+            monitored_ad.set_page_content_hash()
 
             # Add the new advertisement to the database
             db.session.add(monitored_ad)
@@ -330,6 +339,7 @@ def update_advertisement():
     adv_num = request.json['advNum']
     adv_url = request.json['advUrl']
     adv_desc = request.json['advDesc']
+    adv_page_tracking = request.json['webpageTracking']
 
     ad_to_update = MonitoredAd.query.get_or_404(ad_id)
     if ad_to_update.user_id == current_user.id:
@@ -344,6 +354,9 @@ def update_advertisement():
             ad_to_update.description = adv_desc
             ad_to_update.occurrence_count = occurrence_count
             ad_to_update.last_updated = datetime.utcnow()
+            ad_to_update.webpage_tracking = adv_page_tracking
+
+            ad_to_update.set_page_content_hash()
 
             try:
                 db.session.commit()
