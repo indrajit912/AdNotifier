@@ -22,7 +22,7 @@ class MonitoredAd(db.Model):
     occurrence_count = db.Column(db.Integer, default=0)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     last_updated = db.Column(db.DateTime, default=datetime.utcnow)
-    page_content_hash = db.Column(db.String(128), nullable=True)
+    page_content_hash = db.Column(db.String(128), nullable=True) # TODO: change nullable = False
 
     # Foreign Key to refer to the user
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))

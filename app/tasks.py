@@ -18,6 +18,9 @@ from flask import render_template
 from apscheduler.triggers.cron import CronTrigger
 from pprint import pprint
 from datetime import datetime
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 def notify_user(dic:dict):
@@ -71,6 +74,7 @@ def notify_user(dic:dict):
         except Exception as e:
             # Handle email sending error
             print(f"Error occured during email!\n{e}")
+            logger.error(f"TASK_ERR: Error occured while sending emails. {e}")
 
         
         # Send telegram message.
@@ -109,7 +113,6 @@ def check_adv_count():
             ad_url = ad.website_url
             ad_user = ad.user
             ad_prev_count = ad.occurrence_count
-            ad_pg_tracking = ad.webpage_tracking
             telegram = (
                 ad_user.telegram
                 if ad_user.telegram
@@ -153,7 +156,7 @@ def check_adv_count():
                         }
                     )
             else:
-                # TODO: Check the website content hash
+                # Check the website content hash
                 current_hash = get_webpage_sha256(ad.website_url)
                 
                 if current_hash != -1:
@@ -163,7 +166,7 @@ def check_adv_count():
                         ad.last_updated = datetime.utcnow()
 
                         db.session.commit()
-                        
+
                         # Add to the dict
                         if ad_user.email in email_listing.keys():
                             email_listing[ad_user.email]['ads'].append(
@@ -197,10 +200,11 @@ def check_adv_count():
 
             # Email the user.
             notify_user(email_listing)
+            logger.info("TASK_DONE: Email(s) sent to users!")
             
         else:
             print("\n\nBot: Greetings, Indrajit! I've reviewed all ads, but no alterations were detected in their respective URLs. I'll attempt again in the future.\n\n")
-
+            logger.warning("TASK_DONE: No new updates for users found. Hence no email was sent!")
 
 # @scheduler.task(
 #     "interval",

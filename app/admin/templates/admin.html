@@ -165,7 +165,7 @@
 
     <!-- <h2>All Monitored Ads</h2> -->
     {% if current_user.email == indrajit %}
-    <div class="table-responsive">
+    <div class="">
         <table class="table table-striped table-hover table-bordered caption-top">
             <caption>List of MonitoredAds</caption>
             <thead>
@@ -196,13 +196,15 @@
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                   </div>
                                   <div class="modal-body">
-                                    <b>Advertisement Number</b>:  {{ ad.advertisement_number }}
+                                    <b>Advertisement Number</b>:  <code>{{ ad.advertisement_number }}</code>
                                     <br><br>
-                                    <b>Website</b>: <br> {{ ad.website_url }}
+                                    <b>Website</b>: <br> <code>{{ ad.website_url }}</code>
                                     {% if ad.description %}
                                         <br><br>
-                                        <b>Description</b>: <br> {{ ad.description }}
+                                        <b>Description</b>: <br> <code>{{ ad.description }}</code>
                                     {% endif %}
+                                    <br><br>
+                                    <b>Webpage SHA-256 hash</b>: <br> <code>{{ ad.page_content_hash }}</code>
 
                                   </div>
                                   <div class="modal-footer">

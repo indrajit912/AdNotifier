@@ -68,6 +68,8 @@ def create_admin():
         print("Passwords don't match")
     else:
         try:
+            nickname = None if nickname == '' else nickname
+            telegram = None if telegram == '' else telegram
             user = User(
                 fullname=fullname,
                 nickname=nickname,
