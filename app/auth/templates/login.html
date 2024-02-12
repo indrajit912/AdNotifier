@@ -6,27 +6,28 @@
 {% block content %}
     {% include 'flash_msgs.html' %}
 
-    <h1 class="heading">Login</h1>
+    <h1 class="heading">Log in</h1>
 
     <!-- Login form goes here -->
     <form method="POST" class="form-container">
         {{ form.hidden_tag() }}
 
-        <div class="mb-3">
+        <div class="form-floating mb-3">
+            {{ form.email(class="form-control", placeholder="someone@somewhere.com") }}
             {{ form.email.label(class="form-label") }}
-            {{ form.email(class="form-control") }}
         </div>
 
-        <div class="mb-3">
-            {{ form.passwd.label(class="form-label") }}
-            {{ form.passwd(class="form-control") }}
+
+        <div class="form-floating mb-3">
+            {{ form.passwd(class="form-control", placeholder="password") }}
+            {{ form.passwd.label(class="form-label") }}         
         </div>
 
         
         <div class="col-sm-10">
             {{ form.submit(class="btn btn-primary") }}
             <div class="form-text"><a href="{{ url_for('auth.forgot_password') }}">Forgot password?</a></div>
-            <div class="form-text"><a href="{{ url_for('auth.register_email') }}">Don't have an account? Register here.</a></div>
+            <span class="form-text">New here? <a href="{{ url_for('auth.register_email') }}">Register now.</a></span>
         </div> 
     </form>
 

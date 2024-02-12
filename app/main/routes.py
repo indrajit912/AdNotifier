@@ -21,6 +21,10 @@ def index():
     logger.info("Visited homepage.")
     return render_template("index.html")
 
+@main_bp.route('/home')
+def home():
+    return render_template("home.html")
+
 @main_bp.route('/contact', methods=['GET', 'POST'])
 def contact():
     form = ContactIndrajitForm()
