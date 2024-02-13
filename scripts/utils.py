@@ -10,6 +10,9 @@ import hashlib
 from datetime import datetime, timedelta, timezone
 import requests
 from bs4 import BeautifulSoup
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
 
 def send_telegram_message_by_BOT(bot_token:str, user_id:str, message:str='Hello World!'):
     """
@@ -113,6 +116,45 @@ def get_webpage_sha256(url):
     except requests.RequestException as e:
         # If an error occurs during the request or parsing, return -1
         return -1
+    
+def get_webpage_sha256_selenium(url):
+    """
+    Retrieve the content of a webpage at the specified URL, compute its SHA-256 hash, and return the hash using Selenium.
+
+    :param url: The URL of the webpage.
+    :type url: str
+
+    :return: The SHA-256 hash of the webpage content.
+             If an error occurs during the request or parsing, returns -1.
+    :rtype: str or int
+    """
+    try:
+        # Set up a headless Chrome browser
+        chrome_options = Options()
+        chrome_options.add_argument('--headless')
+        driver = webdriver.Chrome(options=chrome_options)
+
+        # Fetch the webpage
+        driver.get(url)
+
+        # Wait for some time to ensure dynamic content is loaded (you may need to adjust this)
+        driver.implicitly_wait(5)
+
+        # Get the webpage content
+        webpage_content = driver.page_source
+
+        # Compute the SHA-256 hash
+        hash_object = hashlib.sha256(webpage_content.encode())
+        sha256_hash = hash_object.hexdigest()
+
+        # Close the browser
+        driver.quit()
+
+        return sha256_hash
+
+    except Exception as e:
+        # If an error occurs during the request or parsing, return -1
+        return -1
 
 
 def count_query_occurance(url:str, query_str:str):
@@ -158,6 +200,51 @@ def count_query_occurance(url:str, query_str:str):
 
 
     except requests.RequestException as e:
+        return -1  # Error indicator
+    
+
+def count_query_occurrence_selenium(url: str, query_str: str):
+    """
+    Count the number of occurrences of a given query_str on a web page using Selenium.
+
+    Parameters:
+    - url (str): The URL of the web page to analyze.
+    - query_str (str): The query to search for.
+
+    Returns:
+    - int: The number of occurrences of the query_str on the page.
+           Returns -1 if there is an error fetching the website content.
+
+    Example:
+    ```python
+    url = "https://example.com"
+    query_str = "ABC123"
+    occurrences = count_query_occurrence_selenium(url, query_str)
+    print(f"The query '{query_str}' appears {occurrences} times on the page.")
+    ```
+    """
+    try:
+        # Set up a headless Chrome browser
+        chrome_options = Options()
+        chrome_options.add_argument('--headless')
+        driver = webdriver.Chrome(options=chrome_options)
+
+        # Fetch the webpage
+        driver.get(url)
+
+        # Wait for some time to ensure dynamic content is loaded (you may need to adjust this)
+        driver.implicitly_wait(5)
+
+        # Find all occurrences of the query string on the page
+        elements = driver.find_elements(By.XPATH, f"//*[contains(text(), '{query_str}')]")
+        occurrences = len(elements)
+
+        # Close the browser
+        driver.quit()
+
+        return occurrences
+
+    except Exception as e:
         return -1  # Error indicator
     
 

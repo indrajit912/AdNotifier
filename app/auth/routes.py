@@ -14,7 +14,7 @@ from app.models.user import User, MonitoredAd
 from app.extensions import db
 from app.utils.decorators import logout_required
 from app.utils.token import get_token_for_email_registration, confirm_email_registration_token
-from scripts.utils import convert_utc_to_ist, count_query_occurance, get_webpage_sha256
+from scripts.utils import convert_utc_to_ist, count_query_occurance, count_query_occurrence_selenium, get_webpage_sha256, get_webpage_sha256_selenium
 from scripts.email_message import EmailMessage
 from config import EmailConfig
 from . import auth_bp
@@ -290,8 +290,44 @@ def add_advertisement():
         
         elif occurrence_count == 0:
             # Adv num is not on the page.
-            flash(f"The advertisement with the number '{advertisement_number}' is not present on the webpage. Please retry with a different advertisement number.", 'warning')
-            return jsonify({'error': False}), 500
+            # Check with selenium
+            occurrence_count = count_query_occurrence_selenium(url=website_url, query_str=advertisement_number)
+            if occurrence_count > 0:
+                # Add it
+                ad_user_id = current_user.id
+
+                monitored_ad = MonitoredAd(
+                    title=title,
+                    advertisement_number = advertisement_number,
+                    website_url = website_url,
+                    description=description,
+                    occurrence_count=occurrence_count,
+                    user_id = ad_user_id
+                )
+
+                # Set web page hash
+                h = get_webpage_sha256_selenium(url=monitored_ad.website_url)
+                if h != -1:
+                    # Hash found
+                    monitored_ad.page_content_hash = h
+                else:
+                    flash(f"Cannot reach the webpage '{monitored_ad.website_url}' rightnow. Try again later!")
+                    return jsonify({'error': False}), 500
+
+                monitored_ad.last_updated = datetime.utcnow()
+
+                # Add the new advertisement to the database
+                db.session.add(monitored_ad)
+                db.session.commit()
+
+                # Return a success response
+                flash("Advertisement entry added successfully!", 'success')
+                logger.info(f"User '{current_user.email}' added one entry to their dashboard.")
+                return jsonify({'success': True}), 200
+                
+            else:
+                flash(f"The advertisement with the number '{advertisement_number}' is not present on the webpage. Please retry with a different advertisement number.", 'warning')
+                return jsonify({'error': False}), 500
         
         else:
             # Error in the URL

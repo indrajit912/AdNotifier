@@ -10,7 +10,7 @@ This scripts contains the tasks to be performed while the app is running!
 
 from .extensions import scheduler, db
 from app.models.user import MonitoredAd, User
-from scripts.utils import count_query_occurance, send_telegram_message_by_BOT, get_webpage_sha256
+from scripts.utils import count_query_occurance, send_telegram_message_by_BOT, get_webpage_sha256, count_query_occurrence_selenium, get_webpage_sha256_selenium
 from config import INDRA_ADNOTIFIER_TELEGRAM_BOT_TOKEN
 from scripts.email_message import EmailMessage
 from config import EmailConfig
@@ -121,10 +121,23 @@ def check_adv_count():
 
             # Count the occurances
             new_count = count_query_occurance(url=ad_url, query_str=ad_num)
+            selenium = False
+            if new_count == 0:
+                new_count = count_query_occurrence_selenium(url=ad_url, query_str=ad_num)
+                selenium = True
 
             if new_count != ad_prev_count:
                 # uncomment - Update the db
                 ad.occurrence_count = new_count
+                
+                if selenium:
+                    current_hash = get_webpage_sha256_selenium(url=ad.website_url)
+                else:
+                    current_hash = get_webpage_sha256_selenium(url=ad.website_url)
+
+                if current_hash != -1:
+                    ad.page_content_hash = current_hash
+
                 ad.last_updated = datetime.utcnow()
 
                 db.session.commit()
@@ -157,7 +170,11 @@ def check_adv_count():
                     )
             else:
                 # Check the website content hash
-                current_hash = get_webpage_sha256(ad.website_url)
+                if selenium:
+                    current_hash = get_webpage_sha256_selenium(ad.website_url)
+                else:
+                    current_hash = get_webpage_sha256(ad.website_url)
+
                 
                 if current_hash != -1:
                     if not current_hash == ad.page_content_hash:
