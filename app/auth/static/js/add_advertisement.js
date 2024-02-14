@@ -1,8 +1,15 @@
 // addAdvertisement.js
 
+// Function to toggle the spinner
+function toggleSpinner() {
+  var spinner = document.getElementById('addNowSpinner');
+  spinner.classList.toggle('d-none');
+}
+
 $(document).ready(function () {
   var addAdvertisementUrl = window.addAdvertisementUrl;
   var dashboardUrl = window.dashboardUrl;
+
   // Add a click event listener to the button
   $('#addUserAdvertisementButton').on('click', function () {
     // Get the values from the form
@@ -19,6 +26,9 @@ $(document).ready(function () {
       description: advDesc
     };
 
+    // Show spinner before making the request
+    toggleSpinner();
+
     // Send a POST request using jQuery
     $.post(addAdvertisementUrl, formData, function (data) {
       // Handle the response data (if needed)
@@ -33,6 +43,14 @@ $(document).ready(function () {
     .fail(function (error) {
       console.error('Error:', error);
       window.location.href = dashboardUrl;
+    })
+    .always(function () {
+      // Hide spinner after the request is complete
+      // You may want to handle success or failure conditions appropriately
+      // For simplicity, I'm hiding the spinner after a delay in this example
+      setTimeout(function () {
+        toggleSpinner();
+      }, 7000); // Adjust the delay as needed
     });
   });
 });

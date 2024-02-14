@@ -34,9 +34,11 @@
         
 
         <!-- Button trigger addUserAdv modal -->
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUserAdvModal">
+        <button type="button" id="addNowbtn" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUserAdvModal">
+          <span id="addNowSpinner" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
           Add now
         </button>
+        
 
         <!-- Modal -->
         <div class="modal fade" id="addUserAdvModal" tabindex="-1" aria-labelledby="addUserAdvModalLabel" aria-hidden="true">
@@ -73,11 +75,12 @@
 
                 </form>
               
-              
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" id="addUserAdvertisementButton" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUserAdvModal" >Add it</button>
+                <button type="button" id="addUserAdvertisementButton" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUserAdvModal" >
+                  Add it
+                </button>
               </div>
             </div>
           </div>
@@ -257,6 +260,5 @@
     <!-- Include your custom scripts -->
     <script src="{{ url_for('auth.static', filename='js/dashboardModalUpdate.js') }}"></script>
     <script src="{{ url_for('auth.static', filename='js/add_advertisement.js') }}"></script>
-
     
 {% endblock %}

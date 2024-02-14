@@ -321,7 +321,7 @@ def add_advertisement():
                 db.session.commit()
 
                 # Return a success response
-                flash("Advertisement entry added successfully!", 'success')
+                flash(f"Advertisement entry '{title}' added successfully!", 'success')
                 logger.info(f"User '{current_user.email}' added one entry to their dashboard.")
                 return jsonify({'success': True}), 200
                 
@@ -351,10 +351,11 @@ def delete_ad(id):
         if ad_to_delete.user_id == current_user.id:
             # Delete the ad
             try:
+                title = ad_to_delete.title
                 db.session.delete(ad_to_delete)
                 db.session.commit()
 
-                flash("Advertisement deleted successfully!", 'success')
+                flash(f"Advertisement '{title}' deleted successfully!", 'success')
                 return redirect(url_for('auth.dashboard'))
             
             except:
