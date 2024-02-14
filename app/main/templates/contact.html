@@ -37,12 +37,30 @@
 
         <div class="mb-3">
             {{ form.message.label(class="form-label") }}
-            <!-- TODO: Add rich text editor -->
             {{ form.message(class="form-control", rows="6", placeholder="Write something here. For example, 'Hey Indrajit I found a bug!' or may be 'Hey Indrajit, I have a feature request...' etc etc.") }}
         </div>
 
-        {{ form.send(class="btn btn-primary") }}
+        {{ form.send(class="btn btn-primary", id="sendEmailBtn") }}
+        <span id="sendEmailSpinner" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
     </form>
+
+
+    <script>
+        function toggleSpinner() {
+          var spinner = document.getElementById('sendEmailSpinner');
+          spinner.classList.toggle('d-none');
+        }
+
+        document.getElementById('sendEmailBtn').addEventListener('click', function () {
+          // Show spinner before making the request
+          toggleSpinner();
+
+          setTimeout(function () {
+            toggleSpinner();
+          }, 5000); // Adjust the delay as needed
+        });
+
+    </script>
 
 
 {% endblock %}
