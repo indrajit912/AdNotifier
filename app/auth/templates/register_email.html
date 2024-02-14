@@ -23,9 +23,28 @@
         </div>
 
         <div class="col-sm-10">
-            {{ form.submit(class="btn btn-primary") }}
+            {{ form.submit(class="btn btn-primary", id="sendEmailBtn") }}
+            <span id="sendEmailSpinner" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
         </div>
+
         <div class="form-text">Already registered? <a href="{{ url_for('auth.login') }}">Login.</a></div>
     </form>
+
+    <script>
+        function toggleSpinner() {
+          var spinner = document.getElementById('sendEmailSpinner');
+          spinner.classList.toggle('d-none');
+        }
+
+        document.getElementById('sendEmailBtn').addEventListener('click', function () {
+          // Show spinner before making the request
+          toggleSpinner();
+
+          setTimeout(function () {
+            toggleSpinner();
+          }, 5000); // Adjust the delay as needed
+        });
+
+    </script>
 
 {% endblock %}
