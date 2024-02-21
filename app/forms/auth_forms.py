@@ -5,7 +5,9 @@
 
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, PasswordField, EmailField, IntegerField, HiddenField
-from wtforms.validators import DataRequired, EqualTo, Optional, Length
+from wtforms.validators import DataRequired, EqualTo, Optional, Length, Email, ValidationError
+
+from app.models.user import User
 
 
 class UserLoginForm(FlaskForm):
@@ -16,7 +18,7 @@ class UserLoginForm(FlaskForm):
 
 class EmailRegistrationForm(FlaskForm):
     fullname = StringField("Fullname", validators=[DataRequired()])
-    email = EmailField("Email", validators=[DataRequired()])
+    email = EmailField("Email", validators=[DataRequired(), Email()])
 
     submit = SubmitField("Next")
 

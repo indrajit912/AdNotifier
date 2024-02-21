@@ -1,0 +1,18 @@
+<!-- templates/errors/500.html -->
+
+{% extends 'error_base.html' %}
+
+{% block title %}Internal Server Error{% endblock %}
+
+{% block content %}
+
+    <h1>500</h1>
+    <h2>Oops! Something went wrong.</h2>
+    <p>We're sorry, but there's been an internal server error on this website.
+      Indrajit Ghosh, the owner of this site, has been notified and is actively working to fix the issue.
+      Feel free to try again later. If the problem persists or if you would like to report this issue,
+      please <a href="{{ url_for('main.contact') }}">contact</a> Indrajit.
+      Thank you for your patience.
+    </p>
+
+{% endblock %}

@@ -1,0 +1,15 @@
+<!-- templates/errors/403.html -->
+
+{% extends 'error_base.html' %}
+
+{% block title %}Forbidden{% endblock %}
+
+{% block content %}
+
+    <h1>403</h1>
+    <h2>Oops! Forbidden.</h2>
+    <p>You don't have permission to view this content.
+      If you believe this is an error, please <a href="{{ url_for('main.contact') }}">contact</a> Indrajit.
+    </p>
+
+{% endblock %}

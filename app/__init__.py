@@ -55,6 +55,9 @@ def create_app(config_class=ProductionConfig):
     from app.main import main_bp
     app.register_blueprint(main_bp)
 
+    from app.errors import errors_bp
+    app.register_blueprint(errors_bp)
+
     from app.auth import auth_bp
     app.register_blueprint(auth_bp)
 
