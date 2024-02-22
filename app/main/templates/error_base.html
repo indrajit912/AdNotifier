@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}{% endblock %}</title>
-    <link rel="stylesheet" href="{{ url_for('errors.static', filename='css/error_style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('main.static', filename='css/error_style.css') }}">
 </head>
 <body>
 
@@ -16,6 +16,12 @@
     
             <button class="btn green" id="homeButton">HOME</button>
             <button class="btn green" id="backButton">BACK</button>
+            {% if error %}
+                <button class="btn green" id="detailsButton">DETAILS</button>
+                <div id="errorDetails" style="display: none;">
+                    <p>{{ error }}</p>
+                </div>
+            {% endif %}
         </div>
     </div>
 
@@ -27,6 +33,15 @@
         document.getElementById("backButton").addEventListener("click", function() {
             window.history.back(); // Go back in the browser history
         });
+
+        var detailsButton = document.getElementById("detailsButton");
+        var errorDetails = document.getElementById("errorDetails");
+
+        if (detailsButton && errorDetails) {
+            detailsButton.addEventListener("click", function() {
+                errorDetails.style.display = (errorDetails.style.display === "none") ? "block" : "none";
+            });
+        }
     </script>
     
 </body>

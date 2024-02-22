@@ -37,6 +37,16 @@ def create_app(config_class=ProductionConfig):
     # Configure logging
     configure_logging(app)
 
+    # Register error handlers
+    from app.error_handlers import page_not_found, internal_server_error, too_many_requests, \
+        bad_request, forbidden, unauthorized
+    app.register_error_handler(404, page_not_found)
+    app.register_error_handler(500, internal_server_error)
+    app.register_error_handler(400, bad_request)
+    app.register_error_handler(401, unauthorized)
+    app.register_error_handler(403, forbidden)
+    app.register_error_handler(429, too_many_requests)
+
     # Initialize extensions
     db.init_app(app)
     migrate.init_app(app, db)
@@ -54,9 +64,6 @@ def create_app(config_class=ProductionConfig):
     # Register all blueprints
     from app.main import main_bp
     app.register_blueprint(main_bp)
-
-    from app.errors import errors_bp
-    app.register_blueprint(errors_bp)
 
     from app.auth import auth_bp
     app.register_blueprint(auth_bp)
