@@ -17,8 +17,10 @@
 
         <div class="row">
           <!-- Avatar -->
-          <div class="col-md-2">
-            <img src="{{ user.avatar(150) }}" class="img-fluid rounded" alt="user-avatar">
+          <div class="col-md-2 text-center">
+            <a href="https://gravatar.com/" target="_blank">
+              <img src="{{ user.avatar(150) }}" class="img-thumbnail" alt="user-avatar">
+            </a>
           </div>
           <!-- User info -->
           <div class="col-md-8">

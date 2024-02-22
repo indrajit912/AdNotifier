@@ -69,7 +69,7 @@ class User(db.Model, UserMixin):
 
     def avatar(self, size):
         email_hash = sha256_hash(self.email.lower())
-        return f"https://gravatar.com/avatar/{email_hash}?s={size}"
+        return f"https://gravatar.com/avatar/{email_hash}?d=identicon&s={size}"
 
 
     def check_password(self, password):
