@@ -61,7 +61,8 @@ Created On: Feb 01, 2024
 
       {% if current_user.is_authenticated %}
         <span class="hide-on-mobile disabled" style="color: #e3f2fd;" aria-disabled="true">
-            {{ current_user.fullname }}
+              <img class="img-fluid rounded-circle" src="{{ current_user.avatar(20) }}" alt="user-avatar">
+              {{ current_user.fullname }}
         </span>
       {% endif %}
     </div>

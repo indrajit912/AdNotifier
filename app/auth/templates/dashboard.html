@@ -14,25 +14,36 @@
     <div class="card">
       <h5 class="card-header">{{ user.fullname }}</h5>
       <div class="card-body">
-        <h5 class="card-title">Welcome to your dashboard!</h5>
-        <p class="card-text">
-            <ul>
-                {% if user.nickname != user.fullname %}
-                  <li><b>Nickname</b>: <code>{{ user.nickname }}</code> </li>
-                {% endif %}
-                <li><b>Email</b>: <code>{{ user.email }}</code></li>
-                <li>
-                  <b>Telegram ID</b>: <code>{{ user.telegram }}</code> 
-                  {% if not user.telegram %}
-                    (<a href="{{ url_for('auth.add_telegram', user_id=user.id) }}" class="form-text">Wanna add?</a>)
-                  {% endif %}
-                </li>
-                <li><b>Account Created</b>: <code>{{ convert_utc_to_ist(user.created_at.strftime("%Y-%m-%d %H:%M:%S")) }}</code> </li>
-                <li><b>Admin</b>: <code>{{ user.is_admin }}</code> </li>
-            </ul>
-        </p>
-        
 
+        <div class="row">
+          <!-- Avatar -->
+          <div class="col-md-2">
+            <img src="{{ user.avatar(150) }}" class="img-fluid rounded" alt="user-avatar">
+          </div>
+          <!-- User info -->
+          <div class="col-md-8">
+            <h5 class="card-title">Welcome to your dashboard!</h5>
+            <p class="card-text">
+                <ul>
+                    {% if user.nickname != user.fullname %}
+                      <li><b>Nickname</b>: <code>{{ user.nickname }}</code> </li>
+                    {% endif %}
+                    <li><b>Email</b>: <code>{{ user.email }}</code></li>
+                    <li>
+                      <b>Telegram ID</b>: <code>{{ user.telegram }}</code> 
+                      {% if not user.telegram %}
+                        (<a href="{{ url_for('auth.add_telegram', user_id=user.id) }}" class="form-text">Wanna add?</a>)
+                      {% endif %}
+                    </li>
+                    <li><b>Account Created</b>: <code>{{ convert_utc_to_ist(user.created_at.strftime("%Y-%m-%d %H:%M:%S")) }}</code> </li>
+                    <li><b>Admin</b>: <code>{{ user.is_admin }}</code> </li>
+                </ul>
+            </p>
+          </div>
+
+        </div>
+        
+        
         <!-- Button trigger addUserAdv modal -->
         <button type="button" id="addNowbtn" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUserAdvModal">
           <span id="addNowSpinner" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>

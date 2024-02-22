@@ -67,6 +67,11 @@ class User(db.Model, UserMixin):
         if self.nickname is None:
             self.nickname = self.fullname
 
+    def avatar(self, size):
+        email_hash = sha256_hash(self.email.lower())
+        return f"https://gravatar.com/avatar/{email_hash}?s={size}"
+
+
     def check_password(self, password):
         # Combine entered password and stored salt, then hash and compare with stored hash
         password_with_salt = password + self.password_salt
