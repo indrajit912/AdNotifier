@@ -11,6 +11,7 @@ import logging
 
 from app.forms.auth_forms import EmailRegistrationForm, UserRegistrationForm, UserLoginForm, ResetPasswordForm, ForgotPasswordForm, ChangePasswordForm, AddTelegramForm
 from app.models.user import User, MonitoredAd
+from app.models.report import Report
 from app.extensions import db
 from app.utils.decorators import logout_required
 from app.utils.token import get_token_for_email_registration, confirm_email_registration_token
@@ -490,3 +491,37 @@ def add_telegram(user_id):
         return redirect(url_for('auth.dashboard'))
 
     return render_template('add_telegram.html', form=form)
+
+
+@auth_bp.route('/report', methods=['GET', 'POST'])
+@login_required
+def report():
+    if request.method == 'POST':
+        issue_description = request.form.get('issue_description')
+
+        if issue_description:
+            new_report = Report(reporter_email=current_user.email, issue_description=issue_description)
+            db.session.add(new_report)
+            db.session.commit()
+            flash('Issue reported successfully!', 'success')
+            return redirect(url_for('auth.report'))
+
+    # Fetch all reports for display
+    reports = Report.query.order_by(desc(Report.created_at)).all()
+    return render_template('report.html', reports=reports, convert_utc_to_ist=convert_utc_to_ist)
+
+
+@auth_bp.route('/resolve_report/<int:report_id>', methods=['GET', 'POST'])
+@login_required
+def resolve_report(report_id):
+    report = Report.query.get_or_404(report_id)
+
+    if current_user.email in [report.reporter_email, 'indrajitghosh912@gmail.com']:
+        # You can check if the current user is the reporter before allowing them to mark it as resolved
+        report.status = True
+        db.session.commit()
+        flash('Issue marked as resolved!', 'success')
+    else:
+        flash('You do not have permission to mark this issue as resolved.', 'danger')
+
+    return redirect(url_for('auth.report'))

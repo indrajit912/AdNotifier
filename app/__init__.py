@@ -6,7 +6,7 @@
 
 import logging
 from flask import Flask
-from .extensions import db, migrate, login_manager, scheduler
+from .extensions import db, migrate, login_manager, scheduler, csrf
 
 from config import ProductionConfig, LOG_FILE
 
@@ -33,6 +33,7 @@ def create_app(config_class=ProductionConfig):
     # Initialize the webapp
     app = Flask(__name__)
     app.config.from_object(config_class)
+    csrf.init_app(app)
 
     # Configure logging
     configure_logging(app)

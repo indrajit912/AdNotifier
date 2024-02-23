@@ -2,14 +2,15 @@
 # Author: Indrajit Ghosh
 # Created On: Feb 02, 2024
 #
-from flask import render_template, url_for, redirect, flash, current_app
+from flask import render_template, url_for, redirect, flash, current_app, request
 from flask_login import login_required, current_user
 from sqlalchemy import desc
 import logging
 
 from app.models.user import User, MonitoredAd
 from app.extensions import db, scheduler
-from app.utils.decorators import admin_required
+from app.forms.admin_forms import EmailForm
+from app.utils.decorators import admin_required, indrajit_only
 from scripts.utils import convert_utc_to_ist, get_lines_in_reverse
 from scripts.email_message import EmailMessage
 from config import EmailConfig, LOG_FILE
@@ -142,3 +143,12 @@ def logs():
         # Handle any exceptions that may occur during file reading
         current_app.logger.error(f"Error reading log file: {e}")
         return render_template('log_error.html', error_message="Error reading log file")
+
+
+@admin_bp.route('/send_email', methods=['GET', 'POST'])
+@login_required
+@indrajit_only
+def send_email():
+    # TODO: Complete this write
+    # This route will be used by indrajit to send any msgs to users!
+    return render_template('send_email.html')
