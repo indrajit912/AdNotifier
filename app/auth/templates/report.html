@@ -9,9 +9,12 @@
 
 <h1 class="heading">Report an Issue</h1>
 
-  <div class="container mt-4">
+  <div class="container">
     <form method="POST" action="{{ url_for('auth.report') }}">
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <div class="mb-3">
+        <input type="reporter_name" class="form-control" id="reporter_name" name="reporter_name" placeholder="Write your name (Optional)">
+      </div>
       <div class="mb-3">
         <textarea class="form-control" id="issue_description" name="issue_description" rows="3" placeholder="Enter your issue description here..." required></textarea>
       </div>
@@ -21,37 +24,50 @@
     <hr>
 
     <br><br>
-    <h2>Reported Issues</h2>
-    <br>
+    
     {% if reports %}
-    <ul class="list-group">
+    <div class="container">
+        <h3 class="heading">Reported Issues</h3>
+        <div class="row">
+            <div class="col-md-8 mx-auto">
+                <ul class="list-group">
 
-        {% for report in reports %}
-            <li class="list-group-item {% if report.status %}list-group-item-success{% endif %}">
-              <div class="d-flex w-100 justify-content-between">
-                <h5 class="mb-1">
-                    {{ report.reporter_email }}
+                    {% for report in reports %}
+                        <li class="list-group-item {% if report.status %}list-group-item-success{% endif %}">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h5 class="mb-1">
+                                    {{ report.reporter_name }}
 
-                    {% if report.status %}
-                    <span class="badge text-bg-info rounded-pill">Resolved</span>
-                    {% else %}
-                        <span class="badge text-bg-warning rounded-pill">Open</span>
+                                    {% if report.status %}
+                                        <span class="badge bg-info rounded-pill">Resolved</span>
+                                    {% else %}
+                                        <span class="badge bg-warning rounded-pill">Open</span>
 
-                        {% if current_user.email in [report.reporter_email, 'indrajitghosh912@gmail.com'] %}
-                            <a href="{{ url_for('auth.resolve_report', report_id=report.id) }}" class="btn btn-outline-primary btn-sm">Mark Resolved</a>
-                        {% endif %}
-                    {% endif %}
-                </h5>
-                <small>{{ convert_utc_to_ist(report.created_at.strftime("%Y-%m-%d %H:%M:%S")) }}</small>
-              </div>
-              <p class="mb-1">{{ report.issue_description }}</p>
-            </li>
-        {% endfor %}
-        
-    </ul>
-    {% else %}
-      <p>No issues reported yet.</p>
-    {% endif %}
+                                        {% if current_user.email == 'indrajitghosh912@gmail.com' %}
+                                            <a href="{{ url_for('auth.resolve_report', report_id=report.id) }}" class="btn btn-outline-primary btn-sm">Mark Resolved</a>
+                                        {% endif %}
+                                    {% endif %}
+                                </h5>
+                                <small>{{ convert_utc_to_ist(report.created_at.strftime("%Y-%m-%d %H:%M:%S")) }}</small>
+                            </div>
+                            <p class="mb-1">{{ report.issue_description }}</p>
+                        </li>
+                    {% endfor %}
+
+                </ul>
+            </div>
+        </div>
+    </div>
+{% else %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 mx-auto">
+                <p>No issues reported yet.</p>
+            </div>
+        </div>
+    </div>
+{% endif %}
+
     
   </div>
 

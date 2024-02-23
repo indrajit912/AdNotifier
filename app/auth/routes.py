@@ -497,13 +497,19 @@ def add_telegram(user_id):
 @login_required
 def report():
     if request.method == 'POST':
+        reporter_name = (
+            None
+            if request.form.get('reporter_name') == ''
+            else request.form.get('reporter_name')
+        )
         issue_description = request.form.get('issue_description')
 
         if issue_description:
-            new_report = Report(reporter_email=current_user.email, issue_description=issue_description)
+            new_report = Report(reporter_name=reporter_name, issue_description=issue_description)
             db.session.add(new_report)
             db.session.commit()
             flash('Issue reported successfully!', 'success')
+            logger.info(f"New report issued by `{reporter_name}`.")
             return redirect(url_for('auth.report'))
 
     # Fetch all reports for display
@@ -516,11 +522,11 @@ def report():
 def resolve_report(report_id):
     report = Report.query.get_or_404(report_id)
 
-    if current_user.email in [report.reporter_email, 'indrajitghosh912@gmail.com']:
-        # You can check if the current user is the reporter before allowing them to mark it as resolved
+    if current_user.email == 'indrajitghosh912@gmail.com':
         report.status = True
         db.session.commit()
         flash('Issue marked as resolved!', 'success')
+        logger.info("Issue resolved!")
     else:
         flash('You do not have permission to mark this issue as resolved.', 'danger')
 
