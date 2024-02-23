@@ -27,6 +27,9 @@ INDRA_ADNOTIFIER_TELEGRAM_BOT_TOKEN = os.environ.get("INDRA_ADNOTIFIER_TELEGRAM_
 FLASK_ENV = os.environ.get("FLASK_ENV")
 
 LOG_FILE = BASE_DIR / "app.log"
+if not LOG_FILE.exists():
+    LOG_FILE.write_text("LOG_FILE created!\n")
+
 
 class EmailConfig:
     INDRAJITS_BOT_EMAIL_ID = os.environ.get("INDRAJITS_BOT_EMAIL_ID")
