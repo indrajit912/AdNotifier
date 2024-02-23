@@ -14,6 +14,10 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 def send_telegram_message_by_BOT(bot_token:str, user_id:str, message:str='Hello World!'):
     """
     Sends msg to a user from a bot
@@ -28,8 +32,9 @@ def send_telegram_message_by_BOT(bot_token:str, user_id:str, message:str='Hello 
     telegram_api_url = f"https://api.telegram.org/bot{bot_token}/sendMessage?chat_id={user_id}&text={message}"
     try:
         requests.get(telegram_api_url)
+        logger.info(f"TELEGRAM_SENT: Telegram message sent to `{user_id}`.")
     except Exception as err:
-        print(f"\n\nERROR: Telegram message couldn't be sent to {user_id}. \n {err}.\n")
+        logger.error(f"TELEGRAM_ERR: Telegram message couldn't be sent to `{user_id}`. \t {err}.\n")
 
 def generate_otp():
     """Generate a random 6-digit OTP (One-Time Password).

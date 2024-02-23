@@ -69,12 +69,11 @@ def notify_user(dic:dict):
                 print_success_status=False
             )
 
-            print(f"Email sent to '{user_email}'!")
+            logger.info(f"EMAIL_SENT: An email sent to '{user_email}'!")
 
         except Exception as e:
             # Handle email sending error
-            print(f"Error occured during email!\n{e}")
-            logger.error(f"TASK_ERR: Error occured while sending emails. {e}")
+            logger.error(f"TASK_ERR: Error occured while sending emails.\t {e}")
 
         
         # Send telegram message.
@@ -93,8 +92,7 @@ def notify_user(dic:dict):
                 bot_token=INDRA_ADNOTIFIER_TELEGRAM_BOT_TOKEN,
                 user_id=telegram_user_id,
                 message=tel_msg
-            )
-            
+            )   
 
 
 def check_adv_count():
@@ -113,6 +111,7 @@ def check_adv_count():
             ad_url = ad.website_url
             ad_user = ad.user
             ad_prev_count = ad.occurrence_count
+            ad_prev_hash = ad.page_content_hash
             telegram = (
                 ad_user.telegram
                 if ad_user.telegram
@@ -124,16 +123,20 @@ def check_adv_count():
             selenium = False
             if new_count == 0:
                 new_count = count_query_occurrence_selenium(url=ad_url, query_str=ad_num)
+                logger.debug(f"MonitoredAd id '{ad.id}': `occurance_count` calculated with selenium since the normal count was 0.")
                 selenium = True
 
             if new_count != ad_prev_count:
                 # uncomment - Update the db
                 ad.occurrence_count = new_count
+                logger.debug(f"MonitoredAd id '{ad.id}': `occurance_count` has been changed from `{ad_prev_count}` to `{new_count}` on the website!")
                 
                 if selenium:
                     current_hash = get_webpage_sha256_selenium(url=ad.website_url)
+                    logger.debug(f"MonitoredAd id '{ad.id}': `webpage_hash` is calculated with selenium!")
                 else:
-                    current_hash = get_webpage_sha256_selenium(url=ad.website_url)
+                    current_hash = get_webpage_sha256(url=ad.website_url)
+                    logger.debug(f"MonitoredAd id '{ad.id}': `webpage_hash` is calculated without selenium!")
 
                 if current_hash != -1:
                     ad.page_content_hash = current_hash
@@ -169,18 +172,23 @@ def check_adv_count():
                         }
                     )
             else:
+                logger.debug(f"MonitoredAd id '{ad.id}': `occurance_count` didn't change so checking the current website hash ...")
+
                 # Check the website content hash
                 if selenium:
                     current_hash = get_webpage_sha256_selenium(ad.website_url)
+                    logger.debug(f"MonitoredAd id '{ad.id}': `occurance_count` didn't change. Current hash has been calculated using selenium.")
                 else:
                     current_hash = get_webpage_sha256(ad.website_url)
+                    logger.debug(f"MonitoredAd id '{ad.id}': `occurance_count` didn't change. Current hash has been calculated WITHOUT selenium.")
 
                 
                 if current_hash != -1:
-                    if not current_hash == ad.page_content_hash:
+                    if current_hash != ad_prev_hash:
                         # Update the db
                         ad.page_content_hash = current_hash
                         ad.last_updated = datetime.utcnow()
+                        logger.debug(f"MonitoredAd id '{ad.id}': `occurance_count` didn't change. Current hash has changed from `{ad_prev_hash}` to `{current_hash}`.")
 
                         db.session.commit()
 
@@ -213,14 +221,12 @@ def check_adv_count():
             
         
         if email_listing:
-            pprint(email_listing)
 
             # Email the user.
             notify_user(email_listing)
-            logger.info("TASK_DONE: Email(s) sent to users!")
+            logger.info("TASK_DONE: User(s) notified!")
             
         else:
-            print("\n\nBot: Greetings, Indrajit! I've reviewed all ads, but no alterations were detected in their respective URLs. I'll attempt again in the future.\n\n")
             logger.warning("TASK_DONE: No new updates for users found. Hence no email was sent!")
 
 # @scheduler.task(

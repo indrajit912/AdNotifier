@@ -172,7 +172,6 @@
                 <tr>
                     <th scope="col">ID</th>
                     <th scope="col">Advertisement</th>
-                    <th scope="col">Count</th>
                     <th scope="col">User (ID)</th>
                 </tr>
             </thead>
@@ -182,7 +181,7 @@
                         <td scope="row">{{ ad.id }}</td>
                         <td>
                             <!-- Button trigger modal -->
-                            <code>{{ ad.title }}</code>
+                            <code>{{ ad.title }} </code>
                             <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#showURL{{ ad.id }}">
                               View
                             </button>
@@ -203,9 +202,17 @@
                                         <br><br>
                                         <b>Description</b>: <br> <code>{{ ad.description }}</code>
                                     {% endif %}
-                                    <br><br>
+                                    <br>
+                                    <br>
                                     <b>Webpage SHA-256 hash</b>: <br> <code>{{ ad.page_content_hash }}</code>
-
+                                    <br><br>
+                                    <b>Count</b>: <code>{{  ad.occurrence_count }}</code>
+                                    <br>
+                                    <b>Date Added</b>: <code>{{ convert_utc_to_ist(ad.created_at.strftime("%Y-%m-%d %H:%M:%S")) }}</code>
+                                    <br>
+                                    <b>Last Updated</b>: <code>{{ convert_utc_to_ist(ad.last_updated.strftime("%Y-%m-%d %H:%M:%S")) }}</code>
+                                    
+                                    
                                   </div>
                                   <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -216,7 +223,6 @@
                             </div>
 
                         </td>
-                        <td>{{ ad.occurrence_count }}</td>
                         <td><code>{{ ad.user.fullname }} ({{ ad.user_id }})</code></td>
                     </tr>
                 {% endfor %}
