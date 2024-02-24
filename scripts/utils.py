@@ -96,6 +96,7 @@ def convert_utc_to_ist(utc_datetime_str):
 
 def get_webpage_sha256(url):
     """
+    TODO: Delete it
     Retrieve the content of a webpage at the specified URL, compute its SHA-256 hash, and return the hash.
 
     Author: Indrajit Ghosh
@@ -124,6 +125,7 @@ def get_webpage_sha256(url):
     
 def get_webpage_sha256_selenium(url):
     """
+    TODO: Delete it!
     Retrieve the content of a webpage at the specified URL, compute its SHA-256 hash, and return the hash using Selenium.
 
     :param url: The URL of the webpage.
@@ -164,6 +166,7 @@ def get_webpage_sha256_selenium(url):
 
 def count_query_occurance(url:str, query_str:str):
     """
+    TODO: Delete it
     Count the number of occurrences of a given query_str on a web page.
 
     Parameters:
@@ -201,32 +204,51 @@ def count_query_occurance(url:str, query_str:str):
             soup.text.count(query_str)
         )
 
-        return occurrences
+        minimal_tag = find_minimal_tag(soup=soup, query_str=query_str)
+
+        # TODO: Return the hash of these minimal_tag
+
+        return occurrences, minimal_tag
 
 
     except requests.RequestException as e:
         return -1  # Error indicator
     
 
-def count_query_occurrence_selenium(url: str, query_str: str):
+def find_minimal_tag(soup: BeautifulSoup, query_str: str):
     """
-    Count the number of occurrences of a given query_str on a web page using Selenium.
+    Finds the minimal HTML tag containing all occurrences of the specified query string.
 
     Parameters:
-    - url (str): The URL of the web page to analyze.
-    - query_str (str): The query to search for.
+    - soup (BeautifulSoup): The BeautifulSoup object representing the HTML content.
+    - query_str (str): The query string to search for.
 
     Returns:
-    - int: The number of occurrences of the query_str on the page.
-           Returns -1 if there is an error fetching the website content.
+    str: The minimal HTML tag containing all occurrences of the query string.
+    """
+    # Find all occurrences of the query string
+    occurrences = soup.find_all(string=lambda text: query_str in text)
 
-    Example:
-    ```python
-    url = "https://example.com"
-    query_str = "ABC123"
-    occurrences = count_query_occurrence_selenium(url, query_str)
-    print(f"The query '{query_str}' appears {occurrences} times on the page.")
-    ```
+    # Find the minimal HTML tag containing all occurrences
+    minimal_tag = None
+    for occurrence in occurrences:
+        # Traverse the tree upwards to find the common ancestor
+        ancestor = occurrence.find_parent().find_parent().find_parent()
+        if minimal_tag is None or ancestor.find(minimal_tag):
+            minimal_tag = ancestor
+
+    return minimal_tag
+
+def count_query_occurrences_and_hash(url: str, query_str: str):
+    """
+    Counts the occurrences of a query string on a webpage using Selenium and returns a hash of the minimal HTML tag.
+
+    Parameters:
+    - url (str): The URL of the webpage to analyze.
+    - query_str (str): The query string to search for.
+
+    Returns:
+    tuple: A tuple containing the number of occurrences of the query string and the hash of the minimal HTML tag.
     """
     try:
         # Set up a headless Chrome browser
@@ -240,17 +262,29 @@ def count_query_occurrence_selenium(url: str, query_str: str):
         # Wait for some time to ensure dynamic content is loaded (you may need to adjust this)
         driver.implicitly_wait(5)
 
-        # Find all occurrences of the query string on the page
-        elements = driver.find_elements(By.XPATH, f"//*[contains(text(), '{query_str}')]")
-        occurrences = len(elements)
+        # # Find all occurrences of the query string on the page
+        # elements = driver.find_elements(By.XPATH, f"//*[contains(text(), '{query_str}')]")
+        # occurrences = len(elements)
+
+        # Extract HTML content from the current page
+        html_content = driver.page_source
+        occurrence_count = html_content.count(query_str)
+
+        # Parse the HTML content with Beautiful Soup
+        soup = BeautifulSoup(html_content, 'html.parser')
+
+        # Find the minimal HTML tag containing the query_str
+        minimal_tag = find_minimal_tag(soup=soup, query_str=query_str)
+        webpage_hash = sha256_hash(minimal_tag)
 
         # Close the browser
         driver.quit()
 
-        return occurrences
+        return occurrence_count, webpage_hash
 
     except Exception as e:
         return -1  # Error indicator
+    
     
 
 def get_lines_in_reverse(file_path):
