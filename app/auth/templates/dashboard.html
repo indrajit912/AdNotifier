@@ -44,13 +44,16 @@
           </div>
 
         </div>
-        
-        
-        <!-- Button trigger addUserAdv modal -->
-        <button type="button" id="addNowbtn" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUserAdvModal">
-          <span id="addNowSpinner" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
-          Add now
-        </button>
+
+        <div class="btn-group center" role="group" aria-label="Default button group">
+          <!-- Button trigger addUserAdv modal -->
+          <button type="button" id="addNowbtn" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUserAdvModal">
+            <span id="addNowSpinner" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+            Add now
+          </button>
+
+          <a href="{{ url_for('auth.change_password', user_id=user.id) }}" class="btn btn-warning">Change Password</a>
+        </div>
         
 
         <!-- Modal -->
@@ -99,8 +102,6 @@
           </div>
         </div>
         <!-- End of Modal thing here -->
-
-        <a href="{{ url_for('auth.change_password', user_id=user.id) }}" class="btn btn-warning">Change Password</a>
         
       </div>
     </div>
@@ -115,27 +116,30 @@
             <h5 class="card-title">{{ ad.title }}</h5>
             <div><span class="fw-bold">Date added</span>: {{ convert_utc_to_ist(ad.created_at.strftime("%Y-%m-%d %H:%M:%S")) }}</div> 
             <br>
-            
-            <!-- View URL Button to trigger modal -->
-            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#viewurlModal{{ ad.id }}">
-              View
-            </button>
 
-            <!-- Update button to trigger modal -->
-            <button
-              type="button"
-              class="btn btn-warning me-md-2 btn-sm"
-              data-bs-toggle="modal"
-              data-bs-target="#updateModal{{ ad.id }}"
-            >
-              Update
-            </button>
+            <div class="btn-group center" role="group" aria-label="Default button group">
+              <!-- Button trigger addUserAdv modal -->
+              <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#viewurlModal{{ ad.id }}">
+                View
+              </button>
+    
+              <!-- Update button to trigger modal -->
+              <button
+                type="button"
+                class="btn btn-warning btn-sm"
+                data-bs-toggle="modal"
+                data-bs-target="#updateModal{{ ad.id }}"
+              >
+                Update
+              </button>
 
-            <!-- Delete btn to trigger modal -->
-            <button type="button" class="btn btn-danger me-md-2 btn-sm" data-bs-toggle="modal" data-bs-target="#delAdModal{{ ad.id }}">
-              Delete
-            </button>
-            
+              <!-- Delete btn to trigger modal -->
+              <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#delAdModal{{ ad.id }}">
+                Delete
+              </button>
+
+            </div>
+        
             
             <!-- View Modal -->
             <div class="modal fade" id="viewurlModal{{ ad.id }}" tabindex="-1" aria-labelledby="viewurlModalLabel{{ ad.id }}" aria-hidden="true">
