@@ -4,5 +4,5 @@ from wtforms.validators import DataRequired, EqualTo, Optional, Length, Email, V
 
 class EmailForm(FlaskForm):
     subject = StringField('Subject', validators=[DataRequired()])
-    message = TextAreaField('Message', validators=[DataRequired()])
-    submit = SubmitField('Send Email')
+    recipients = StringField('Recipients (comma-separated)', validators=[DataRequired()])
+    body = TextAreaField('Body', validators=[DataRequired()])

@@ -178,6 +178,52 @@ def logs():
 @login_required
 @indrajit_only
 def send_email():
-    # TODO: Complete this write
-    # This route will be used by indrajit to send any msgs to users!
-    return render_template('send_email.html')
+    # Create an instance of the EmailForm
+    form = EmailForm()
+    users = User.query.all()
+
+    # Check if the form is submitted and valid
+    if form.validate_on_submit():
+        # Get the subject, recipients, and body from the form
+        subject = form.subject.data
+        recipients = [e.strip() for e in form.recipients.data.split(',')]  # Assuming multiple recipients are comma-separated
+        body_parts = form.body.data.split('\n')
+
+        # Render the email template with the provided parameters
+        email_html_text = render_template(
+            'email_templates/user_email.html',
+            body_parts=body_parts
+        )
+
+        # Create the email message
+        msg = EmailMessage(
+            sender_email_id=EmailConfig.INDRAJITS_BOT_EMAIL_ID,
+            to=recipients,
+            subject=subject,
+            email_html_text=email_html_text,
+        )
+
+        try:
+            # Send the email to Indrajit
+            msg.send(
+                sender_email_password=EmailConfig.INDRAJITS_BOT_EMAIL_PASSWD,
+                server_info=EmailConfig.GMAIL_SERVER,
+                print_success_status=False
+            )
+
+            form = EmailForm(formdata=None)
+        
+
+            flash(f"Hey {current_user.nickname}! Your email has been sent succesfully to user(s).", 'success')
+            logger.info(f"Email sent to user(s) by `{current_user}`!")
+            return redirect(url_for('admin.home'))
+
+        except Exception as e:
+            # Handle email sending error
+            flash("Error occured during email!")
+            logger.error("Error occured during email to Indrajit.")
+            return redirect(url_for('main.contact'))
+
+        
+
+    return render_template('send_email.html', form=form, users=users)

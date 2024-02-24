@@ -1,12 +1,74 @@
 <!-- app/admin/templates/send_email.html -->
 {% extends 'base.html' %}
 
-{% block title %}Email{% endblock %}
+{% block title %}Send Email{% endblock %}
 
 {% block content %}
 
     {% include 'flash_msgs.html' %}
 
     <h1 class="heading">Send Email!</h1>
+
+    <div class="container">
+        <form method="post" action="{{ url_for('admin.send_email') }}">
+            {{ form.hidden_tag() }}
+    
+            <div class="form-floating mb-3">
+                {{ form.subject(class="form-control", placeholder="Subject") }}
+                {{ form.subject.label(class="form-label") }}         
+            </div>
+    
+            <div class="form-floating mb-3">
+                {{ form.recipients(class="form-control", placeholder="Recipients") }}
+                {{ form.recipients.label(class="form-label") }}
+                
+                <!-- Dropdown menu for users -->
+                <div class="col-auto">
+                    <select id="userDropdown" class="form-select" onchange="updateRecipients()">
+                        <option value="" selected disabled>Select User</option>
+                        <option value="selectAll">Select All</option>
+                        {% for user in users %}
+                            <option value="{{ user.email }}">{{ user.email }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            
+            <div class="mb-3">
+              {{ form.body(class="form-control", rows=6, placeholder="Message here ...") }}
+            </div>
+    
+            <div class="mb-3">
+                <button type="submit" class="btn btn-primary">Send Email</button>
+            </div>
+            
+        </form>
+    </div>
+
+    <script>
+        function updateRecipients() {
+            var recipientsField = document.getElementById('recipients');
+            var userDropdown = document.getElementById('userDropdown');
+            
+            if (userDropdown.value === 'selectAll') {
+                // Select All option selected, set recipients to all user emails
+                var allEmails = Array.from(userDropdown.options).slice(2).map(option => option.value).join(', ');
+                recipientsField.value = allEmails;
+            } else {
+                // Single user selected, append the user's email to the recipients field
+                var currentRecipients = recipientsField.value;
+                var selectedUserEmail = userDropdown.value;
+    
+                // Check if the email is not already in the list before appending
+                if (!currentRecipients.includes(selectedUserEmail)) {
+                    if (currentRecipients) {
+                        recipientsField.value = currentRecipients + ', ' + selectedUserEmail;
+                    } else {
+                        recipientsField.value = selectedUserEmail;
+                    }
+                }
+            }
+        }
+    </script>
 
 {% endblock %}
