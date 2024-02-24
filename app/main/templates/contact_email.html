@@ -58,7 +58,9 @@
             <p><b>Name:</b> {{ name }}</p>
             <p><b>Subject:</b> {{ subject }}</p>
             <p><b>Message:</b></p>
-                <p>{{ msg }}</p>
+                {% for msg in message_parts %}
+                    <p>{{ msg }}</p>
+                {% endfor %}
         </div>
     </div>
 </body>

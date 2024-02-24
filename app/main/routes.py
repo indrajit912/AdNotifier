@@ -31,14 +31,14 @@ def contact():
         name = form.name.data
         email = form.email.data
         subject = form.subject.data
-        msg = form.message.data
+        message_parts = form.message.data.split('\n')
 
         # Render the email template with the provided parameters
         email_html_text = render_template(
             'contact_email.html',
             name=name,
             subject=subject,
-            msg=msg,
+            message_parts=message_parts,
             email_id=email
         )
 

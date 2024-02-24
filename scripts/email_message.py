@@ -47,7 +47,7 @@ class EmailMessage(MIMEMultipart):
     def __init__(
         self,
         sender_email_id:str,
-        to,
+        to:list,
         subject:str=None,
         email_plain_text:str=None,
         email_html_text:str=None,
