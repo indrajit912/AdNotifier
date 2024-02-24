@@ -6,12 +6,13 @@ from flask import render_template, url_for, redirect, flash, current_app, reques
 from flask_login import login_required, current_user
 from sqlalchemy import desc
 import logging
+from datetime import datetime
 
 from app.models.user import User, MonitoredAd
 from app.extensions import db, scheduler
 from app.forms.admin_forms import EmailForm
 from app.utils.decorators import admin_required, indrajit_only
-from scripts.utils import convert_utc_to_ist, get_lines_in_reverse
+from scripts.utils import convert_utc_to_ist, get_lines_in_reverse, count_query_occurrences_and_hash
 from scripts.email_message import EmailMessage
 from config import EmailConfig, LOG_FILE
 
@@ -128,7 +129,35 @@ def toggle_admin(user_id):
         # TODO: Handle email sending error better!
         flash('An error occurred while attempting to send the email!', 'danger')
         return redirect(url_for('admin.home'))
+    
 
+@admin_bp.route('/update_user_ad/<int:ad_id>', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def update_user_ad(ad_id):
+    ad_to_update = MonitoredAd.query.get_or_404(ad_id)
+
+    occurrence_count, page_hash = count_query_occurrences_and_hash(url=ad_to_update.website_url, query_str=ad_to_update.advertisement_number)
+
+    if occurrence_count > 0:
+        # Everything fine!
+        ad_to_update.occurrence_count = occurrence_count
+        ad_to_update.page_content_hash = page_hash
+        ad_to_update.last_updated = datetime.utcnow()
+
+        try:
+            db.session.commit()
+            flash("User advertisement updated successfully.", 'success')
+            logger.info(f"User entry updated by the admin '{current_user.email}'.")
+            return redirect(url_for('admin.home'))
+        
+        except:
+            flash("Error. Looks like there was a problem updating the information into the database.", 'danger')
+            return redirect(url_for('admin.home'))
+    else:
+        flash(f"Error occurred during the update!")
+        logger.error(f"Error occurred while updating the adv with id `{ad_id}`")
+        return redirect(url_for('admin.home'))
     
 @admin_bp.route('/logs')
 @login_required

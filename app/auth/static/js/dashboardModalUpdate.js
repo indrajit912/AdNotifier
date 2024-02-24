@@ -7,6 +7,11 @@ function handleUpdateResponse(response) {
     }, 1000);
 }
 
+function toggleupdateSpinner() {
+    var spinner = document.getElementById('updateSpinner');
+    spinner.classList.toggle('d-none');
+  }
+
 // Function that update the advertisement from the user's dashboard
 function updateDashboardAdvertisement(adId) {
     var updateAdvertisementUrl = window.updateAdvertisementUrl;
@@ -16,6 +21,9 @@ function updateDashboardAdvertisement(adId) {
     var advNum = document.querySelector('#adv-numUpdate-' + adId).value;
     var advUrl = document.querySelector('#adv-urlUpdate-' + adId).value;
     var advDesc = document.querySelector('#adv-descUpdate-' + adId).value;
+
+    // Show spinner before making the request
+    toggleupdateSpinner();
 
     // Make a POST request to the server
     fetch(updateAdvertisementUrl, {

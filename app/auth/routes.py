@@ -15,7 +15,7 @@ from app.models.report import Report
 from app.extensions import db
 from app.utils.decorators import logout_required
 from app.utils.token import get_token_for_email_registration, confirm_email_registration_token
-from scripts.utils import convert_utc_to_ist, count_query_occurance, count_query_occurrence_selenium, get_webpage_sha256, get_webpage_sha256_selenium
+from scripts.utils import convert_utc_to_ist, count_query_occurrences_and_hash
 from scripts.email_message import EmailMessage
 from config import EmailConfig
 from . import auth_bp
@@ -253,9 +253,9 @@ def add_advertisement():
         description = request.form.get('description')
 
         # Calculate the count
-        occurrence_count = count_query_occurance(url=website_url, query_str=advertisement_number)
+        occurrence_count, page_hash = count_query_occurrences_and_hash(url=website_url, query_str=advertisement_number)
         
-        if occurrence_count > 0:
+        if occurrence_count > 0 and page_hash:
             # Everything is fine!
 
             ad_user_id = current_user.id
@@ -266,19 +266,10 @@ def add_advertisement():
                 website_url = website_url,
                 description=description,
                 occurrence_count=occurrence_count,
+                page_content_hash=page_hash,
+                last_updated=datetime.utcnow(),
                 user_id = ad_user_id
             )
-
-            # Set web page hash
-            h = get_webpage_sha256(url=monitored_ad.website_url)
-            if h != -1:
-                # Hash found
-                monitored_ad.page_content_hash = h
-            else:
-                flash(f"Cannot reach the webpage '{monitored_ad.website_url}' rightnow. Try again later!")
-                return jsonify({'error': False}), 500
-            
-            monitored_ad.last_updated = datetime.utcnow()
 
             # Add the new advertisement to the database
             db.session.add(monitored_ad)
@@ -289,50 +280,9 @@ def add_advertisement():
             logger.info(f"User '{current_user.email}' added one entry to their dashboard.")
             return jsonify({'success': True}), 200
         
-        elif occurrence_count == 0:
-            # Adv num is not on the page.
-            # Check with selenium
-            occurrence_count = count_query_occurrence_selenium(url=website_url, query_str=advertisement_number)
-            if occurrence_count > 0:
-                # Add it
-                ad_user_id = current_user.id
-
-                monitored_ad = MonitoredAd(
-                    title=title,
-                    advertisement_number = advertisement_number,
-                    website_url = website_url,
-                    description=description,
-                    occurrence_count=occurrence_count,
-                    user_id = ad_user_id
-                )
-
-                # Set web page hash
-                h = get_webpage_sha256_selenium(url=monitored_ad.website_url)
-                if h != -1:
-                    # Hash found
-                    monitored_ad.page_content_hash = h
-                else:
-                    flash(f"Cannot reach the webpage '{monitored_ad.website_url}' rightnow. Try again later!")
-                    return jsonify({'error': False}), 500
-
-                monitored_ad.last_updated = datetime.utcnow()
-
-                # Add the new advertisement to the database
-                db.session.add(monitored_ad)
-                db.session.commit()
-
-                # Return a success response
-                flash(f"Advertisement entry '{title}' added successfully!", 'success')
-                logger.info(f"User '{current_user.email}' added one entry to their dashboard.")
-                return jsonify({'success': True}), 200
-                
-            else:
-                flash(f"The advertisement with the number '{advertisement_number}' is not present on the webpage. Please retry with a different advertisement number.", 'warning')
-                return jsonify({'error': False}), 500
-        
         else:
             # Error in the URL
-            flash("An error occurred while trying to access the webpage. Please verify that the URL is valid.", 'error')
+            flash("An error occurred while trying to access the webpage. Please verify that the URL is valid also the adv num is present on the webpage.", 'error')
             return jsonify({'error': False}), 500
         
     except Exception as e:
@@ -383,7 +333,7 @@ def update_advertisement():
     ad_to_update = MonitoredAd.query.get_or_404(ad_id)
     if ad_to_update.user_id == current_user.id:
         # Check the occurrence count
-        occurrence_count = count_query_occurance(url=adv_url, query_str=adv_num)
+        occurrence_count, page_hash = count_query_occurrences_and_hash(url=adv_url, query_str=adv_num)
 
         if occurrence_count > 0:
             # Everything fine!
@@ -392,16 +342,7 @@ def update_advertisement():
             ad_to_update.website_url = adv_url
             ad_to_update.description = adv_desc
             ad_to_update.occurrence_count = occurrence_count
-
-            # Set web page hash
-            h = get_webpage_sha256(url=ad_to_update.website_url)
-            if h != -1:
-                # Hash found
-                ad_to_update.page_content_hash = h
-            else:
-                flash(f"Cannot reach the webpage '{ad_to_update.website_url}' rightnow. Try again later!")
-                return jsonify({'error': False}), 500
-            
+            ad_to_update.page_content_hash = page_hash
             ad_to_update.last_updated = datetime.utcnow()
 
             try:

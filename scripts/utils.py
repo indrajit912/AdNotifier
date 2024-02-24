@@ -283,7 +283,7 @@ def count_query_occurrences_and_hash(url: str, query_str: str):
         return occurrence_count, webpage_hash
 
     except Exception as e:
-        return -1  # Error indicator
+        return -1, None  # Error indicator
     
     
 

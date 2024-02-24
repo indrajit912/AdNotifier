@@ -226,6 +226,7 @@
                                   </div>
                                   <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <a href="{{ url_for('admin.update_user_ad', ad_id=ad.id) }}" class="btn btn-warning">Update</a>
                                     <a href="{{ ad.website_url }}" target="_blank" class="btn btn-primary">Goto website</a>
                                   </div>
                                 </div>
@@ -240,5 +241,6 @@
         </table>
     </div>
     {% endif %}
+
 
 {% endblock %}

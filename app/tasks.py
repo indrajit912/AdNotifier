@@ -10,7 +10,7 @@ This scripts contains the tasks to be performed while the app is running!
 
 from .extensions import scheduler, db
 from app.models.user import MonitoredAd, User
-from scripts.utils import count_query_occurance, send_telegram_message_by_BOT, get_webpage_sha256, count_query_occurrence_selenium, get_webpage_sha256_selenium
+from scripts.utils import count_query_occurance, send_telegram_message_by_BOT, get_webpage_sha256, count_query_occurrences_and_hash, get_webpage_sha256_selenium
 from config import INDRA_ADNOTIFIER_TELEGRAM_BOT_TOKEN
 from scripts.email_message import EmailMessage
 from config import EmailConfig
@@ -119,32 +119,18 @@ def check_adv_count():
             )
 
             # Count the occurances
-            new_count = count_query_occurance(url=ad_url, query_str=ad_num)
-            selenium = False
-            if new_count == 0:
-                new_count = count_query_occurrence_selenium(url=ad_url, query_str=ad_num)
-                logger.debug(f"MonitoredAd id '{ad.id}': `occurance_count` calculated with selenium since the normal count was 0.")
-                selenium = True
+            new_count, current_page_hash = count_query_occurrences_and_hash(url=ad_url, query_str=ad_num)
+            logger.debug(f"MonitoredAd id '{ad.id}': `occurance_count` and `webpage_hash` has been calculated.")
 
             if new_count != ad_prev_count:
                 # uncomment - Update the db
                 ad.occurrence_count = new_count
+                ad.page_content_hash = current_page_hash
                 logger.debug(f"MonitoredAd id '{ad.id}': `occurance_count` has been changed from `{ad_prev_count}` to `{new_count}` on the website!")
                 
-                if selenium:
-                    current_hash = get_webpage_sha256_selenium(url=ad.website_url)
-                    logger.debug(f"MonitoredAd id '{ad.id}': `webpage_hash` is calculated with selenium!")
-                else:
-                    current_hash = get_webpage_sha256(url=ad.website_url)
-                    logger.debug(f"MonitoredAd id '{ad.id}': `webpage_hash` is calculated without selenium!")
-
-                if current_hash != -1:
-                    ad.page_content_hash = current_hash
-
                 ad.last_updated = datetime.utcnow()
 
                 db.session.commit()
-
 
                 # Add to the dict
                 if ad_user.email in email_listing.keys():
@@ -174,50 +160,37 @@ def check_adv_count():
             else:
                 logger.debug(f"MonitoredAd id '{ad.id}': `occurance_count` didn't change so checking the current website hash ...")
 
-                # Check the website content hash
-                if selenium:
-                    current_hash = get_webpage_sha256_selenium(ad.website_url)
-                    logger.debug(f"MonitoredAd id '{ad.id}': `occurance_count` didn't change. Current hash has been calculated using selenium.")
-                else:
-                    current_hash = get_webpage_sha256(ad.website_url)
-                    logger.debug(f"MonitoredAd id '{ad.id}': `occurance_count` didn't change. Current hash has been calculated WITHOUT selenium.")
-
-                
-                if current_hash != -1:
-                    if current_hash != ad_prev_hash:
-                        # Update the db
-                        ad.page_content_hash = current_hash
-                        ad.last_updated = datetime.utcnow()
-                        logger.debug(f"MonitoredAd id '{ad.id}': `occurance_count` didn't change. Current hash has changed from `{ad_prev_hash}` to `{current_hash}`.")
-
-                        db.session.commit()
-
-                        # Add to the dict
-                        if ad_user.email in email_listing.keys():
-                            email_listing[ad_user.email]['ads'].append(
-                                {
-                                    'adv_url': ad_url,
-                                    'adv_num': ad_num,
-                                    'adv_title': ad_title,
-                                    'adv_count': new_count
-                                }
-                            )
-                        else:
-                            email_listing.setdefault(
-                                ad_user.email, {
-                                    'name': ad_user.fullname,
-                                    'telegram': telegram,
-                                    'ads': [
-                                        {
-                                            'adv_url': ad_url,
-                                            'adv_num': ad_num,
-                                            'adv_title': ad_title,
-                                            'adv_count': new_count
-                                        }
-                                    ]
-                                }
-                            )
-
+                if current_page_hash != ad_prev_hash:
+                    # Update the db
+                    ad.page_content_hash = current_page_hash
+                    ad.last_updated = datetime.utcnow()
+                    logger.debug(f"MonitoredAd id '{ad.id}': `occurance_count` didn't change. Current hash has changed from `{ad_prev_hash}` to `{current_page_hash}`.")
+                    db.session.commit()
+                    # Add to the dict
+                    if ad_user.email in email_listing.keys():
+                        email_listing[ad_user.email]['ads'].append(
+                            {
+                                'adv_url': ad_url,
+                                'adv_num': ad_num,
+                                'adv_title': ad_title,
+                                'adv_count': new_count
+                            }
+                        )
+                    else:
+                        email_listing.setdefault(
+                            ad_user.email, {
+                                'name': ad_user.fullname,
+                                'telegram': telegram,
+                                'ads': [
+                                    {
+                                        'adv_url': ad_url,
+                                        'adv_num': ad_num,
+                                        'adv_title': ad_title,
+                                        'adv_count': new_count
+                                    }
+                                ]
+                            }
+                        )
             
         
         if email_listing:
