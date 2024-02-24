@@ -215,7 +215,7 @@ def send_email():
         
 
             flash(f"Hey {current_user.nickname}! Your email has been sent succesfully to user(s).", 'success')
-            logger.info(f"Email sent to user(s) by `{current_user}`!")
+            logger.info(f"Email sent to user(s) by `{current_user.nickname}`!")
             return redirect(url_for('admin.home'))
 
         except Exception as e:
