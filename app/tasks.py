@@ -221,3 +221,9 @@ def check_adv_count():
 #     print("job 1")
             
 
+def main():
+    check_adv_count()
+
+if __name__ == '__main__':
+    main()
+    
